@@ -4,7 +4,8 @@ var App = (function(lng, undefined) {
     
     lng.App.init({
         name: 'GitBucket',
-        version: '0.1'
+        version: '0.1',
+        cache_time: '30 minutes'
     });
     
     return {

@@ -27,53 +27,53 @@
         First, you have to do is create a LungoJS Application instance in the file app.js.
         ...and use a Webkit browser as Chrome or Safari.
     -->
-    
-    <section id="home">
-        <header data-title="Streamsocial/Animales">
+
+    <section id="main">
+        <header data-title="Main View">
             <a href="#aside-menu" data-target="aside" data-icon="left" class="button onleft"></a>
             <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
         </header>
 
-        <footer class="toolbar with-labels">
+        <article id="user-recent" class="current list indented scrollable">
+            <ul>
+                <li>Loading...</li>
+            </ul>
+        </article>
+        <article id="repo-recent" class="list scrollable"></article>
+        <article id="repo-commits" class="list scrollable"></article>
+        <article id="repo-source" class="list scrollable"></article>
+        <article id="repo-issues" class="list scrollable"></article>
+        <article id="settings" class="list scrollable">Settings here</article>
+
+        <footer class="toolbar with-labels" data-article="repo-recent repo-commits repo-source repo-issues">
             <nav>
-                <a href="#recent" data-target="article" data-icon="clock" data-label="Recent"></a>
-                <a href="#commits" data-target="article" data-icon="files" data-label="Commits"></a>
-                <a href="#source" class="current" data-target="article" data-icon="edit" data-label="Source"></a>
-                <a href="#issues" data-target="article" data-icon="warning" data-label="Issues"></a>
+                <a href="#repo-recent" data-target="article" data-icon="clock" data-label="Recent" class="current"></a>
+                <a href="#repo-commits" data-target="article" data-icon="files" data-label="Commits"></a>
+                <a href="#repo-source" data-target="article" data-icon="edit" data-label="Source"></a>
+                <a href="#repo-issues" data-target="article" data-icon="warning" data-label="Issues"></a>
             </nav>
         </footer>
-
-        <article id="recent" class="list scrollable"></article>
-        <article id="commits" class="list scrollable"></article>
-        <article id="source" class="current list scrollable"></article>
-        <article id="issues" class="list scrollable"></article>
-    </section>
-
-    <section id="copyright">
-        <header data-back="home" data-title="Copyright"></header>
-        <article></article>
     </section>
     
-    <aside id="aside-menu">
-    	<div class="title" data-icon="user">FdezRomero</div>
-	    <a href="#home" data-target="section" data-icon="folder" data-label="Animales"></a>
-      <a href="#commits" data-target="section" data-icon="folder" data-label="SS-Web-2012"></a>
-      <div class="title" data-icon="star">Other</div>
-      <a href="#source" data-target="section" data-icon="settings" data-label="Settings"></a>
+    <aside id="aside-menu" class="scrollable current">
+        <a id="aside-user" href="#user-recent" class="title" data-target="article" data-icon="user" data-title=""></a>
+        <div id="aside-repos"></div>
+        <footer>
+            <a id="aside-settings" href="#settings" data-target="article" data-icon="settings" data-title="Settings">Settings</a>
+        </footer>
     </aside>
 
     <!-- LungoJS (Development mode) -->
     <script src="lungo.js/QuoJS.js"></script>
     <script src="lungo.js/iscroll-lite.js"></script>
-    <script src="lungo.js/base64.js"></script>
     <script src="lungo.js/lungo-1.2.js"></script>
     <!-- LungoJS (Production mode) -->
-    <!--<script src="lungo.js/base64.js"></script>-->
     <!--<script src="lungo.js/lungo-1.2.packed.js"></script>-->
     <!-- LungoJS - Sandbox App -->
     <script src="app/app.js"></script>
     <script src="app/data.js"></script>
     <script src="app/events.js"></script>
+    <script src="app/base64.js"></script>
     <script src="app/services.js"></script>
     <script src="app/view.js"></script>
 </body>
