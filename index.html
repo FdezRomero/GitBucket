@@ -20,6 +20,7 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="./lungo.js/lungo-1.2.css">
     <link rel="stylesheet" href="./lungo.js/lungo.theme.gitbucket.css">
+    <link rel="stylesheet" href="./assets/font-awesome.css">
 </head>
 
 <body class="app">
@@ -29,11 +30,13 @@
     -->
 
     <section id="main">
-        <header data-title="Main View">
-            <a href="#aside-menu" data-target="aside" data-icon="left" class="button onleft"></a>
+        <header data-title="Loading">
+            <a href="#aside-menu" data-target="aside" data-icon="_left" class="button onleft">
+                <i class="icon-reorder"></i>
+            </a>
             <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
         </header>
-
+        
         <article id="user-recent" class="current list indented scrollable">
             <ul>
                 <li>Loading...</li>
@@ -44,7 +47,7 @@
         <article id="repo-source" class="list scrollable"></article>
         <article id="repo-issues" class="list scrollable"></article>
         <article id="settings" class="list scrollable">Settings here</article>
-
+        
         <footer class="toolbar with-labels" data-article="repo-recent repo-commits repo-source repo-issues">
             <nav>
                 <a href="#repo-recent" data-target="article" data-icon="clock" data-label="Recent" class="current"></a>
@@ -55,7 +58,7 @@
         </footer>
     </section>
     
-    <aside id="aside-menu" class="scrollable current">
+    <aside id="aside-menu" class="scrollable">
         <a id="aside-user" href="#user-recent" class="title" data-target="article" data-icon="user" data-title=""></a>
         <div id="aside-repos"></div>
         <footer>
@@ -63,18 +66,87 @@
         </footer>
     </aside>
 
+    <section id="login">
+        <article id="login-form" class="list scrollable" style="background-color:#ff7700">
+            <div class="container indented">
+                <div style="display:block;margin-top:20px;text-align:center">
+                    <img src="assets/images/gitbucket.png" width="150"/>
+                </div>
+                <ul class="form">
+                    <!--<li class="anchor" data-icon="user">Login to BitBucket</li>-->
+                    <li>
+                        <!--<label>Username</label>-->
+                        <input id="login-username" type="text" placeholder="Username" value="FdezRomero">
+                        <!--<label>Password</label>-->
+                        <input id="login-password" type="password" placeholder="Password" value="c4lif0rni4">
+                    </li>
+                    <li>
+                        <a id="login-btn" href="#" class="button big orange">Login</a>
+                    </li>
+                    <li class="tip dark" data-icon="info mini">Create your free account at <strong>BitBucket.org</strong></li>
+                </ul>
+            </div>
+        </article>
+    </section>
+
+    <section id="commit-detail">
+        <header class="extended" data-title="Commit Detail">
+            <nav class="onleft">
+                <a href="#back" data-target="section" data-icon="left" class="button"></a>
+            </nav>
+            <nav class="groupbar">
+                <a href="#commit-detail-info" data-target="article" class="current">COMMIT INFO</a>
+                <a href="#commit-detail-files" data-target="article">FILES</a>
+            </nav>
+        </header>
+        <article id="commit-detail-info" class="current list scrollable">
+            <ul>
+                <li>
+                    <div style="display:inline-block;width:60px"><label>Commit</label></div>
+                    <span id="commit-detail-node"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:60px"><label>Branch</label></div>
+                    <span id="commit-detail-branch"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:60px"><label>Author</label></div>
+                    <span id="commit-detail-author"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:60px"><label>Date</label></div>
+                    <span id="commit-detail-date"></span></li>
+                <li>
+                    <label>Message</label><br/>
+                    <span id="commit-detail-msg"></span>
+                </li>
+            </ul>
+        </article>
+        <article id="commit-detail-files" class="list scrollable"></article>
+    </section>
+
+    <section id="commit-source">
+        <header data-title="">
+            <nav class="onleft">
+                <a href="#" data-target="section" data-icon="left" class="button"></a>
+            </nav>
+        </header>
+        <article id="commit-source-files" class="list scrollable"></article>
+    </section>
+
     <!-- LungoJS (Development mode) -->
-    <script src="lungo.js/QuoJS.js"></script>
+    <!--<script src="lungo.js/QuoJS.js"></script>
     <script src="lungo.js/iscroll-lite.js"></script>
-    <script src="lungo.js/lungo-1.2.js"></script>
+    <script src="lungo.js/lungo-1.2.js"></script>-->
     <!-- LungoJS (Production mode) -->
-    <!--<script src="lungo.js/lungo-1.2.packed.js"></script>-->
+    <script src="lungo.js/lungo-1.2.packed.js"></script>
     <!-- LungoJS - Sandbox App -->
     <script src="app/app.js"></script>
     <script src="app/data.js"></script>
     <script src="app/events.js"></script>
     <script src="app/base64.js"></script>
     <script src="app/services.js"></script>
+    <script src="app/moment.min.js"></script>
     <script src="app/view.js"></script>
 </body>
 </html>

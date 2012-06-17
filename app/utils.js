@@ -1,12 +1,15 @@
 App.Utils = (function(lng, undefined) {
 
     //Non-LungoJS module for JS utilities
-    var BasicAuth = function (user, password) {
-		return 'Basic ' + Base64.encode(user + ':' + password);
+    var EventIcon = function (event) {
+		switch(event) {
+			case 'create': return 'add';
+			case 'commit': return 'check';
+		}
 	};
     
     return {
-		BasicAuth: BasicAuth
+		EventIcon: EventIcon
     };
 
 })(LUNGO);

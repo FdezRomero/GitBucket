@@ -29,14 +29,9 @@ App.Data = (function(lng, app, undefined) {
     var cachePictures = function(pictures) {
 		lng.Data.Sql.insert('pictures', pictures);
     };*/
-
-    var StoreAuth = function(token) {
-		
-	};
     
     return {
 		//cachePictures: cachePictures
-		StoreAuth: StoreAuth
     };
 
 })(LUNGO, App);

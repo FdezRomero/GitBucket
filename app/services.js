@@ -1,8 +1,19 @@
 App.Services = (function(lng, app, undefined) {
 		
-	var auth = lng.Data.Storage.persistent('auth');
-	$$.ajaxSettings.headers = {'Authorization': 'Basic ' + auth}; // Store in persistent storage
+	//========== USER FUNCTIONS ==========//
+
+	var SetBasicAuth = function() {
+		var token = lng.Data.Storage.persistent('token');
+		$$.ajaxSettings.headers = {'Authorization': 'Basic ' + token}; // Store in persistent storage
+	};
 	
+	var CheckLogin = function() {
+		$$.ajaxSettings.async = false;
+		var response = lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(){});
+		$$.ajaxSettings.async = true;
+		return response.user.username;
+	};
+
 	var UserInfo = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(response) {
 			//console.error(response);
@@ -17,6 +28,8 @@ App.Services = (function(lng, app, undefined) {
 			App.View.UserRecent(response.events);
 		});
 	};
+
+	//========== REPOSITORY FUNCTIONS ==========//
 
 	var RepoList = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/repositories/', null, function(response) {
@@ -42,11 +55,13 @@ App.Services = (function(lng, app, undefined) {
 				var n = dirsArray.length + filesArray.length;
 				var elements = new Array(n);
 				
+				// Add the directories
 				for (var i = 0; i < dirsArray.length; i++) {
 					elements[i] = new Object({});
 					elements[i].path = dirsArray[i];
 					elements[i].icon = 'folder mini';
 				}
+				// Add the files
 				for (i = dirsArray.length; i < n; i++) {
 					elements[i] = new Object({});
 					elements[i] = filesArray[i - dirsArray.length];
@@ -54,7 +69,6 @@ App.Services = (function(lng, app, undefined) {
 				}
 				return elements;
 			};
-
 			var source = Join(response.directories, response.files);
 			App.View.RepoSource(source);
 		});
@@ -67,13 +81,25 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-    return {
-    	UserInfo: UserInfo,
-    	UserRecent: UserRecent,
+	//========== DETAIL FUNCTIONS ==========//
+
+	var CommitDetail = function(user_repo, commit, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit, null, function(response) {
+			//console.error(response);
+			App.View.CommitDetail(response);
+		});
+	};
+
+	return {
+		SetBasicAuth: SetBasicAuth,
+		CheckLogin: CheckLogin,
+		UserInfo: UserInfo,
+		UserRecent: UserRecent,
 		RepoList: RepoList,
 		RepoSource: RepoSource,
 		RepoRecent: RepoRecent,
-		RepoCommits: RepoCommits
-    };
+		RepoCommits: RepoCommits,
+		CommitDetail: CommitDetail
+	};
 
 })(LUNGO, App);
