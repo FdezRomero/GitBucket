@@ -39,41 +39,12 @@ App.Services = (function(lng, app, undefined) {
 	};
 
 	var RepoRecent = function(user_repo, method) {
-			
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/events/', null, function(response) {
 			//console.error(response);
 			App.View.RepoRecent(response.events);
 		});
 	};
 
-	var RepoSource = function(user_repo, method) {
-		
-		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/master/', null, function(response) {
-			
-			// Normalize directory data to file structure
-			var Join = function(dirsArray, filesArray) {
-				var n = dirsArray.length + filesArray.length;
-				var elements = new Array(n);
-				
-				// Add the directories
-				for (var i = 0; i < dirsArray.length; i++) {
-					elements[i] = new Object({});
-					elements[i].path = dirsArray[i];
-					elements[i].icon = 'folder mini';
-				}
-				// Add the files
-				for (i = dirsArray.length; i < n; i++) {
-					elements[i] = new Object({});
-					elements[i] = filesArray[i - dirsArray.length];
-					elements[i].icon = 'file mini';
-				}
-				return elements;
-			};
-			var source = Join(response.directories, response.files);
-			App.View.RepoSource(source);
-		});
-	};
-	
 	var RepoCommits = function(user_repo, method) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/', null, function(response) {
 			//console.error(response);
@@ -81,12 +52,55 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var RepoSource = function(user_repo, dir, method) {
+		var path = (dir) ? dir + '/' : '';
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/master/'+path, null, function(response) {
+			//console.error(response);
+
+			// Normalize directory data to file structure
+			var Join = function(dirsArray, filesArray) {
+				var n = dirsArray.length + filesArray.length;
+				var elements = new Array();
+
+				// Add path to go back if needed
+				//console.error(path);
+				if (path.length > 0) {
+					var obj = new Object({'path': 'Back', 'type': 'back', 'size': null, 'revision': null, 'icon': 'left mini'});
+					elements.push(obj);
+				}
+				// Add the directories
+				for (var i = 0; i < dirsArray.length; i++) {
+					var obj = new Object({'path': dirsArray[i], 'type': 'dir', 'size': null, 'revision': null, 'icon': 'folder mini'});
+					elements.push(obj);
+				}
+				// Add the files
+				for (var j = 0; j < filesArray.length; j++) {
+					var obj = filesArray[j];
+					obj.path = obj.path.substring(path.length);
+					obj.type = 'file';
+					obj.icon = 'file';
+					elements.push(obj);
+				}
+				return elements;
+			};
+			var source = Join(response.directories, response.files);
+			App.View.RepoSource(source);
+		});
+	};
+
 	//========== DETAIL FUNCTIONS ==========//
 
 	var CommitDetail = function(user_repo, commit, method) {
-		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit, null, function(response) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/', null, function(response) {
 			//console.error(response);
 			App.View.CommitDetail(response);
+		});
+	};
+
+	var CommitComments = function(user_repo, commit, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', null, function(response) {
+			console.error(response);
+			//App.View.CommitComments(response);
 		});
 	};
 
@@ -99,7 +113,8 @@ App.Services = (function(lng, app, undefined) {
 		RepoSource: RepoSource,
 		RepoRecent: RepoRecent,
 		RepoCommits: RepoCommits,
-		CommitDetail: CommitDetail
+		CommitDetail: CommitDetail,
+		CommitComments: CommitComments
 	};
 
 })(LUNGO, App);

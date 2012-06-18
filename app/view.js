@@ -12,12 +12,6 @@ App.View = (function(lng, app, undefined) {
 			<a href="#"><span class="icon check mini"></span>{{event}}: {{description}}</a>\
 		</li>'
 	);
-	
-	lng.View.Template.create('source-tmpl',
-		'<li id="{{path}}">\
-			<span class="icon {{icon}}"></span><a href="#">{{path}}</a>\
-		</li>'
-	);
 
 	lng.View.Template.create('commits-tmpl',
 		'<li id="{{node}}">\
@@ -59,7 +53,12 @@ App.View = (function(lng, app, undefined) {
 			case 'added': return 'add';
 			case 'commit': return 'check';
 			case 'create': return 'add mini';
+			case 'issue_comment': return 'message mini';
+			case 'issue_update': return 'refresh mini';
 			case 'modified': return 'edit';
+			case 'removed': return 'remove';
+			case 'report_issue': return 'warning mini';
+			case 'stop_follow_issue': return 'close mini';
 		}
 	};
 
@@ -136,29 +135,28 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#repo-source').empty();
 		if (source.length > 0) {
 			for (var i = 0; i < source.length; i++) {
-				var time_ago = TimeAgo(source[i]['utctimestamp']);
 				var size = (source[i]['size']) ? FileSize(source[i]['size']) : '';
 				var revision = (source[i]['revision']) ? source[i]['revision'] : '';
-				lng.dom('#repo-source').append('<li id="'+source[i]['path']+'"><a href="#">\
-					<div class="onright">'+size+'</div>\
+				lng.dom('#repo-source').append('<li data-title="'+source[i]['path']+'" data-type="'+source[i]['type']+'">\
+					<a href="#"><div class="onright">'+size+'</div>\
 					<span class="icon '+source[i]['icon']+'"></span>'+source[i]['path']+'\
 					<small>'+revision+'</small></a></li>');
 			}
 		} else {
-			lng.dom('#repo-commits').html(NoElements('events'));
+			lng.dom('#repo-source').html(NoElements('files'));
 		}
 	};
 
 	var RepoCommits = function(commits) {
-		//console.error(events);
+		//console.error(commits);
 		lng.dom('#repo-commits').empty();
 		if (commits.length > 0) {
-			for (var i = 0; i < commits.length; i++) {
-				var branch = (commits[i]['branch']) ? commits[i]['branch']+'/' : '';
+			for (var i = commits.length-1; i >= 0; i--) {
+				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
 				var time_ago = moment(commits[i]['utctimestamp'], 'YYYY-MM-DD HH:mm:ssZZ').fromNow();
 				lng.dom('#repo-commits').append('<li data-title="'+commits[i]['node']+'">\
 					<a href="#" data-target="section"><div class="onright">'+time_ago+'</div>\
-					<span class="icon check"></span>'+branch+commits[i]['node']+'\
+					<span class="icon check"></span>'+commits[i]['node']+branch+'\
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
 		} else {

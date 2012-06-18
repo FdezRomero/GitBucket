@@ -2,6 +2,7 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('body').ready(function() {
 
+		App.Data.ClearSessionStorage();
 		var username = lng.Data.Storage.persistent('username');
 		var token = lng.Data.Storage.persistent('token');
 
@@ -14,7 +15,6 @@ App.Events = (function(lng, app, undefined) {
 			} else {
 				lng.Router.section('login');
 			}
-
 		} else {
 			lng.Router.section('login');
 		}
@@ -89,13 +89,32 @@ App.Events = (function(lng, app, undefined) {
 		UpdateRepo(user_repo, 'refresh');
 	});
 
-	lng.dom('#repo-recent li, #repo-commits li').tap(function() {
+	// TODO: Something throws SYNTAX_ERR: DOM Exception 12
+	lng.dom('#repo-commits li, #repo-recent li').tap(function() {
 		if (lng.dom(this).data('title')) {
 			var user_repo = lng.Data.Storage.session('current_title');
 			var commit = lng.dom(this).data('title');
 			App.Services.CommitDetail(user_repo, commit);
+			App.Services.CommitComments(user_repo, commit);
 			lng.Router.section('commit-detail');
-		}	
+		}
+	});
+
+	lng.dom('#repo-source li').tap(function() {
+
+		var user_repo = lng.Data.Storage.session('current_title');
+
+		if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'dir') {
+			var dir = lng.dom(this).data('title');
+			var path_url = App.Data.StorePath(dir); // Advance one history level
+			//var path_url = lng.Data.Storage.session('path_history').join('/'); // Create the URL
+			App.Services.RepoSource(user_repo, path_url);
+		} else if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'file') {
+			console.error('Show highlighted source code');
+		} else if (lng.dom(this).data('type') == 'back') {
+			var path_url = App.Data.PathBack(); // Go back one history level
+			App.Services.RepoSource(user_repo, path_url);
+		}
 	});
 
 	/*lng.dom('article#repo-commits li').tap(function() {
@@ -108,7 +127,7 @@ App.Events = (function(lng, app, undefined) {
 
 	var UpdateRepo = function(user_repo, method) {
 		App.Services.RepoRecent(user_repo, method);
-		App.Services.RepoSource(user_repo, method);
+		App.Services.RepoSource(user_repo, null, method);
 		App.Services.RepoCommits(user_repo, method);
 	};
 
