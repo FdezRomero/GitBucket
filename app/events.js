@@ -59,7 +59,9 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('aside#aside-menu a').tap(function() {
 		
+		App.Data.ClearSessionStorage();
 		var title = lng.dom(this).data('title');
+		App.Data.CurrentRepo(title);
 
 		lng.Data.Storage.session('current_title', title);
 		App.View.UpdateTitle(title);
@@ -72,28 +74,18 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
-	lng.dom('section#main a#refresh').tap(function() {
-	
-	/*lng.Data.Sql.select('pictures', null, function(result) {
-		console.error(result);
-		if (result.length > 0) { //Tenemos datos en la DB
-			App.View.pictures(result);
-		} else {
-			App.Services.panoramioPictures();
-		}
-	});*/
-	
+	lng.dom('#main a#refresh').tap(function() {
 		App.Services.RepoList();
-
-		var user_repo = lng.Data.Storage.session('current_title');
+		var user_repo = App.Data.CurrentRepo();
 		UpdateRepo(user_repo, 'refresh');
 	});
 
 	// TODO: Something throws SYNTAX_ERR: DOM Exception 12
 	lng.dom('#repo-commits li, #repo-recent li').tap(function() {
 		if (lng.dom(this).data('title')) {
-			var user_repo = lng.Data.Storage.session('current_title');
+			var user_repo = App.Data.CurrentRepo();
 			var commit = lng.dom(this).data('title');
+			App.Data.CurrentCommit(commit);
 			App.Services.CommitDetail(user_repo, commit);
 			App.Services.CommitComments(user_repo, commit);
 			lng.Router.section('commit-detail');
@@ -102,12 +94,11 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#repo-source li').tap(function() {
 
-		var user_repo = lng.Data.Storage.session('current_title');
+		var user_repo = App.Data.CurrentRepo();
 
 		if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'dir') {
 			var dir = lng.dom(this).data('title');
 			var path_url = App.Data.StorePath(dir); // Advance one history level
-			//var path_url = lng.Data.Storage.session('path_history').join('/'); // Create the URL
 			App.Services.RepoSource(user_repo, path_url);
 		} else if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'file') {
 			console.error('Show highlighted source code');
@@ -117,10 +108,52 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
-	/*lng.dom('article#repo-commits li').tap(function() {
-		var user_repo = lng.Data.Storage.session('current_title');
-		var commit = lng.dom(this).attr('id');
+	lng.dom('#repo-issues li').tap(function() {
+		if (lng.dom(this).data('title')) {
+			var user_repo = App.Data.CurrentRepo();
+			var issue = lng.dom(this).data('title');
+			App.Data.CurrentIssue(issue);
+			App.Services.IssueDetail(user_repo, issue);
+			App.Services.IssueComments(user_repo, issue);
+			lng.Router.section('issue-detail');
+		}
+	});
+
+	lng.dom('#commit-detail-left').tap(function() {
+		lng.dom('#commit-detail-info li span').empty();
+		lng.dom('#commit-detail-comments').empty();
+	});
+
+	lng.dom('#commit-detail-refresh').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		var commit = App.Data.CurrentCommit();
 		App.Services.CommitDetail(user_repo, commit);
+		App.Services.CommitComments(user_repo, commit);
+	});
+
+	lng.dom('#issue-detail-left').tap(function() {
+		lng.dom('#issue-detail-info').empty();
+		lng.dom('#issue-detail-comments').empty();
+	});
+
+	lng.dom('#issue-detail-refresh').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		var issue = App.Data.CurrentIssue();
+		App.Services.IssueDetail(user_repo, issue);
+		App.Services.IssueComments(user_repo, issue);
+	});
+
+	lng.dom('#compose-issue-btn').tap(function() {
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 2 -- line height
+	});
+
+	/*lng.Data.Sql.select('pictures', null, function(result) {
+		console.error(result);
+		if (result.length > 0) { //Tenemos datos en la DB
+			App.View.pictures(result);
+		} else {
+			App.Services.panoramioPictures();
+		}
 	});*/
 
 	//========== UTILITIES ==========//
@@ -129,6 +162,7 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.RepoRecent(user_repo, method);
 		App.Services.RepoSource(user_repo, null, method);
 		App.Services.RepoCommits(user_repo, method);
+		App.Services.RepoIssues(user_repo, method);
 	};
 
 	var ShowFooter = function() {

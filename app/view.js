@@ -14,7 +14,7 @@ App.View = (function(lng, app, undefined) {
 	);
 
 	lng.View.Template.create('commits-tmpl',
-		'<li id="{{node}}">\
+		'<li data-title="{{node}}">\
 			<div class="onright">{{utctimestamp}}</div>\
 			<span class="check"></span><a href="#">{{branch}}/{{node}}</a>\
 			<small>{{message}}</small>\
@@ -24,8 +24,8 @@ App.View = (function(lng, app, undefined) {
 	//===== VIEW UTILITIES =====//
 
 	var UpdateTitle = function(title) {
-		lng.dom('section#main header').data('title', title);
-		lng.dom('section#main header span.title').html(title);
+		lng.dom('#main header').data('title', title);
+		lng.dom('#main header span.title').html(title);
 	};
 
 	var NoElements = function(type) {
@@ -48,17 +48,25 @@ App.View = (function(lng, app, undefined) {
 		return size.toFixed(1) + ' ' + units[i];
 	};
 
-	var EventIcon = function(event) {
+	var GetIcon = function(event) {
 		switch(event) {
 			case 'added': return 'add';
 			case 'commit': return 'check';
 			case 'create': return 'add mini';
+			case 'cset_comment_created': return 'message mini';
+			case 'duplicate': return 'files';
+			case 'invalid': return 'close';
 			case 'issue_comment': return 'message mini';
 			case 'issue_update': return 'refresh mini';
 			case 'modified': return 'edit';
+			case 'new': return 'add';
+			case 'on hold': return 'clock';
+			case 'open': return 'warning';
 			case 'removed': return 'remove';
+			case 'resolved': return 'check';
 			case 'report_issue': return 'warning mini';
 			case 'stop_follow_issue': return 'close mini';
+			case 'wontfix': return 'close';
 		}
 	};
 
@@ -66,8 +74,9 @@ App.View = (function(lng, app, undefined) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	};
 
+	// TODO: Find a working encoder (this one cuts the 1st letter)
 	var EncodeHTML = function(str) {
-		var aStr = str.split(''), i = aStr.length, aRet = [];
+		/*var aStr = str.split(''), i = aStr.length, aRet = [];
 		while (--i) {
 			var iC = aStr[i].charCodeAt();
 			if (iC < 65 || iC > 127 || (iC>90 && iC<97)) {
@@ -76,7 +85,8 @@ App.View = (function(lng, app, undefined) {
 				aRet.push(aStr[i]);
 			}
 		}
-		return aRet.reverse().join('');
+		return aRet.reverse().join('');*/
+		return str;
 	};
 
 	//========== USER VIEWS ==========//
@@ -117,7 +127,7 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#repo-recent').empty();
 		if (events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
-				var icon = EventIcon(events[i]['event']);
+				var icon = GetIcon(events[i]['event']);
 				var time_ago = TimeAgo(events[i]['utc_created_on']);
 				var node = (events[i]['node']) ? events[i]['node'] : '';
 				var description = (events[i]['description']) ? ': '+events[i]['description'] : '';
@@ -155,7 +165,7 @@ App.View = (function(lng, app, undefined) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
 				var time_ago = moment(commits[i]['utctimestamp'], 'YYYY-MM-DD HH:mm:ssZZ').fromNow();
 				lng.dom('#repo-commits').append('<li data-title="'+commits[i]['node']+'">\
-					<a href="#" data-target="section"><div class="onright">'+time_ago+'</div>\
+					<a href="#"><div class="onright">'+time_ago+'</div>\
 					<span class="icon check"></span>'+commits[i]['node']+branch+'\
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
@@ -164,30 +174,127 @@ App.View = (function(lng, app, undefined) {
 		}
 	};
 
+	var RepoIssues = function(issues) {
+		//console.error(issues);
+		lng.dom('#repo-issues').html('<li style="background:#EDEDED">\
+			<input type="search" placeholder="Search issues...">\
+            <a href="#" class="button"><span class="icon search"></span></a></li>');
+
+		if (issues.length > 0) {
+			for (var i = 0; i < issues.length; i++) {
+				var time_ago = moment(issues[i]['utc_last_updated'], 'YYYY-MM-DD HH:mm:ssZZ').fromNow();
+				var icon = GetIcon(issues[i]['status']);
+				lng.dom('#repo-issues').append('<li data-title="'+issues[i]['local_id']+'">\
+					<a href="#"><div class="onright">'+time_ago+'</div>\
+					<span class="icon '+icon+'"></span>#'+issues[i]['local_id']+': '+issues[i]['title']+'\
+					<small>Status: '+issues[i]['status']+'</small></a></li>');
+			}
+		} else {
+			lng.dom('#repo-issues').html(NoElements('issues'));
+		}
+	};
+
 	//========== DETAIL VIEWS ==========//
 
 	var CommitDetail = function(detail) {
-		
-		lng.dom('section#commit-detail header').data('title', detail.node);
-		lng.dom('section#commit-detail header span.title').html(detail.node);
+		//console.error(detail);
 
-		var time_ago = moment(detail.utctimestamp, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		lng.dom('#commit-detail header').data('title', detail.node);
+		lng.dom('#commit-detail header span.title').html(detail.node);
+
+		// Info tab
+		var formatted_date = moment(detail.utctimestamp, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		var branch = (detail.branch) ? detail.branch : '(none)';
 		lng.dom('#commit-detail-node').html(detail.node);
-		lng.dom('#commit-detail-branch').html(detail.branch);
+		lng.dom('#commit-detail-branch').html(branch);
 		lng.dom('#commit-detail-author').html(detail.author);
-		lng.dom('#commit-detail-date').html(time_ago);
+		lng.dom('#commit-detail-date').html(formatted_date);
 		lng.dom('#commit-detail-msg').html(detail.message);
 
+		// Files tab
 		lng.dom('#commit-detail-files').empty();
 		if (detail.files.length > 0) {
 			for (var i = 0; i < detail.files.length; i++) {
-				var icon = EventIcon(detail.files[i]['type']);
-				lng.dom('#commit-detail-files').append('<li>\
-					<span class="icon '+icon+'"></span>'+detail.files[i]['file']+'\
-					<small>'+Capitalize(detail.files[i]['type'])+'</small></a></li>');
+				var icon = GetIcon(detail.files[i]['type']);
+				lng.dom('#commit-detail-files').append('<li><span class="icon '+icon+'"></span>\
+					'+detail.files[i]['file']+'<small>'+Capitalize(detail.files[i]['type'])+'</small></a></li>');
 			}
 		} else {
 			lng.dom('#commit-detail-files').html(NoElements('files'));
+		}
+	};
+
+	var CommitComments = function(comments) {
+		//console.error(comments);
+		lng.dom('#commit-detail-comments').empty();
+		var num_comments = 0;
+		
+		//Comments tab
+		if (comments.length > 0) {
+			for (var i = 0; i < comments.length; i++) {
+				if (comments[i]['content']) { // Don't display comment if no content
+					var time_ago = TimeAgo(comments[i]['utc_created_on']);
+					lng.dom('#commit-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
+						<img src="'+comments[i]['user_avatar_url']+'" class="icon"/>\
+						<label>'+comments[i]['username']+'</label><br/>'+comments[i]['content']+'</li>');
+					num_comments++;
+				}
+			}
+		}
+		if (num_comments === 0) {
+			lng.dom('#commit-detail-comments').html(NoElements('comments'));
+		}
+	};
+
+	var IssueDetail = function(detail) {
+		
+		lng.dom('#issue-detail header').data('title', 'Issue #'+detail.local_id);
+		lng.dom('#issue-detail header span.title').html('Issue #'+detail.local_id);
+		
+		lng.dom('#issue-detail-info').empty();
+
+		// Info tab: Show only properties with a value assigned
+		var reported_by = '<img src="'+detail.reported_by.avatar+'" class="icon" style="float:none"/>\
+			'+detail.reported_by.username;
+		var responsible = (detail.responsible) ? '<img src="'+detail.responsible.avatar+'" class="icon" style="float:none"/>\
+			'+detail.responsible.username : null;
+		var created_on = moment(detail.utc_created_on, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		var last_updated = moment(detail.utc_last_updated, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		
+		// Build our object with all the properties and innerHTMLs
+		var obj = {'Issue ID':'#'+detail.local_id,'Title':detail.title,'Status':Capitalize(detail.status),
+			'Priority':Capitalize(detail.priority),'Reported by':reported_by,'Responsible':responsible,
+			'Created on':created_on,'Last updated':last_updated,'Kind':Capitalize(detail.metadata.kind),
+			'Component':detail.metadata.component,'Milestone':detail.metadata.milestone,
+			'Version':detail.metadata.version,'Description':'<br/>'+detail.content};
+
+		for (var x in obj) {
+			if (obj[x]) {
+				lng.dom('#issue-detail-info').append('<li><div style="display:inline-block;width:95px">\
+					<label>'+x+'</label></div>'+obj[x]+'</li>');
+			}
+		}
+	};
+
+	var IssueComments = function(comments) {
+		//console.error(comments);
+		lng.dom('#issue-detail-comments').empty();
+		var num_comments = 0;
+
+		//Comments tab
+		if (comments.length > 0) {
+			for (var i = 0; i < comments.length; i++) {
+				if (comments[i]['content']) { // Don't display comment if no content
+					var time_ago = TimeAgo(comments[i]['utc_updated_on']);
+					lng.dom('#issue-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
+						<img src="'+comments[i]['author_info']['avatar']+'" class="icon"/>\
+						<label>'+comments[i]['author_info']['username']+'</label><br/>'+comments[i]['content']+'</li>');
+					num_comments++;
+				}
+			}
+		}
+		if (num_comments === 0) {
+			lng.dom('#issue-detail-comments').html(NoElements('comments'));
 		}
 	};
 
@@ -199,7 +306,11 @@ App.View = (function(lng, app, undefined) {
 		RepoSource: RepoSource,
 		RepoRecent: RepoRecent,
 		RepoCommits: RepoCommits,
-		CommitDetail: CommitDetail
+		RepoIssues: RepoIssues,
+		CommitDetail: CommitDetail,
+		CommitComments: CommitComments,
+		IssueDetail: IssueDetail,
+		IssueComments: IssueComments
 	};
 
 })(LUNGO, App);

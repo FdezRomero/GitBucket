@@ -34,6 +34,7 @@
             <a href="#aside-menu" data-target="aside" data-icon="_left" class="button onleft">
                 <i class="icon-reorder"></i>
             </a>
+            <a id="compose-issue-btn" href="#compose-issue" data-target="section" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
             <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
         </header>
         
@@ -45,7 +46,12 @@
         <article id="repo-recent" class="list scrollable"></article>
         <article id="repo-commits" class="list scrollable"></article>
         <article id="repo-source" class="list scrollable"></article>
-        <article id="repo-issues" class="list scrollable"></article>
+        <article id="repo-issues" class="list scrollable">
+             <ul>
+                <li style="background:#EDEDED"><input type="search" placeholder="Search issues...">
+                <a href="#" class="button"><span class="icon search"></span></a></li>
+            </ul>
+        </article>
         <article id="settings" class="list scrollable">Settings here</article>
         
         <footer class="toolbar with-labels" data-article="repo-recent repo-commits repo-source repo-issues">
@@ -75,10 +81,8 @@
                 <ul class="form">
                     <!--<li class="anchor" data-icon="user">Login to BitBucket</li>-->
                     <li>
-                        <!--<label>Username</label>-->
-                        <input id="login-username" type="text" placeholder="Username" value="FdezRomero">
-                        <!--<label>Password</label>-->
-                        <input id="login-password" type="password" placeholder="Password" value="c4lif0rni4">
+                        <input id="login-username" type="text" placeholder="Username" value="FdezRomero"/>
+                        <input id="login-password" type="password" placeholder="Password" value="c4lif0rni4"/>
                     </li>
                     <li>
                         <a id="login-btn" href="#" class="button big orange">Login</a>
@@ -90,9 +94,10 @@
     </section>
 
     <section id="commit-detail">
-        <header class="extended" data-title="Commit Detail"><span class="title">Commit Detail</span>
-            <nav class="onleft">
-                <a href="#back" data-target="section" data-icon="left" class="button"></a>
+        <header class="extended" data-title=""><span class="title"></span>
+            <nav>
+                <a id="commit-detail-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="commit-detail-refresh" href="#" data-icon="refresh" class="button onright"></a>
             </nav>
             <nav class="groupbar">
                 <a href="#commit-detail-info" data-target="article" class="current">COMMIT INFO</a>
@@ -127,23 +132,74 @@
         <article id="commit-detail-comments" class="list scrollable"></article>
     </section>
 
-    <section id="commit-source">
-        <header data-title="">
-            <nav class="onleft">
-                <a href="#" data-target="section" data-icon="left" class="button"></a>
+    <section id="issue-detail">
+        <header class="extended" data-title=""><span class="title"></span>
+            <nav>
+                <a id="issue-detail-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="issue-detail-refresh" href="#" data-icon="refresh" class="button onright"></a>
+            </nav>
+            <nav class="groupbar">
+                <a href="#issue-detail-info" data-target="article" class="current">ISSUE INFO</a>
+                <a href="#issue-detail-comments" data-target="article">COMMENTS</a>
             </nav>
         </header>
-        <article id="commit-source-files" class="list scrollable"></article>
+        <article id="issue-detail-info" class="current list scrollable"></article>
+        <article id="issue-detail-comments" class="list scrollable"></article>
+    </section>
+
+    <section id="compose-issue">
+        <header data-title="New Issue">
+            <nav>
+                <a id="compose-issue-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <!--<a id="compose-issue-refresh" href="#" data-icon="refresh" class="button onright"></a>-->
+            </nav>
+        </header>
+        <article id="compose-issue-form" class="current list scrollable">
+            <ul class="form">
+                <li>
+                    <label>Issue title</label>
+                        <input id="compose-issue-title" type="text" placeholder=""/>
+                    <label>Status</label>
+                        <label class="select"><select id="compose-issue-status" class="custom">
+                            <option value="new">New</option>
+                            <option value="open">Open</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="on hold">On hold</option>
+                            <option value="invalid">Invalid</option>
+                            <option value="duplicate">Duplicate</option>
+                            <option value="wontfix">Won't fix</option>
+                        </select></label>
+                    <label>Priority</label>
+                        <label class="select"><select id="compose-issue-priority" class="custom">
+                            <option value="trivial">Trivial</option>
+                            <option value="minor">Minor</option>
+                            <option value="mayor">Mayor</option>
+                            <option value="critical">Critical</option>
+                            <option value="blocker">Blocker</option>
+                        </select></label>
+                    <label>Kind</label>
+                        <label class="select"><select id="compose-issue-kind" class="custom">
+                            <option value="bug">Bug</option>
+                            <option value="enhancement">Enhancement</option>
+                            <option value="proposal">Proposal</option>
+                            <option value="task">Task</option>
+                        </select></label>
+                    <label>Description</label>
+                        <textarea id="compose-issue-msg" placeholder=""></textarea>
+                </li>
+            </ul>
+        </article>
     </section>
 
     <!-- LungoJS (Development mode) -->
-    <!--<script src="lungo.js/QuoJS.js"></script>
+    <script src="lungo.js/QuoJS.js"></script>
     <script src="lungo.js/iscroll-lite.js"></script>
-    <script src="lungo.js/lungo-1.2.js"></script>-->
+    <script src="lungo.js/lungo-1.2.js"></script>
     <!-- LungoJS (Production mode) -->
-    <script src="lungo.js/lungo-1.2.packed.js"></script>
+    <!--<script src="lungo.js/lungo-1.2.packed.js"></script>-->
     <!-- LungoJS - Sandbox App -->
     <script src="app/app.js"></script>
+    <script src="app/utils.js"></script>
     <script src="app/data.js"></script>
     <script src="app/events.js"></script>
     <script src="app/base64.js"></script>

@@ -12,6 +12,7 @@
 .app {
   background: #000000;
   font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 /* @group <header> & <footer> & <article> */
 header {

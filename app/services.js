@@ -88,6 +88,13 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var RepoIssues = function(user_repo, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', null, function(response) {
+			//console.error(response);
+			App.View.RepoIssues(response.issues);
+		});
+	};
+
 	//========== DETAIL FUNCTIONS ==========//
 
 	var CommitDetail = function(user_repo, commit, method) {
@@ -99,8 +106,22 @@ App.Services = (function(lng, app, undefined) {
 
 	var CommitComments = function(user_repo, commit, method) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', null, function(response) {
-			console.error(response);
-			//App.View.CommitComments(response);
+			//console.error(response);
+			App.View.CommitComments(response);
+		});
+	};
+
+	var IssueDetail = function(user_repo, issue, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
+			//console.error(response);
+			App.View.IssueDetail(response);
+		});
+	};
+
+	var IssueComments = function(user_repo, issue, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', null, function(response) {
+			//console.error(response);
+			App.View.IssueComments(response);
 		});
 	};
 
@@ -110,11 +131,14 @@ App.Services = (function(lng, app, undefined) {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
 		RepoList: RepoList,
-		RepoSource: RepoSource,
 		RepoRecent: RepoRecent,
 		RepoCommits: RepoCommits,
+		RepoIssues: RepoIssues,
+		RepoSource: RepoSource,
 		CommitDetail: CommitDetail,
-		CommitComments: CommitComments
+		CommitComments: CommitComments,
+		IssueDetail: IssueDetail,
+		IssueComments: IssueComments
 	};
 
 })(LUNGO, App);
