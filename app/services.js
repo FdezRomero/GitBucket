@@ -4,13 +4,13 @@ App.Services = (function(lng, app, undefined) {
 
 	var SetBasicAuth = function() {
 		var token = lng.Data.Storage.persistent('token');
-		$$.ajaxSettings.headers = {'Authorization': 'Basic ' + token}; // Store in persistent storage
+		lng.Service.Settings.headers = {'Authorization': 'Basic ' + token};
 	};
 	
 	var CheckLogin = function() {
-		$$.ajaxSettings.async = false;
+		lng.Service.Settings.async = false;
 		var response = lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(){});
-		$$.ajaxSettings.async = true;
+		lng.Service.Settings.async = true;
 		return response.user.username;
 	};
 
@@ -54,7 +54,8 @@ App.Services = (function(lng, app, undefined) {
 
 	var RepoSource = function(user_repo, dir, method) {
 		var path = (dir) ? dir + '/' : '';
-		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/master/'+path, null, function(response) {
+		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/'+scm+'/'+path, null, function(response) {
 			//console.error(response);
 
 			// Normalize directory data to file structure
@@ -65,12 +66,12 @@ App.Services = (function(lng, app, undefined) {
 				// Add path to go back if needed
 				//console.error(path);
 				if (path.length > 0) {
-					var obj = new Object({'path': 'Back', 'type': 'back', 'size': null, 'revision': null, 'icon': 'left mini'});
+					var obj = new Object({path: 'Back', type: 'back', size: null, revision: null, icon: 'left mini'});
 					elements.push(obj);
 				}
 				// Add the directories
 				for (var i = 0; i < dirsArray.length; i++) {
-					var obj = new Object({'path': dirsArray[i], 'type': 'dir', 'size': null, 'revision': null, 'icon': 'folder mini'});
+					var obj = new Object({path: dirsArray[i], type: 'dir', size: null, revision: null, icon: 'folder mini'});
 					elements.push(obj);
 				}
 				// Add the files
@@ -93,6 +94,10 @@ App.Services = (function(lng, app, undefined) {
 			//console.error(response);
 			App.View.RepoIssues(response.issues);
 		});
+		// Get & store for <select>'s
+		IssueComponents(user_repo);
+		IssueMilestones(user_repo);
+		IssueVersions(user_repo);
 	};
 
 	//========== DETAIL FUNCTIONS ==========//
@@ -125,6 +130,80 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var IssueComponents = function(user_repo, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/components/', null, function(response) {
+			//console.error(response);
+			App.Data.IssueComponents(response);
+		});
+	};
+
+	var IssueMilestones = function(user_repo, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/milestones/', null, function(response) {
+			//console.error(response);
+			App.Data.IssueMilestones(response);
+		});
+	};
+
+	var IssueVersions = function(user_repo, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/versions/', null, function(response) {
+			//console.error(response);
+			App.Data.IssueVersions(response);
+		});
+	};
+
+	var PostIssue = function(user_repo, method) {
+		
+		var data = new Object({
+			title: lng.dom('#compose-issue-title').val(),
+			content: lng.dom('#compose-issue-msg').val(),
+			component: lng.dom('#compose-issue-component').val(),
+			milestone: lng.dom('#compose-issue-milestone').val(),
+			version: lng.dom('#compose-issue-version').val(),
+			//'responsible: null, // TODO: get a list of repo users
+			priority: lng.dom('#compose-issue-priority').val(),
+			status: lng.dom('#compose-issue-status').val(),
+			kind: lng.dom('#compose-issue-kind').val()
+		});
+		//console.error(data);
+
+		var serial_data = App.Utils.Serialize(data);
+		if (data.title && data.content) {
+			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', serial_data, function(response) {
+				console.error(response);
+				RepoIssues(user_repo, method);
+				alert('Issue #'+response.local_id+' was created');
+				lng.Router.back();
+			});
+		} else {
+			alert('The issue must have a title and a description.');
+		}
+	};
+
+	// Populates the issue composer with previous data
+	var LoadIssue = function(user_repo, issue, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
+			//console.error(response);
+			App.View.LoadIssue(response);
+		});
+	};
+
+	var UpdateIssue = function(user_repo, issue, method) {
+		$$.ajax({type: "PUT", url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
+        	data: data, dataType: 'json', contentType: "application/x-www-form-urlencoded", success: function(response) {
+        		// Do stuff
+        	}
+		});
+	};
+
+	/*$$.ajax({
+        type: "PUT", // GET, POST, PUT, DELETE
+        url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
+        data: data,
+        dataType: 'json',
+        contentType: "application/x-www-form-urlencoded", //defaults to null
+        success: success // function(response)...
+      });*/
+
 	return {
 		SetBasicAuth: SetBasicAuth,
 		CheckLogin: CheckLogin,
@@ -138,7 +217,10 @@ App.Services = (function(lng, app, undefined) {
 		CommitDetail: CommitDetail,
 		CommitComments: CommitComments,
 		IssueDetail: IssueDetail,
-		IssueComments: IssueComments
+		IssueComments: IssueComments,
+		PostIssue: PostIssue,
+		LoadIssue: LoadIssue,
+		UpdateIssue: UpdateIssue
 	};
 
 })(LUNGO, App);

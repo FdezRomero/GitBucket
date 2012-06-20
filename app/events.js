@@ -57,17 +57,20 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.RepoList();
 	});
 
+	// Choose a Repository
 	lng.dom('aside#aside-menu a').tap(function() {
 		
 		App.Data.ClearSessionStorage();
-		var title = lng.dom(this).data('title');
-		App.Data.CurrentRepo(title);
+		var user_repo = lng.dom(this).data('title');
+		App.Data.CurrentRepo(user_repo);
+		var type = lng.dom(this).data('scm');
+		App.Data.CurrentRepoType(type);
 
-		lng.Data.Storage.session('current_title', title);
-		App.View.UpdateTitle(title);
+		lng.Data.Storage.session('current_title', user_repo);
+		App.View.UpdateTitle(user_repo);
 
 		if (lng.dom(this).parent().attr('id') == 'aside-repos') {
-			UpdateRepo(title, 'cache');
+			UpdateRepo(user_repo, 'cache');
 			ShowFooter();
 		} else {
 			HideFooter();
@@ -80,7 +83,6 @@ App.Events = (function(lng, app, undefined) {
 		UpdateRepo(user_repo, 'refresh');
 	});
 
-	// TODO: Something throws SYNTAX_ERR: DOM Exception 12
 	lng.dom('#repo-commits li, #repo-recent li').tap(function() {
 		if (lng.dom(this).data('title')) {
 			var user_repo = App.Data.CurrentRepo();
@@ -144,7 +146,29 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#compose-issue-btn').tap(function() {
-		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 2 -- line height
+		App.View.RefreshIssueSelects();
+		App.View.NewIssue();
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 3 -- line height
+		lng.Router.section('compose-issue');
+	});
+
+	lng.dom('#update-issue-btn').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		var issue = App.Data.CurrentIssue(); 
+		App.View.RefreshIssueSelects();
+		App.Services.LoadIssue(user_repo, issue);
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 3 -- line height
+		lng.Router.section('compose-issue');
+	});
+
+	lng.dom('#compose-issue-send').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		var issue = App.Data.CurrentIssue();
+		var action = lng.dom(this).data('action');
+		switch (action) {
+			case 'new': App.Services.PostIssue(user_repo);
+			case 'update': App.Services.UpdateIssue(user_repo, issue);
+		}
 	});
 
 	/*lng.Data.Sql.select('pictures', null, function(result) {
@@ -156,7 +180,7 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});*/
 
-	//========== UTILITIES ==========//
+	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
 		App.Services.RepoRecent(user_repo, method);

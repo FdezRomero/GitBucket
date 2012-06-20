@@ -2,22 +2,10 @@ App.View = (function(lng, app, undefined) {
 		
 	//===== TEMPLATES =====//
 
-	lng.View.Template.create('repolist-tmpl',
-		'<a href="#" data-target="article" data-icon="folder" data-label="{{name}}" data-repo="{{owner}}/{{slug}}"></a>'
-	);
-
 	lng.View.Template.create('recent-tmpl',
 		'<li>\
 			<div class="onright">{{utc_created_on}}</div>\
 			<a href="#"><span class="icon check mini"></span>{{event}}: {{description}}</a>\
-		</li>'
-	);
-
-	lng.View.Template.create('commits-tmpl',
-		'<li data-title="{{node}}">\
-			<div class="onright">{{utctimestamp}}</div>\
-			<span class="check"></span><a href="#">{{branch}}/{{node}}</a>\
-			<small>{{message}}</small>\
 		</li>'
 	);
 
@@ -33,60 +21,6 @@ App.View = (function(lng, app, undefined) {
 				<h1 class="icon" style="font-size:100pt">H</h1>\
 				<p>&nbsp;</p><h2>There are no '+type+'</h2></div>';
 		return message;
-	};
-
-	var TimeAgo = function(timestamp) {
-		var time_ago = (timestamp) ? moment(timestamp, 'YYYY-MM-DD HH:mm:ssZZ').fromNow() : '';
-		return time_ago;
-	};
-
-	var FileSize = function(size) {
-		var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-		for(var i = 0; size >= 1024; i++) {
-			size /= 1024;
-		}
-		return size.toFixed(1) + ' ' + units[i];
-	};
-
-	var GetIcon = function(event) {
-		switch(event) {
-			case 'added': return 'add';
-			case 'commit': return 'check';
-			case 'create': return 'add mini';
-			case 'cset_comment_created': return 'message mini';
-			case 'duplicate': return 'files';
-			case 'invalid': return 'close';
-			case 'issue_comment': return 'message mini';
-			case 'issue_update': return 'refresh mini';
-			case 'modified': return 'edit';
-			case 'new': return 'add';
-			case 'on hold': return 'clock';
-			case 'open': return 'warning';
-			case 'removed': return 'remove';
-			case 'resolved': return 'check';
-			case 'report_issue': return 'warning mini';
-			case 'stop_follow_issue': return 'close mini';
-			case 'wontfix': return 'close';
-		}
-	};
-
-	var Capitalize = function(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	};
-
-	// TODO: Find a working encoder (this one cuts the 1st letter)
-	var EncodeHTML = function(str) {
-		/*var aStr = str.split(''), i = aStr.length, aRet = [];
-		while (--i) {
-			var iC = aStr[i].charCodeAt();
-			if (iC < 65 || iC > 127 || (iC>90 && iC<97)) {
-				aRet.push('&#'+iC+';');
-			} else {
-				aRet.push(aStr[i]);
-			}
-		}
-		return aRet.reverse().join('');*/
-		return str;
 	};
 
 	//========== USER VIEWS ==========//
@@ -117,8 +51,8 @@ App.View = (function(lng, app, undefined) {
 		for (var i = 0; i < repos.length; i++) {
 			//console.error(repos);
 			lng.dom('#aside-repos').append('<a href="#repo-recent" data-target="article" data-icon="download"\
-				data-label="'+ repos[i]['name'] +'" data-title="'+ repos[i]['owner'] +'/'+ repos[i]['slug'] +'">\
-				<span class="icon download"></span><abbr>'+ repos[i]['name'] +'</abbr></a>');
+				data-label="'+repos[i]['name']+'" data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'"\
+				data-scm="'+repos[i]['scm']+'"><span class="icon download"></span><abbr>'+repos[i]['name']+'</abbr></a>');
 		}
 	};
 	
@@ -127,13 +61,13 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#repo-recent').empty();
 		if (events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
-				var icon = GetIcon(events[i]['event']);
-				var time_ago = TimeAgo(events[i]['utc_created_on']);
+				var icon = App.Utils.GetIcon(events[i]['event']);
+				var time_ago = App.Utils.TimeAgo(events[i]['utc_created_on']);
 				var node = (events[i]['node']) ? events[i]['node'] : '';
 				var description = (events[i]['description']) ? ': '+events[i]['description'] : '';
 				lng.dom('#repo-recent').append('<li data-title="'+node+'"><a href="#">\
-					<div class="onright">'+time_ago+'</div>\
-					<span class="icon '+icon+'"></span>'+Capitalize(events[i]['event'])+description+'</a></li>');
+					<div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
+					'+App.Utils.Capitalize(events[i]['event'])+description+'</a></li>');
 			}
 		} else {
 			lng.dom('#repo-recent').html(NoElements('events'));
@@ -145,7 +79,7 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#repo-source').empty();
 		if (source.length > 0) {
 			for (var i = 0; i < source.length; i++) {
-				var size = (source[i]['size']) ? FileSize(source[i]['size']) : '';
+				var size = (source[i]['size']) ? App.Utils.FileSize(source[i]['size']) : '';
 				var revision = (source[i]['revision']) ? source[i]['revision'] : '';
 				lng.dom('#repo-source').append('<li data-title="'+source[i]['path']+'" data-type="'+source[i]['type']+'">\
 					<a href="#"><div class="onright">'+size+'</div>\
@@ -163,7 +97,7 @@ App.View = (function(lng, app, undefined) {
 		if (commits.length > 0) {
 			for (var i = commits.length-1; i >= 0; i--) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
-				var time_ago = moment(commits[i]['utctimestamp'], 'YYYY-MM-DD HH:mm:ssZZ').fromNow();
+				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
 				lng.dom('#repo-commits').append('<li data-title="'+commits[i]['node']+'">\
 					<a href="#"><div class="onright">'+time_ago+'</div>\
 					<span class="icon check"></span>'+commits[i]['node']+branch+'\
@@ -182,8 +116,8 @@ App.View = (function(lng, app, undefined) {
 
 		if (issues.length > 0) {
 			for (var i = 0; i < issues.length; i++) {
-				var time_ago = moment(issues[i]['utc_last_updated'], 'YYYY-MM-DD HH:mm:ssZZ').fromNow();
-				var icon = GetIcon(issues[i]['status']);
+				var time_ago = App.Utils.TimeAgo(issues[i]['utc_last_updated']);
+				var icon = App.Utils.GetIcon(issues[i]['status']);
 				lng.dom('#repo-issues').append('<li data-title="'+issues[i]['local_id']+'">\
 					<a href="#"><div class="onright">'+time_ago+'</div>\
 					<span class="icon '+icon+'"></span>#'+issues[i]['local_id']+': '+issues[i]['title']+'\
@@ -203,7 +137,7 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#commit-detail header span.title').html(detail.node);
 
 		// Info tab
-		var formatted_date = moment(detail.utctimestamp, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		var formatted_date = App.Utils.FormatDate(detail.utctimestamp);
 		var branch = (detail.branch) ? detail.branch : '(none)';
 		lng.dom('#commit-detail-node').html(detail.node);
 		lng.dom('#commit-detail-branch').html(branch);
@@ -215,9 +149,10 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#commit-detail-files').empty();
 		if (detail.files.length > 0) {
 			for (var i = 0; i < detail.files.length; i++) {
-				var icon = GetIcon(detail.files[i]['type']);
+				var icon = App.Utils.GetIcon(detail.files[i]['type']);
 				lng.dom('#commit-detail-files').append('<li><span class="icon '+icon+'"></span>\
-					'+detail.files[i]['file']+'<small>'+Capitalize(detail.files[i]['type'])+'</small></a></li>');
+					'+detail.files[i]['file']+'<small>'+App.Utils.Capitalize(detail.files[i]['type'])+'\
+					</small></a></li>');
 			}
 		} else {
 			lng.dom('#commit-detail-files').html(NoElements('files'));
@@ -233,7 +168,7 @@ App.View = (function(lng, app, undefined) {
 		if (comments.length > 0) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
-					var time_ago = TimeAgo(comments[i]['utc_created_on']);
+					var time_ago = App.Utils.TimeAgo(comments[i]['utc_created_on']);
 					lng.dom('#commit-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['user_avatar_url']+'" class="icon"/>\
 						<label>'+comments[i]['username']+'</label><br/>'+comments[i]['content']+'</li>');
@@ -258,13 +193,13 @@ App.View = (function(lng, app, undefined) {
 			'+detail.reported_by.username;
 		var responsible = (detail.responsible) ? '<img src="'+detail.responsible.avatar+'" class="icon" style="float:none"/>\
 			'+detail.responsible.username : null;
-		var created_on = moment(detail.utc_created_on, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
-		var last_updated = moment(detail.utc_last_updated, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		var created_on = App.Utils.FormatDate(detail.utc_created_on);
+		var last_updated = App.Utils.FormatDate(detail.utc_last_updated);
 		
 		// Build our object with all the properties and innerHTMLs
-		var obj = {'Issue ID':'#'+detail.local_id,'Title':detail.title,'Status':Capitalize(detail.status),
-			'Priority':Capitalize(detail.priority),'Reported by':reported_by,'Responsible':responsible,
-			'Created on':created_on,'Last updated':last_updated,'Kind':Capitalize(detail.metadata.kind),
+		var obj = {'Issue ID':'#'+detail.local_id,'Title':detail.title,'Status':App.Utils.Capitalize(detail.status),
+			'Priority':App.Utils.Capitalize(detail.priority),'Reported by':reported_by,'Responsible':responsible,
+			'Created on':created_on,'Last updated':last_updated,'Kind':App.Utils.Capitalize(detail.metadata.kind),
 			'Component':detail.metadata.component,'Milestone':detail.metadata.milestone,
 			'Version':detail.metadata.version,'Description':'<br/>'+detail.content};
 
@@ -285,7 +220,7 @@ App.View = (function(lng, app, undefined) {
 		if (comments.length > 0) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
-					var time_ago = TimeAgo(comments[i]['utc_updated_on']);
+					var time_ago = App.Utils.TimeAgo(comments[i]['utc_updated_on']);
 					lng.dom('#issue-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['author_info']['avatar']+'" class="icon"/>\
 						<label>'+comments[i]['author_info']['username']+'</label><br/>'+comments[i]['content']+'</li>');
@@ -296,6 +231,48 @@ App.View = (function(lng, app, undefined) {
 		if (num_comments === 0) {
 			lng.dom('#issue-detail-comments').html(NoElements('comments'));
 		}
+	};
+
+	var RefreshIssueSelects = function() {
+		var components = App.Data.IssueComponents();
+		var milestones = App.Data.IssueMilestones();
+		var versions = App.Data.IssueVersions();
+
+		// Add the empty options
+		lng.dom('#compose-issue-component').html('<option value="" selected="selected">(None)</option>');
+		lng.dom('#compose-issue-milestone').html('<option value="" selected="selected">(None)</option>');
+		lng.dom('#compose-issue-version').html('<option value="" selected="selected">(None)</option>');
+
+		for (var i = 0; i < components.length; i++) {
+			lng.dom('#compose-issue-component').append('<option value="'+components[i].name+'">'+components[i].name+'</option>');
+		}
+		for (var i = 0; i < milestones.length; i++) {
+			lng.dom('#compose-issue-milestone').append('<option value="'+milestones[i].name+'">'+milestones[i].name+'</option>');
+		}
+		for (var i = 0; i < versions.length; i++) {
+			lng.dom('#compose-issue-version').append('<option value="'+versions[i].name+'">'+versions[i].name+'</option>');
+		}
+	};
+
+	var NewIssue = function () {
+		lng.dom('#compose-issue-form').data('title', 'New Issue');
+		lng.dom('#compose-issue-form header span.title').html('New Issue');
+		lng.dom('#compose-issue-send').data('action', 'new');
+	};
+
+	var LoadIssue = function(detail) {
+		lng.dom('#compose-issue-form').data('title', 'Update #'+detail.local_id);
+		lng.dom('#compose-issue-form header span.title').html('Update #'+detail.local_id);
+		lng.dom('#compose-issue-send').data('action', 'update');
+
+		lng.dom('#compose-issue-title').val(detail.title);
+		lng.dom('#compose-issue-status').val(detail.status);
+		lng.dom('#compose-issue-priority').val(detail.priority);
+		lng.dom('#compose-issue-kind').val(detail.metadata.kind);
+		lng.dom('#compose-issue-component').val(detail.metadata.component);
+		lng.dom('#compose-issue-milestone').val(detail.metadata.milestone);
+		lng.dom('#compose-issue-version').val(detail.metadata.version);
+		lng.dom('#compose-issue-msg').val(detail.content);
 	};
 
 	return {
@@ -310,7 +287,10 @@ App.View = (function(lng, app, undefined) {
 		CommitDetail: CommitDetail,
 		CommitComments: CommitComments,
 		IssueDetail: IssueDetail,
-		IssueComments: IssueComments
+		IssueComments: IssueComments,
+		RefreshIssueSelects: RefreshIssueSelects,
+		NewIssue: NewIssue,
+		LoadIssue: LoadIssue
 	};
 
 })(LUNGO, App);

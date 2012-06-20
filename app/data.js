@@ -46,6 +46,17 @@ App.Data = (function(lng, app, undefined) {
 		}
 	};
 
+	// Stores and provides the current repo SCM in view
+	var CurrentRepoType = function(type) {
+		if (type) {
+			// Store the repo SCM provided
+			lng.Data.Storage.session('current_scm', type);
+		} else {
+			// Return the current SCM repo
+			return lng.Data.Storage.session('current_scm');
+		}
+	};
+
 	// Stores and provides the current commit in view
 	var CurrentCommit = function(commit) {
 		if (commit) {
@@ -54,17 +65,6 @@ App.Data = (function(lng, app, undefined) {
 		} else {
 			// Return the current commit
 			return lng.Data.Storage.session('current_commit');
-		}
-	};
-
-	// Stores and provides the current issue in view
-	var CurrentIssue = function(issue) {
-		if (issue) {
-			// Store the issue provided
-			lng.Data.Storage.session('current_issue', issue);
-		} else {
-			// Return the current issue
-			return lng.Data.Storage.session('current_issue');
 		}
 	};
 
@@ -90,15 +90,63 @@ App.Data = (function(lng, app, undefined) {
 		lng.Data.Storage.session('path_history', path_history);
 		return path_history.join('/'); // Returns previous URL
 	};
+
+	// Stores and provides the current issue in view
+	var CurrentIssue = function(issue) {
+		if (issue) {
+			// Store the issue provided
+			lng.Data.Storage.session('current_issue', issue);
+		} else {
+			// Return the current issue
+			return lng.Data.Storage.session('current_issue');
+		}
+	};
+
+	// Stores and provides the Issue Components
+	var IssueComponents = function(components) {
+		if (components) {
+			// Store the components provided
+			lng.Data.Storage.session('issue_components', components);
+		} else {
+			// Return the current components
+			return lng.Data.Storage.session('issue_components');
+		}
+	};
+
+	// Stores and provides the Issue Milestones
+	var IssueMilestones = function(milestones) {
+		if (milestones) {
+			// Store the milestones provided
+			lng.Data.Storage.session('issue_milestones', milestones);
+		} else {
+			// Return the current milestones
+			return lng.Data.Storage.session('issue_milestones');
+		}
+	};
+
+	// Stores and provides the Issue Versions
+	var IssueVersions = function(versions) {
+		if (versions) {
+			// Store the versions provided
+			lng.Data.Storage.session('issue_versions', versions);
+		} else {
+			// Return the current versions
+			return lng.Data.Storage.session('issue_versions');
+		}
+	};
 	
 	return {
 		//cachePictures: cachePictures
 		ClearSessionStorage: ClearSessionStorage,
 		CurrentRepo: CurrentRepo,
+		CurrentRepoType: CurrentRepoType,
 		CurrentCommit: CurrentCommit,
-		CurrentIssue: CurrentIssue,
 		StorePath: StorePath,
-		PathBack: PathBack
+		PathBack: PathBack,
+		CurrentIssue: CurrentIssue,
+		IssueComponents: IssueComponents,
+		IssueMilestones: IssueMilestones,
+		IssueVersions: IssueVersions
 	};
 
 })(LUNGO, App);

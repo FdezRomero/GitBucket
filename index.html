@@ -34,7 +34,7 @@
             <a href="#aside-menu" data-target="aside" data-icon="_left" class="button onleft">
                 <i class="icon-reorder"></i>
             </a>
-            <a id="compose-issue-btn" href="#compose-issue" data-target="section" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
+            <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
             <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
         </header>
         
@@ -136,6 +136,7 @@
         <header class="extended" data-title=""><span class="title"></span>
             <nav>
                 <a id="issue-detail-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="update-issue-btn" href="#" data-article="issue-detail-info" data-icon="pencil" class="blue button onright"></a>
                 <a id="issue-detail-refresh" href="#" data-icon="refresh" class="button onright"></a>
             </nav>
             <nav class="groupbar">
@@ -148,10 +149,9 @@
     </section>
 
     <section id="compose-issue">
-        <header data-title="New Issue">
-            <nav>
-                <a id="compose-issue-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
-                <!--<a id="compose-issue-refresh" href="#" data-icon="refresh" class="button onright"></a>-->
+        <header data-title="New Issue"><span class="title">New Issue</span>
+            <nav class="onleft">
+                <a id="compose-issue-back" href="#back" data-target="section" data-icon="left" class="button"></a>
             </nav>
         </header>
         <article id="compose-issue-form" class="current list scrollable">
@@ -172,20 +172,39 @@
                     <label>Priority</label>
                         <label class="select"><select id="compose-issue-priority" class="custom">
                             <option value="trivial">Trivial</option>
-                            <option value="minor">Minor</option>
-                            <option value="mayor">Mayor</option>
+                            <option value="minor" selected="selected">Minor</option>
+                            <option value="major">Major</option>
                             <option value="critical">Critical</option>
                             <option value="blocker">Blocker</option>
                         </select></label>
                     <label>Kind</label>
                         <label class="select"><select id="compose-issue-kind" class="custom">
-                            <option value="bug">Bug</option>
+                            <option value="bug" selected="selected">Bug</option>
                             <option value="enhancement">Enhancement</option>
                             <option value="proposal">Proposal</option>
                             <option value="task">Task</option>
                         </select></label>
+                </li>
+                <li>
+                    <label>Component</label>
+                        <label class="select"><select id="compose-issue-component" class="custom">
+                            <option value="" selected="selected">(None)</option>
+                        </select></label>
+                    <label>Milestone</label>
+                        <label class="select"><select id="compose-issue-milestone" class="custom">
+                            <option value="" selected="selected">(None)</option>
+                        </select></label>
+                    <label>Version</label>
+                        <label class="select"><select id="compose-issue-version" class="custom">
+                            <option value="" selected="selected">(None)</option>
+                        </select></label>
+                </li>
+                <li>
                     <label>Description</label>
                         <textarea id="compose-issue-msg" placeholder=""></textarea>
+                </li>
+                <li>
+                    <a id="compose-issue-send" href="#" data-action="new" class="button big">Post Issue</a>
                 </li>
             </ul>
         </article>
