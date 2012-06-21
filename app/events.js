@@ -130,7 +130,6 @@ App.Events = (function(lng, app, undefined) {
 		var user_repo = App.Data.CurrentRepo();
 		var commit = App.Data.CurrentCommit();
 		App.Services.CommitDetail(user_repo, commit);
-		console.log('hola');
 		App.Services.PostCommitComments(user_repo, commit);
 		App.Services.CommitComments(user_repo, commit);
 	});
