@@ -116,6 +116,24 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var PostCommitComments = function(user_repo, commit, method) {
+		var data = new Object({
+			//TODO: Get comment from UI - content: 'Testing if the comment is posted in Bitbucket'
+		});
+		
+		var serial_data = App.Utils.Serialize(data);
+		
+		if(data.content){
+			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', serial_data, function(response) {
+				alert('Your comment have been posted successfully.');
+				//Reload Comments
+				CommitComments(user_repo,commit,method);
+			});
+		}else{
+			alert('You have to type a comment.');
+		}
+	};
+
 	var IssueDetail = function(user_repo, issue, method) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
 			//console.error(response);
@@ -212,6 +230,7 @@ App.Services = (function(lng, app, undefined) {
 		RepoList: RepoList,
 		RepoRecent: RepoRecent,
 		RepoCommits: RepoCommits,
+		PostCommitComments:PostCommitComments,
 		RepoIssues: RepoIssues,
 		RepoSource: RepoSource,
 		CommitDetail: CommitDetail,
