@@ -68,6 +68,14 @@ App.Data = (function(lng, app, undefined) {
 		}
 	};
 
+	var CurrentCommitDesc = function(description) {
+		if (description) {
+			lng.Data.Storage.session('current_commit_desc', description);
+		} else {
+			return lng.Data.Storage.session('current_commit_desc');
+		}
+	};
+
 	// Add the current path to the source browsing history
 	var StorePath = function(path) {
 		if (lng.Data.Storage.session('path_history')) {
@@ -99,6 +107,14 @@ App.Data = (function(lng, app, undefined) {
 		} else {
 			// Return the current issue
 			return lng.Data.Storage.session('current_issue');
+		}
+	};
+
+	var CurrentIssueDesc = function(description) {
+		if (description) {
+			lng.Data.Storage.session('current_issue_desc', description);
+		} else {
+			return lng.Data.Storage.session('current_issue_desc');
 		}
 	};
 
@@ -141,9 +157,11 @@ App.Data = (function(lng, app, undefined) {
 		CurrentRepo: CurrentRepo,
 		CurrentRepoType: CurrentRepoType,
 		CurrentCommit: CurrentCommit,
+		CurrentCommitDesc: CurrentCommitDesc,
 		StorePath: StorePath,
 		PathBack: PathBack,
 		CurrentIssue: CurrentIssue,
+		CurrentIssueDesc: CurrentIssueDesc,
 		IssueComponents: IssueComponents,
 		IssueMilestones: IssueMilestones,
 		IssueVersions: IssueVersions

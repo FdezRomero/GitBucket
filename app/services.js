@@ -130,6 +130,8 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	//========== ISSUE POSTING ==========//
+
 	var IssueComponents = function(user_repo, method) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/components/', null, function(response) {
 			//console.error(response);
@@ -169,9 +171,10 @@ App.Services = (function(lng, app, undefined) {
 		var serial_data = App.Utils.Serialize(data);
 		if (data.title && data.content) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', serial_data, function(response) {
-				console.error(response);
+				//console.error(response);
 				RepoIssues(user_repo, method);
 				alert('Issue #'+response.local_id+' was created');
+				App.View.ResetForm('#compose-issue-form');
 				lng.Router.back();
 			});
 		} else {
@@ -188,21 +191,69 @@ App.Services = (function(lng, app, undefined) {
 	};
 
 	var UpdateIssue = function(user_repo, issue, method) {
+		
+		var data = new Object({
+			title: lng.dom('#compose-issue-title').val(),
+			content: lng.dom('#compose-issue-msg').val(),
+			component: lng.dom('#compose-issue-component').val(),
+			milestone: lng.dom('#compose-issue-milestone').val(),
+			version: lng.dom('#compose-issue-version').val(),
+			//'responsible: null, // TODO: get a list of repo users
+			priority: lng.dom('#compose-issue-priority').val(),
+			status: lng.dom('#compose-issue-status').val(),
+			kind: lng.dom('#compose-issue-kind').val()
+		});
+		var serial_data = App.Utils.Serialize(data);
+
 		$$.ajax({type: "PUT", url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
-        	data: data, dataType: 'json', contentType: "application/x-www-form-urlencoded", success: function(response) {
-        		// Do stuff
-        	}
+			data: serial_data, dataType: 'json', contentType: "application/x-www-form-urlencoded", success: function(response) {
+				//console.error(response);
+				IssueDetail(user_repo, issue); // Update the details before going back
+				RepoIssues(user_repo, method); // Just in case we changed the title
+				alert('Issue #'+response.local_id+' updated');
+				App.View.ResetForm('#compose-issue-form');
+				lng.Router.back();
+			}
 		});
 	};
 
-	/*$$.ajax({
-        type: "PUT", // GET, POST, PUT, DELETE
-        url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
-        data: data,
-        dataType: 'json',
-        contentType: "application/x-www-form-urlencoded", //defaults to null
-        success: success // function(response)...
-      });*/
+	//========== COMMENTING COMMITS & ISSUES ==========//
+
+	var PostCommitComment = function(user_repo, commit, method) {
+		
+		var data = new Object({content: lng.dom('#compose-comment-msg').val()});
+		var serial_data = App.Utils.Serialize(data);
+		
+		if (data.content) {
+			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', serial_data, function(response) {
+				//console.error(response);
+				CommitComments(user_repo, commit); // Reload Comments
+				alert('Your comment has been posted');
+				App.View.ResetForm('#compose-comment-form');
+				lng.Router.back();
+			});
+		} else {
+			alert('You must type a comment');
+		}
+	};
+
+	var PostIssueComment = function(user_repo, issue, method) {
+		
+		var data = new Object({content: lng.dom('#compose-comment-msg').val()});
+		var serial_data = App.Utils.Serialize(data);
+		
+		if (data.content) {
+			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', serial_data, function(response) {
+				//console.error(response);
+				IssueComments(user_repo, issue); // Reload Comments
+				alert('Your comment has been posted');
+				App.View.ResetForm('#compose-comment-form');
+				lng.Router.back();
+			});
+		} else {
+			alert('You must type a comment');
+		}
+	};
 
 	return {
 		SetBasicAuth: SetBasicAuth,
@@ -220,7 +271,9 @@ App.Services = (function(lng, app, undefined) {
 		IssueComments: IssueComments,
 		PostIssue: PostIssue,
 		LoadIssue: LoadIssue,
-		UpdateIssue: UpdateIssue
+		UpdateIssue: UpdateIssue,
+		PostCommitComment: PostCommitComment,
+		PostIssueComment: PostIssueComment
 	};
 
 })(LUNGO, App);

@@ -81,8 +81,8 @@
                 <ul class="form">
                     <!--<li class="anchor" data-icon="user">Login to BitBucket</li>-->
                     <li>
-                        <input id="login-username" type="text" placeholder="Username" value="FdezRomero"/>
-                        <input id="login-password" type="password" placeholder="Password" value="c4lif0rni4"/>
+                        <input id="login-username" type="text" placeholder="Username" value=""/>
+                        <input id="login-password" type="password" placeholder="Password" value=""/>
                     </li>
                     <li>
                         <a id="login-btn" href="#" class="button big orange">Login</a>
@@ -97,6 +97,7 @@
         <header class="extended" data-title=""><span class="title"></span>
             <nav>
                 <a id="commit-detail-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="commit-comment-btn" href="#" data-article="commit-detail-comments" data-icon="message" class="blue button onright"></a>
                 <a id="commit-detail-refresh" href="#" data-icon="refresh" class="button onright"></a>
             </nav>
             <nav class="groupbar">
@@ -137,6 +138,7 @@
             <nav>
                 <a id="issue-detail-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
                 <a id="update-issue-btn" href="#" data-article="issue-detail-info" data-icon="pencil" class="blue button onright"></a>
+                <a id="issue-comment-btn" href="#" data-article="issue-detail-comments" data-icon="message" class="blue button onright"></a>
                 <a id="issue-detail-refresh" href="#" data-icon="refresh" class="button onright"></a>
             </nav>
             <nav class="groupbar">
@@ -150,8 +152,9 @@
 
     <section id="compose-issue">
         <header data-title="New Issue"><span class="title">New Issue</span>
-            <nav class="onleft">
-                <a id="compose-issue-back" href="#back" data-target="section" data-icon="left" class="button"></a>
+            <nav>
+                <a id="compose-issue-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="issue-reset-btn" href="#" data-icon="trash" class="red button onright"></a>
             </nav>
         </header>
         <article id="compose-issue-form" class="current list scrollable">
@@ -205,6 +208,33 @@
                 </li>
                 <li>
                     <a id="compose-issue-send" href="#" data-action="new" class="button big">Post Issue</a>
+                </li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="compose-comment">
+        <header data-title="New Comment"><span class="title">New Comment</span>
+            <nav class="onleft">
+                <a id="compose-comment-back" href="#back" data-target="section" data-icon="left" class="button"></a>
+            </nav>
+        </header>
+        <article id="compose-comment-form" class="current list scrollable">
+            <ul class="form">
+                <li>
+                    <div style="display:inline-block;width:85px"><label>In reply to</label></div>
+                        <span id="compose-comment-inreplyto"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:85px"><label>Description</label></div>
+                        <span id="compose-comment-desc"></span>
+                </li>
+                <li>
+                    <label>Comment</label>
+                        <textarea id="compose-comment-msg" placeholder=""></textarea>
+                </li>
+                <li>
+                    <a id="compose-comment-send" href="#" data-action="new" class="button big">Post Comment</a>
                 </li>
             </ul>
         </article>

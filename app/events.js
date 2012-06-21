@@ -1,5 +1,7 @@
 App.Events = (function(lng, app, undefined) {
 
+	//========== DEVICE READY ==========//
+
 	lng.dom('body').ready(function() {
 
 		App.Data.ClearSessionStorage();
@@ -19,6 +21,8 @@ App.Events = (function(lng, app, undefined) {
 			lng.Router.section('login');
 		}
 	});
+
+	//========== LOGIN EVENTS ==========//
 
 	lng.dom('#login-btn').tap(function() {
 		var username = lng.dom('#login-username').val();
@@ -57,7 +61,8 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.RepoList();
 	});
 
-	// Choose a Repository
+	//========== ASIDE EVENTS ==========//
+
 	lng.dom('aside#aside-menu a').tap(function() {
 		
 		App.Data.ClearSessionStorage();
@@ -76,6 +81,18 @@ App.Events = (function(lng, app, undefined) {
 			HideFooter();
 		}
 	});
+
+	// Swipe right to open the aside
+	lng.dom('#main').swipeRight(function() {
+		lng.View.Aside.show('#main', '#aside-menu');
+	});
+
+	// Swipe left to close the aside
+	lng.dom('#main').swipeLeft(function() {
+		lng.View.Aside.hide('#main', '#aside-menu');
+	});
+
+	//========== REPOSITORY EVENTS ==========//
 
 	lng.dom('#main a#refresh').tap(function() {
 		App.Services.RepoList();
@@ -121,6 +138,8 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
+	//========== DETAIL EVENTS ==========//
+
 	lng.dom('#commit-detail-left').tap(function() {
 		lng.dom('#commit-detail-info li span').empty();
 		lng.dom('#commit-detail-comments').empty();
@@ -145,6 +164,8 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.IssueComments(user_repo, issue);
 	});
 
+	//========== COMPOSE EVENTS ==========//
+
 	lng.dom('#compose-issue-btn').tap(function() {
 		App.View.RefreshIssueSelects();
 		App.View.NewIssue();
@@ -154,7 +175,7 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#update-issue-btn').tap(function() {
 		var user_repo = App.Data.CurrentRepo();
-		var issue = App.Data.CurrentIssue(); 
+		var issue = App.Data.CurrentIssue();
 		App.View.RefreshIssueSelects();
 		App.Services.LoadIssue(user_repo, issue);
 		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 3 -- line height
@@ -165,10 +186,37 @@ App.Events = (function(lng, app, undefined) {
 		var user_repo = App.Data.CurrentRepo();
 		var issue = App.Data.CurrentIssue();
 		var action = lng.dom(this).data('action');
-		switch (action) {
-			case 'new': App.Services.PostIssue(user_repo);
-			case 'update': App.Services.UpdateIssue(user_repo, issue);
+		if (action == 'new') {
+			App.Services.PostIssue(user_repo);
+		} else if (action == 'update') {
+			App.Services.UpdateIssue(user_repo, issue);
 		}
+	});
+
+	lng.dom('#commit-comment-btn').tap(function() {
+		App.View.NewComment('commit');
+		lng.Router.section('compose-comment');
+	});
+
+	lng.dom('#issue-comment-btn').tap(function() {
+		App.View.NewComment('issue');
+		lng.Router.section('compose-comment');
+	});
+
+	lng.dom('#compose-comment-send').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		var commit = App.Data.CurrentCommit();
+		var issue = App.Data.CurrentIssue();
+		var type = lng.dom(this).data('type');
+		if (type == 'commit') {
+			App.Services.PostCommitComment(user_repo, commit);
+		} else if (type == 'issue') {
+			App.Services.PostIssueComment(user_repo, issue);
+		}
+	});
+
+	lng.dom('#issue-reset-btn').tap(function() {
+		App.View.ResetForm('#compose-issue-form');
 	});
 
 	/*lng.Data.Sql.select('pictures', null, function(result) {

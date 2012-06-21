@@ -136,6 +136,8 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#commit-detail header').data('title', detail.node);
 		lng.dom('#commit-detail header span.title').html(detail.node);
 
+		App.Data.CurrentCommitDesc(detail.message);
+
 		// Info tab
 		var formatted_date = App.Utils.FormatDate(detail.utctimestamp);
 		var branch = (detail.branch) ? detail.branch : '(none)';
@@ -185,6 +187,8 @@ App.View = (function(lng, app, undefined) {
 		
 		lng.dom('#issue-detail header').data('title', 'Issue #'+detail.local_id);
 		lng.dom('#issue-detail header span.title').html('Issue #'+detail.local_id);
+
+		App.Data.CurrentIssueDesc(detail.content);
 		
 		lng.dom('#issue-detail-info').empty();
 
@@ -275,6 +279,26 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-msg').val(detail.content);
 	};
 
+	var ResetForm = function (id) {
+		lng.dom(id+' input, '+id+' textarea').each(function() {
+			lng.dom(this).val(''); // Empty the form fields
+		});
+		// TODO: reselect the default options
+		lng.View.Scroll.first(id); // Scroll to the top
+	};
+
+	var NewComment = function (type) {
+		if (type == 'commit') {
+			lng.dom('#compose-comment-inreplyto').html('Commit '+App.Data.CurrentCommit());
+			lng.dom('#compose-comment-desc').html(App.Data.CurrentCommitDesc());
+		} else if (type == 'issue') {
+			lng.dom('#compose-comment-inreplyto').html('Issue #'+App.Data.CurrentIssue());
+			lng.dom('#compose-comment-desc').html(App.Data.CurrentIssueDesc());
+		}
+		lng.dom('#compose-comment-send').data('type', type);
+		new App.Utils.AutoGrow(document.getElementById('compose-comment-msg'), 3);
+	};
+
 	return {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
@@ -290,7 +314,9 @@ App.View = (function(lng, app, undefined) {
 		IssueComments: IssueComments,
 		RefreshIssueSelects: RefreshIssueSelects,
 		NewIssue: NewIssue,
-		LoadIssue: LoadIssue
+		LoadIssue: LoadIssue,
+		ResetForm: ResetForm,
+		NewComment: NewComment
 	};
 
 })(LUNGO, App);

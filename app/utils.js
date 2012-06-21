@@ -28,6 +28,7 @@ App.Utils = (function(lng, undefined) {
 			case 'commit': return 'check';
 			case 'create': return 'add mini';
 			case 'cset_comment_created': return 'message mini';
+			case 'cset_comment_deleted': return 'trash mini';
 			case 'duplicate': return 'files';
 			case 'invalid': return 'close';
 			case 'issue_comment': return 'message mini';
@@ -39,7 +40,10 @@ App.Utils = (function(lng, undefined) {
 			case 'removed': return 'remove';
 			case 'resolved': return 'check';
 			case 'report_issue': return 'warning mini';
+			case 'start_follow_issue': return 'search mini';
 			case 'stop_follow_issue': return 'close mini';
+			case 'start_follow_repo': return 'search mini';
+			case 'stop_follow_repo': return 'close mini';
 			case 'wontfix': return 'close';
 		}
 	};
