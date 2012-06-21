@@ -213,6 +213,15 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var SearchIssues = function(user_repo, method){
+		var searchBoxContent = lng.dom('#repo-issues-search').val();
+		console.log('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+searchBoxContent);
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+searchBoxContent, null, function(response) {
+			//console.log(response);
+			console.log('success');
+		});
+	};
+
 	/*$$.ajax({
         type: "PUT", // GET, POST, PUT, DELETE
         url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',

@@ -130,6 +130,8 @@ App.Events = (function(lng, app, undefined) {
 		var user_repo = App.Data.CurrentRepo();
 		var commit = App.Data.CurrentCommit();
 		App.Services.CommitDetail(user_repo, commit);
+		console.log('hola');
+		App.Services.PostCommitComments(user_repo, commit);
 		App.Services.CommitComments(user_repo, commit);
 	});
 
@@ -145,6 +147,11 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.IssueComments(user_repo, issue);
 	});
 
+	lng.dom('#repo-issues-search-btn').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		App.Services.SearchIssues(user_repo);
+	});
+	
 	lng.dom('#compose-issue-btn').tap(function() {
 		App.View.RefreshIssueSelects();
 		App.View.NewIssue();
