@@ -111,10 +111,10 @@ App.Data = (function(lng, app, undefined) {
 	};
 
 	var CurrentIssueQuery = function(query) {
-		if (query !== null) {
+		if (query != null) {
 			// Store the search query provided
 			lng.Data.Storage.session('current_issue_query', query);
-			console.error('Query stored: '+query);
+			console.error('Query stored: "'+query+'"');
 		} else {
 			// Return the current search query
 			return lng.Data.Storage.session('current_issue_query');
