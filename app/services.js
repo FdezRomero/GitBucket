@@ -217,6 +217,16 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var SearchIssue = function(user_repo, method) {
+		//var searchBoxContent=lng.dom('#repo-issues-search').val();
+		var searchBoxContent='test';
+		
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+searchBoxContent, null, function(response) {
+			//console.log(response);
+			App.View.RepoIssues(response.issues);
+		});
+	};
+
 	//========== COMMENTING COMMITS & ISSUES ==========//
 
 	var PostCommitComment = function(user_repo, commit, method) {
@@ -272,6 +282,7 @@ App.Services = (function(lng, app, undefined) {
 		PostIssue: PostIssue,
 		LoadIssue: LoadIssue,
 		UpdateIssue: UpdateIssue,
+		SearchIssue: SearchIssue,
 		PostCommitComment: PostCommitComment,
 		PostIssueComment: PostIssueComment
 	};

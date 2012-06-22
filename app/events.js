@@ -228,6 +228,14 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});*/
 
+	//========== ISSUE SEARCH ==========//
+	
+	//TODO: Test why this event isn't working properly :(
+	lng.dom('#repo-issues-search-btn').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		App.Services.SearchIssue(user_repo);
+	});
+
 	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
