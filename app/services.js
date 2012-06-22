@@ -218,11 +218,12 @@ App.Services = (function(lng, app, undefined) {
 	};
 
 	var SearchIssue = function(user_repo, method) {
-		//var searchBoxContent=lng.dom('#repo-issues-search').val();
-		var searchBoxContent='test';
-		
-		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+searchBoxContent, null, function(response) {
-			//console.log(response);
+		var query = lng.dom('#repo-issues-search').val();
+		query = (query !== null) ? query : '';
+		App.Data.CurrentIssueQuery(query);
+
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+query, null, function(response) {
+			//console.error(response);
 			App.View.RepoIssues(response.issues);
 		});
 	};

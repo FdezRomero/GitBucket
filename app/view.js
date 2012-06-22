@@ -110,9 +110,13 @@ App.View = (function(lng, app, undefined) {
 
 	var RepoIssues = function(issues) {
 		//console.error(issues);
+		var query = App.Data.CurrentIssueQuery();
+		query = (query) ? query : ''; // Substitutes null for empty string
+		console.error(query);
+
 		lng.dom('#repo-issues').html('<li style="background:#EDEDED">\
-			<input type="search" placeholder="Search issues...">\
-            <a href="#" class="button"><span class="icon search"></span></a></li>');
+			<input type="search" id="repo-issues-search" placeholder="Search issues..." value="'+query+'">\
+            <a id="repo-issues-search-btn" href="#" class="button"><span class="icon search"></span></a></li>');
 
 		if (issues.length > 0) {
 			for (var i = 0; i < issues.length; i++) {

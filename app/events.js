@@ -138,6 +138,11 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
+	lng.dom('#repo-issues-search-btn').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		App.Services.SearchIssue(user_repo);
+	});
+
 	//========== DETAIL EVENTS ==========//
 
 	lng.dom('#commit-detail-left').tap(function() {
@@ -227,14 +232,6 @@ App.Events = (function(lng, app, undefined) {
 			App.Services.panoramioPictures();
 		}
 	});*/
-
-	//========== ISSUE SEARCH ==========//
-	
-	//TODO: Test why this event isn't working properly :(
-	lng.dom('#repo-issues-search-btn').tap(function() {
-		var user_repo = App.Data.CurrentRepo();
-		App.Services.SearchIssue(user_repo);
-	});
 
 	//========== EVENT UTILITIES ==========//
 
