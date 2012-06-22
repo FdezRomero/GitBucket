@@ -219,6 +219,7 @@ App.Services = (function(lng, app, undefined) {
 
 	var SearchIssue = function(user_repo, method) {
 		var query = lng.dom('#repo-issues-search').val();
+
 		query = (query != null) ? query : '';
 		App.Data.CurrentIssueQuery(query);
 
