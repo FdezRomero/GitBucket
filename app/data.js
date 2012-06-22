@@ -117,6 +117,8 @@ App.Data = (function(lng, app, undefined) {
 			console.error('Query stored: "'+query+'"');
 		} else {
 			// Return the current search query
+			alert('Hey envio datos!');
+			console.log('Hey envio datos!');
 			return lng.Data.Storage.session('current_issue_query');
 			console.error('Query returned: '+query);
 		}
