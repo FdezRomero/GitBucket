@@ -219,7 +219,9 @@ App.Services = (function(lng, app, undefined) {
 
 	var SearchIssue = function(user_repo, method) {
 		var query = lng.dom('#repo-issues-search').val();
-		query = (query !== null) ? query : '';
+		alert('Consulta: '+query);
+		if(query == null){alert(query+' es null');}
+		query = (query != null) ? query : '';
 		App.Data.CurrentIssueQuery(query);
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+query, null, function(response) {
