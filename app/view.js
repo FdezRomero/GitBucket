@@ -111,7 +111,7 @@ App.View = (function(lng, app, undefined) {
 	var RepoIssues = function(issues) {
 		//console.error(issues);
 		var query = App.Data.CurrentIssueQuery();
-		query = (query) ? query : ''; // Substitutes null for empty string
+		query = (query) ? query : ''; // null -> empty string
 		
 		lng.dom('#repo-issues').html('<li style="background:#EDEDED">\
 			<input type="search" id="repo-issues-search" placeholder="Search issues..." value="'+query+'">\

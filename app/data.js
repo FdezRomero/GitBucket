@@ -111,14 +111,14 @@ App.Data = (function(lng, app, undefined) {
 	};
 
 	var CurrentIssueQuery = function(query) {
-		if (query != null) {
-			// Store the search query provided
-			lng.Data.Storage.session('current_issue_query', query);
-			console.error('Query stored: "'+query+'"');
+		//console.error('CurrentIssueQuery: Received type '+typeof(query)', value "'+query+'"');
+		
+		if (query === undefined) {
+			// CurrentIssueQuery(): Return the current search query
+			return sessionStorage.current_issue_query;
 		} else {
-			// Return the current search query
-			return lng.Data.Storage.session('current_issue_query');
-			console.error('Query returned: '+query);
+			// CurrentIssueQuery('string'): Store the search query
+			sessionStorage.current_issue_query = query;
 		}
 	};
 
