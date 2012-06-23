@@ -50,9 +50,9 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#aside-repos').empty();
 		for (var i = 0; i < repos.length; i++) {
 			//console.error(repos);
-			lng.dom('#aside-repos').append('<a href="#repo-recent" data-target="article" data-icon="download"\
-				data-label="'+repos[i]['name']+'" data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'"\
-				data-scm="'+repos[i]['scm']+'"><span class="icon download"></span><abbr>'+repos[i]['name']+'</abbr></a>');
+			lng.dom('#aside-repos').append('<a href="#repo-dashboard" data-target="article" data-icon="download" data-label="'+repos[i]['name']+'" \
+				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
+				<span class="icon download"></span><abbr>'+repos[i]['name']+'</abbr></a>');
 		}
 	};
 	
@@ -71,6 +71,27 @@ App.View = (function(lng, app, undefined) {
 			}
 		} else {
 			lng.dom('#repo-recent').html(NoElements('events'));
+		}
+	};
+
+	var RepoDashboard = function(info) {
+		console.error(info);
+
+		var website = (info['website']) ? info['website'] : 'N/A';
+		var followers = info['followers_count'].toString();
+		var forks = info['forks_count'].toString();
+		var scm = (info['scm'] == 'hg') ? 'Mercurial' : 'Git';
+		var access = (info['is_private']) ? 'Private' : 'Public';
+
+		// Build our object with all the properties and innerHTMLs
+		var obj = {'desc':info['description'], 'web':website, 'followers':followers, 'forks':forks,
+			'scm':scm, 'access':access, 'lang':App.Utils.Capitalize(info['language']),
+			'created':App.Utils.FormatDate(info['utc_created_on']), 'updated':App.Utils.FormatDate(info['utc_last_updated'])};
+
+		for (var x in obj) {
+			if (obj[x]) {
+				lng.dom('#repo-dashboard-'+x).html(obj[x]);
+			}
 		}
 	};
 	
@@ -93,7 +114,7 @@ App.View = (function(lng, app, undefined) {
 
 	var RepoCommits = function(commits) {
 		//console.error(commits);
-		lng.dom('#repo-commits').empty();
+		//lng.dom('#repo-commits').empty();
 		if (commits.length > 0) {
 			for (var i = commits.length-1; i >= 0; i--) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
@@ -307,9 +328,10 @@ App.View = (function(lng, app, undefined) {
 		UserRecent: UserRecent,
 		UpdateTitle: UpdateTitle,
 		RepoList: RepoList,
-		RepoSource: RepoSource,
 		RepoRecent: RepoRecent,
+		RepoDashboard: RepoDashboard,
 		RepoCommits: RepoCommits,
+		RepoSource: RepoSource,
 		RepoIssues: RepoIssues,
 		CommitDetail: CommitDetail,
 		CommitComments: CommitComments,

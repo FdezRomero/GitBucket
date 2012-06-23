@@ -100,7 +100,7 @@ App.Events = (function(lng, app, undefined) {
 		UpdateRepo(user_repo, 'refresh');
 	});
 
-	lng.dom('#repo-commits li, #repo-recent li').tap(function() {
+	lng.dom('#repo-commits li').tap(function() {
 		if (lng.dom(this).data('title')) {
 			var user_repo = App.Data.CurrentRepo();
 			var commit = lng.dom(this).data('title');
@@ -236,7 +236,8 @@ App.Events = (function(lng, app, undefined) {
 	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
-		App.Services.RepoRecent(user_repo, method);
+		//App.Services.RepoRecent(user_repo, method);
+		App.Services.RepoDashboard(user_repo, method);
 		App.Services.RepoSource(user_repo, null, method);
 		App.Services.RepoCommits(user_repo, method);
 		App.Services.RepoIssues(user_repo, method);
@@ -251,7 +252,9 @@ App.Events = (function(lng, app, undefined) {
 	};
 	
 	return {
-
+		UpdateRepo: UpdateRepo,
+		ShowFooter: ShowFooter,
+		HideFooter: HideFooter
 	};
 
 })(LUNGO, App);

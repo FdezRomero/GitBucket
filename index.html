@@ -24,18 +24,14 @@
 </head>
 
 <body class="app">
-    <!--
-        First, you have to do is create a LungoJS Application instance in the file app.js.
-        ...and use a Webkit browser as Chrome or Safari.
-    -->
 
     <section id="main">
         <header data-title="Loading">
-            <a href="#aside-menu" data-target="aside" data-icon="_left" class="button onleft">
-                <i class="icon-reorder"></i>
-            </a>
-            <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
-            <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
+            <nav>
+                <a href="#aside-menu" data-target="aside" class="button onleft"><i class="icon-reorder"></i></a>
+                <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
+                <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
+            </nav>
         </header>
         
         <article id="user-recent" class="current list indented scrollable">
@@ -43,15 +39,60 @@
                 <li>Loading...</li>
             </ul>
         </article>
-        <article id="repo-recent" class="list scrollable"></article>
+        <!--<article id="repo-recent" class="list scrollable"></article>-->
+        <article id="repo-dashboard" class="indented list scrollable">
+            <ul>
+                <li>
+                    <label>Description</label>
+                    <p id="repo-dashboard-desc"></p>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Website</label></div>
+                    <span id="repo-dashboard-web"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:49%">
+                        <div style="display:inline-block;width:95px"><label>Followers</label></div>
+                        <span id="repo-dashboard-followers"></span>
+                    </div>
+                    <div style="display:inline-block;width:49%">
+                        <div style="display:inline-block;width:95px"><label>Forks</label></div>
+                        <span id="repo-dashboard-forks"></span>
+                    </div>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Type</label></div>
+                    <span id="repo-dashboard-scm"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Access</label></div>
+                    <span id="repo-dashboard-access"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Language</label></div>
+                    <span id="repo-dashboard-lang"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Created on</label></div>
+                    <span id="repo-dashboard-created"></span>
+                </li>
+                <li>
+                    <div style="display:inline-block;width:95px"><label>Last updated</label></div>
+                    <span id="repo-dashboard-updated"></span>
+                </li>
+            </ul>
+        </article>
         <article id="repo-commits" class="list scrollable"></article>
         <article id="repo-source" class="list scrollable"></article>
         <article id="repo-issues" class="list scrollable"></article>
         <article id="settings" class="list scrollable">Settings here</article>
         
-        <footer class="toolbar with-labels" data-article="repo-recent repo-commits repo-source repo-issues">
+        <footer class="toolbar with-labels">
             <nav>
-                <a href="#repo-recent" data-target="article" data-icon="clock" data-label="Recent" class="current"></a>
+                <!--<a href="#repo-recent" data-target="article" data-icon="clock" data-label="Recent" class="current"></a>-->
+                <a href="#repo-dashboard" data-target="article" data-icon="chart" data-label="Dashboard" class="current"></a>
                 <a href="#repo-commits" data-target="article" data-icon="files" data-label="Commits"></a>
                 <a href="#repo-source" data-target="article" data-icon="edit" data-label="Source"></a>
                 <a href="#repo-issues" data-target="article" data-icon="warning" data-label="Issues"></a>
@@ -74,7 +115,6 @@
                     <img src="assets/images/gitbucket.png" width="150"/>
                 </div>
                 <ul class="form">
-                    <!--<li class="anchor" data-icon="user">Login to BitBucket</li>-->
                     <li>
                         <input id="login-username" type="text" placeholder="Username" value=""/>
                         <input id="login-password" type="password" placeholder="Password" value=""/>

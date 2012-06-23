@@ -10,7 +10,7 @@ App.Utils = (function(lng, undefined) {
 	};
 
 	var FormatDate = function(timestamp) {
-		var date = moment(timestamp, 'YYYY-MM-DD HH:mm:ssZZ').format('DD/MMM/YYYY, HH:mm:ss');
+		var date = moment(timestamp, 'YYYY-MM-DD HH:mm:ssZZ').format('DD MMM YYYY, HH:mm:ss');
 		return date;
 	};
 
