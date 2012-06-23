@@ -57,7 +57,8 @@ App.Events = (function(lng, app, undefined) {
 		App.View.UpdateTitle(username);
 
 		App.Services.UserInfo();
-		App.Services.UserRecent();
+		//App.Services.UserRecent();
+		App.Services.UserDashboardInfo();
 		App.Services.RepoList();
 	});
 

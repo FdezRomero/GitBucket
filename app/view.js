@@ -43,6 +43,16 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#user-recent').html(NoElements('events'));
 		}
 	};
+	
+	var UserDashboard = function(){
+	
+		var followers=lng.Data.Cache.get('user_followers');
+		var repo_following=lng.Data.Cache.get('user_repo_following');
+		var user_groups=lng.Data.Cache.get('user_groups');
+	
+		lng.dom('#user-recent').html('<ul><li><div style="display:inline-block;width:85px"><label>Followers</label></div><span id="user-dashboard-followers">'+followers+'</span></li><li><div style="display:inline-block;width:85px"><label>Following repositories</label></div><span id="user-dashboard-repofollowing">'+repo_following+'</span></li><li><div style="display:inline-block;width:85px"><label>Groups</label></div><span id="user-dashboard-groups">'+user_groups+'</span></li></ul>');
+		
+	};
 
 	//========== REPOSITORY VIEWS ==========//
 
@@ -326,6 +336,7 @@ App.View = (function(lng, app, undefined) {
 	return {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
+		UserDashboard: UserDashboard,
 		UpdateTitle: UpdateTitle,
 		RepoList: RepoList,
 		RepoRecent: RepoRecent,

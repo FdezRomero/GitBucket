@@ -28,6 +28,37 @@ App.Services = (function(lng, app, undefined) {
 			App.View.UserRecent(response.events);
 		});
 	};
+	
+	var UserDashboardInfo = function() {
+		UserFollowers();
+		UserRepoFollowing();
+		UserGroups();
+	};
+	
+	var UserFollowers = function() {
+		var username = lng.Data.Storage.persistent('username');
+		lng.Service.get('https://api.bitbucket.org/1.0/users/'+username+'/followers', null, function(response) {
+			//console.log(response.count);
+			lng.Data.Cache.set('user_followers', response.count.toString());
+		});
+	};
+	
+	var UserRepoFollowing = function() {
+		var username = lng.Data.Storage.persistent('username');
+		lng.Service.get('https://api.bitbucket.org/1.0/user/follows', null, function(response) {
+			//console.log(response.length);
+			lng.Data.Cache.set('user_repo_following', response.length.toString());
+		});
+	};
+	
+	var UserGroups = function() {
+		var username = lng.Data.Storage.persistent('username');
+		lng.Service.get('https://api.bitbucket.org/1.0/groups/'+username, null, function(response) {
+			//console.log(response.length);
+			lng.Data.Cache.set('user_groups', response.length.toString());
+			App.View.UserDashboard();
+		});
+	};
 
 	//========== REPOSITORY FUNCTIONS ==========//
 
@@ -285,6 +316,10 @@ App.Services = (function(lng, app, undefined) {
 		CheckLogin: CheckLogin,
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
+		UserDashboardInfo: UserDashboardInfo,
+		UserFollowers: UserFollowers,
+		UserRepoFollowing: UserRepoFollowing,
+		UserGroups: UserGroups,
 		RepoList: RepoList,
 		RepoRecent: RepoRecent,
 		RepoDashboard: RepoDashboard,
