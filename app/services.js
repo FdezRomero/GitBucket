@@ -29,34 +29,44 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 	
-	var UserDashboardInfo = function() {
+	var UserDashboard = function() {
 		UserFollowers();
-		UserRepoFollowing();
+		UserFollowing();
 		UserGroups();
+		UserTeams();
 	};
 	
 	var UserFollowers = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/users/'+username+'/followers', null, function(response) {
-			//console.log(response.count);
-			lng.Data.Cache.set('user_followers', response.count.toString());
+			//console.error(response);
+			lng.dom('#user-dashboard-followers').html(response.count.toString());
 		});
 	};
 	
-	var UserRepoFollowing = function() {
+	var UserFollowing = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/user/follows', null, function(response) {
-			//console.log(response.length);
-			lng.Data.Cache.set('user_repo_following', response.length.toString());
+			//console.error(response);
+			lng.dom('#user-dashboard-following').html(response.length.toString());
 		});
 	};
 	
 	var UserGroups = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/groups/'+username, null, function(response) {
-			//console.log(response.length);
-			lng.Data.Cache.set('user_groups', response.length.toString());
-			App.View.UserDashboard();
+			//console.error(response);
+			lng.dom('#user-dashboard-groups').html(response.length.toString());
+		});
+	};
+
+	var UserTeams = function() {
+		lng.Service.get('https://api.bitbucket.org/1.0/user/privileges/', null, function(response) {
+			//console.error(response);
+			for (var x in response.teams) {
+				lng.dom('#user-dashboard-teams').append('<li><span class="icon group"></span>'+x+'\
+					<small>'+App.Utils.Capitalize(response.teams[x])+'</small></li>');
+			}
 		});
 	};
 
@@ -142,6 +152,7 @@ App.Services = (function(lng, app, undefined) {
 		IssueComponents(user_repo);
 		IssueMilestones(user_repo);
 		IssueVersions(user_repo);
+		IssueUsers(user_repo);
 	};
 
 	//========== DETAIL FUNCTIONS ==========//
@@ -197,6 +208,17 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	var IssueUsers = function(user_repo, method) {
+		lng.Service.get('https://api.bitbucket.org/1.0/privileges/'+user_repo, null, function(response) {
+			//console.error(response);
+			var users = [];
+			for (var x in response) {
+				users.push(response[x]['user']['username']);
+			}
+			App.Data.IssueUsers(users);
+		});
+	};
+
 	var PostIssue = function(user_repo, method) {
 		
 		var data = new Object({
@@ -205,7 +227,7 @@ App.Services = (function(lng, app, undefined) {
 			component: lng.dom('#compose-issue-component').val(),
 			milestone: lng.dom('#compose-issue-milestone').val(),
 			version: lng.dom('#compose-issue-version').val(),
-			//'responsible: null, // TODO: get a list of repo users
+			responsible: lng.dom('#compose-issue-assignto').val(),
 			priority: lng.dom('#compose-issue-priority').val(),
 			status: lng.dom('#compose-issue-status').val(),
 			kind: lng.dom('#compose-issue-kind').val()
@@ -242,7 +264,7 @@ App.Services = (function(lng, app, undefined) {
 			component: lng.dom('#compose-issue-component').val(),
 			milestone: lng.dom('#compose-issue-milestone').val(),
 			version: lng.dom('#compose-issue-version').val(),
-			//'responsible: null, // TODO: get a list of repo users
+			responsible: lng.dom('#compose-issue-assignto').val(),
 			priority: lng.dom('#compose-issue-priority').val(),
 			status: lng.dom('#compose-issue-status').val(),
 			kind: lng.dom('#compose-issue-kind').val()
@@ -316,10 +338,7 @@ App.Services = (function(lng, app, undefined) {
 		CheckLogin: CheckLogin,
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
-		UserDashboardInfo: UserDashboardInfo,
-		UserFollowers: UserFollowers,
-		UserRepoFollowing: UserRepoFollowing,
-		UserGroups: UserGroups,
+		UserDashboard: UserDashboard,
 		RepoList: RepoList,
 		RepoRecent: RepoRecent,
 		RepoDashboard: RepoDashboard,

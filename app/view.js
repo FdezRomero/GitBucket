@@ -28,7 +28,9 @@ App.View = (function(lng, app, undefined) {
 	var UserInfo = function(user) {
 		//console.error(user);
 		lng.dom('#aside-user').data('title', user.username);
-		lng.dom('#aside-user').html('<img src="'+user.avatar+'" class="icon"/>' + user.username);
+		lng.dom('#aside-user').html('<img src="'+user.avatar+'" class="icon"/> ' + user.username);
+
+		lng.dom('#user-dashboard-avatar').html('<img src="'+user.avatar+'" class="icon" style="float:none"/> '+user['first_name']+' '+user['last_name']);
 	};
 
 	var UserRecent = function(events) {
@@ -43,26 +45,17 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#user-recent').html(NoElements('events'));
 		}
 	};
-	
-	var UserDashboard = function(){
-	
-		var followers=lng.Data.Cache.get('user_followers');
-		var repo_following=lng.Data.Cache.get('user_repo_following');
-		var user_groups=lng.Data.Cache.get('user_groups');
-	
-		lng.dom('#user-recent').html('<ul><li><div style="display:inline-block;width:85px"><label>Followers</label></div><span id="user-dashboard-followers">'+followers+'</span></li><li><div style="display:inline-block;width:85px"><label>Following repositories</label></div><span id="user-dashboard-repofollowing">'+repo_following+'</span></li><li><div style="display:inline-block;width:85px"><label>Groups</label></div><span id="user-dashboard-groups">'+user_groups+'</span></li></ul>');
-		
-	};
 
 	//========== REPOSITORY VIEWS ==========//
 
 	var RepoList = function(repos) {
+		//console.error(repos);
 		lng.dom('#aside-repos').empty();
 		for (var i = 0; i < repos.length; i++) {
 			//console.error(repos);
 			lng.dom('#aside-repos').append('<a href="#repo-dashboard" data-target="article" data-icon="download" data-label="'+repos[i]['name']+'" \
 				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
-				<span class="icon download"></span><abbr>'+repos[i]['name']+'</abbr></a>');
+				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
 		}
 	};
 	
@@ -85,7 +78,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var RepoDashboard = function(info) {
-		console.error(info);
+		//console.error(info);
 
 		var website = (info['website']) ? info['website'] : 'N/A';
 		var followers = info['followers_count'].toString();
@@ -124,7 +117,7 @@ App.View = (function(lng, app, undefined) {
 
 	var RepoCommits = function(commits) {
 		//console.error(commits);
-		//lng.dom('#repo-commits').empty();
+		lng.dom('#repo-commits').empty();
 		if (commits.length > 0) {
 			for (var i = commits.length-1; i >= 0; i--) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
@@ -275,11 +268,13 @@ App.View = (function(lng, app, undefined) {
 		var components = App.Data.IssueComponents();
 		var milestones = App.Data.IssueMilestones();
 		var versions = App.Data.IssueVersions();
+		var users = App.Data.IssueUsers();
 
 		// Add the empty options
 		lng.dom('#compose-issue-component').html('<option value="" selected="selected">(None)</option>');
 		lng.dom('#compose-issue-milestone').html('<option value="" selected="selected">(None)</option>');
 		lng.dom('#compose-issue-version').html('<option value="" selected="selected">(None)</option>');
+		lng.dom('#compose-issue-assignto').html('<option value="" selected="selected">(None)</option>');
 
 		for (var i = 0; i < components.length; i++) {
 			lng.dom('#compose-issue-component').append('<option value="'+components[i].name+'">'+components[i].name+'</option>');
@@ -289,6 +284,9 @@ App.View = (function(lng, app, undefined) {
 		}
 		for (var i = 0; i < versions.length; i++) {
 			lng.dom('#compose-issue-version').append('<option value="'+versions[i].name+'">'+versions[i].name+'</option>');
+		}
+		for (var i = 0; i < users.length; i++) {
+			lng.dom('#compose-issue-assignto').append('<option value="'+users[i]+'">'+users[i]+'</option>');
 		}
 	};
 
@@ -336,7 +334,6 @@ App.View = (function(lng, app, undefined) {
 	return {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
-		UserDashboard: UserDashboard,
 		UpdateTitle: UpdateTitle,
 		RepoList: RepoList,
 		RepoRecent: RepoRecent,

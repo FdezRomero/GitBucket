@@ -58,7 +58,7 @@ App.Events = (function(lng, app, undefined) {
 
 		App.Services.UserInfo();
 		//App.Services.UserRecent();
-		App.Services.UserDashboardInfo();
+		App.Services.UserDashboard();
 		App.Services.RepoList();
 	});
 

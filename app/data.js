@@ -162,6 +162,17 @@ App.Data = (function(lng, app, undefined) {
 			return lng.Data.Storage.session('issue_versions');
 		}
 	};
+
+	// Stores and provides the Users to assign issues
+	var IssueUsers = function(users) {
+		if (users) {
+			// Store the users provided
+			lng.Data.Storage.session('issue_users', users);
+		} else {
+			// Return the current users
+			return lng.Data.Storage.session('issue_users');
+		}
+	};
 	
 	return {
 		//cachePictures: cachePictures
@@ -177,7 +188,8 @@ App.Data = (function(lng, app, undefined) {
 		CurrentIssueDesc: CurrentIssueDesc,
 		IssueComponents: IssueComponents,
 		IssueMilestones: IssueMilestones,
-		IssueVersions: IssueVersions
+		IssueVersions: IssueVersions,
+		IssueUsers: IssueUsers
 	};
 
 })(LUNGO, App);
