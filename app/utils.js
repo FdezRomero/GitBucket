@@ -56,10 +56,18 @@ App.Utils = (function(lng, undefined) {
 		return $$.serializeParameters(string).slice(1);
 	};
 
+	// TODO: Find a working encoder (this one cuts the 1st letter)
 	var ToHTML = function(str) {
-		str = str.replace(/</g, '&lt;');
-		str = str.replace(/>/g, '&gt;');
-		str = '<pre>' + str + '</pre>';
+		/*var aStr = str.split(''), i = aStr.length, aRet = [];
+		while (--i) {
+			var iC = aStr[i].charCodeAt();
+			if (iC < 65 || iC > 127 || (iC>90 && iC<97)) {
+				aRet.push('&#'+iC+';');
+			} else {
+				aRet.push(aStr[i]);
+			}
+		}
+		return aRet.reverse().join('');*/
 		return str;
 	};
 

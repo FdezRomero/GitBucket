@@ -9,6 +9,20 @@ App.View = (function(lng, app, undefined) {
 		</li>'
 	);
 
+	//===== VIEW UTILITIES =====//
+
+	var UpdateTitle = function(title) {
+		lng.dom('#main header').data('title', title);
+		lng.dom('#main header span.title').html(title);
+	};
+
+	var NoElements = function(type) {
+		var message = '<div style="margin-top:100px;text-align:center;">\
+				<h1 class="icon" style="font-size:100pt">H</h1>\
+				<p>&nbsp;</p><h2>There are no '+type+'</h2></div>';
+		return message;
+	};
+
 	//========== USER VIEWS ==========//
 
 	var UserInfo = function(user) {
@@ -23,12 +37,12 @@ App.View = (function(lng, app, undefined) {
 		//console.error(events);
 		if (events.length > 0) {
 			lng.View.Template.List.create({
-				el: '#settings ul',
+				el: '#user-recent',
 				template: 'recent-tmpl',
 				data: events
 			});
 		} else {
-			lng.dom('#settings').html(NoElements('events'));
+			lng.dom('#user-recent').html(NoElements('events'));
 		}
 	};
 
@@ -43,7 +57,6 @@ App.View = (function(lng, app, undefined) {
 				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
 		}
-		RefreshScroll('aside-repos');
 	};
 	
 	var RepoRecent = function(events) {
@@ -62,7 +75,6 @@ App.View = (function(lng, app, undefined) {
 		} else {
 			lng.dom('#repo-recent').html(NoElements('events'));
 		}
-		RefreshScroll('repo-recent');
 	};
 
 	var RepoDashboard = function(info) {
@@ -75,7 +87,7 @@ App.View = (function(lng, app, undefined) {
 		var access = (info['is_private']) ? 'Private' : 'Public';
 
 		// Build our object with all the properties and innerHTMLs
-		var obj = {'desc':App.Utils.ToHTML(info['description']), 'web':website, 'followers':followers, 'forks':forks,
+		var obj = {'desc':info['description'], 'web':website, 'followers':followers, 'forks':forks,
 			'scm':scm, 'access':access, 'lang':App.Utils.Capitalize(info['language']),
 			'created':App.Utils.FormatDate(info['utc_created_on']), 'updated':App.Utils.FormatDate(info['utc_last_updated'])};
 
@@ -84,64 +96,48 @@ App.View = (function(lng, app, undefined) {
 				lng.dom('#repo-dashboard-'+x).html(obj[x]);
 			}
 		}
-		RefreshScroll('repo-dashboard');
 	};
-
-	var RepoCommits = function(response) {
-		//console.error(response);
-		var commits = response.changesets;
-		
-		//lng.dom('#repo-commits').empty();
-		EmptyPullable('repo-commits');
-		
-		if (commits.length > 0) {
-			for (var i = commits.length-1; i >= 0; i--) {
-				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
-				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
-				lng.dom('#repo-commits ul').append('<li data-title="'+commits[i]['node']+'">\
-					<a href="#"><div class="onright">'+time_ago+'</div>\
-					<span class="icon check"></span>'+commits[i]['node']+branch+'\
-					<small>'+commits[i]['message']+'</small></a></li>');
-			}
-			if (response.count > commits.length) {
-				lng.dom('#repo-commits ul').append('<li class="load-more" data-start="x" data-limit="x">\
-					<a href="#">Load more...</a></li>');
-			}
-		} else {
-			lng.dom('#repo-commits ul').append(NoElements('events'));
-		}
-		StopPullable('repo-commits');
-	};
-
+	
 	var RepoSource = function(source) {
 		//console.error(source);
-
-		//lng.dom('#repo-source').empty();
-		EmptyPullable('repo-source');
-
+		lng.dom('#repo-source').empty();
 		if (source.length > 0) {
 			for (var i = 0; i < source.length; i++) {
 				var size = (source[i]['size']) ? App.Utils.FileSize(source[i]['size']) : '';
 				var revision = (source[i]['revision']) ? source[i]['revision'] : '';
-				lng.dom('#repo-source ul').append('<li data-title="'+source[i]['path']+'" data-type="'+source[i]['type']+'">\
+				lng.dom('#repo-source').append('<li data-title="'+source[i]['path']+'" data-type="'+source[i]['type']+'">\
 					<a href="#"><div class="onright">'+size+'</div>\
 					<span class="icon '+source[i]['icon']+'"></span>'+source[i]['path']+'\
 					<small>'+revision+'</small></a></li>');
 			}
 		} else {
-			lng.dom('#repo-source ul').append(NoElements('files'));
+			lng.dom('#repo-source').html(NoElements('files'));
 		}
-		StopPullable('repo-source');
+	};
+
+	var RepoCommits = function(commits) {
+		//console.error(commits);
+		lng.dom('#repo-commits').empty();
+		if (commits.length > 0) {
+			for (var i = commits.length-1; i >= 0; i--) {
+				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
+				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
+				lng.dom('#repo-commits').append('<li data-title="'+commits[i]['node']+'">\
+					<a href="#"><div class="onright">'+time_ago+'</div>\
+					<span class="icon check"></span>'+commits[i]['node']+branch+'\
+					<small>'+commits[i]['message']+'</small></a></li>');
+			}
+		} else {
+			lng.dom('#repo-commits').html(NoElements('events'));
+		}
 	};
 
 	var RepoIssues = function(issues) {
 		//console.error(issues);
-		EmptyPullable('repo-issues');
-
 		var query = App.Data.CurrentIssueQuery();
 		query = (query) ? query : ''; // null -> empty string
 		
-		lng.dom('#repo-issues ul').append('<li style="background:#EDEDED">\
+		lng.dom('#repo-issues').html('<li style="background:#EDEDED">\
 			<input type="search" id="repo-issues-search" placeholder="Search issues..." value="'+query+'">\
             <a id="repo-issues-search-btn" href="#" class="button"><span class="icon search"></span></a></li>');
 
@@ -149,15 +145,14 @@ App.View = (function(lng, app, undefined) {
 			for (var i = 0; i < issues.length; i++) {
 				var time_ago = App.Utils.TimeAgo(issues[i]['utc_last_updated']);
 				var icon = App.Utils.GetIcon(issues[i]['status']);
-				lng.dom('#repo-issues ul').append('<li data-title="'+issues[i]['local_id']+'">\
+				lng.dom('#repo-issues').append('<li data-title="'+issues[i]['local_id']+'">\
 					<a href="#"><div class="onright">'+time_ago+'</div>\
 					<span class="icon '+icon+'"></span>#'+issues[i]['local_id']+': '+issues[i]['title']+'\
 					<small>Status: '+issues[i]['status']+'</small></a></li>');
 			}
 		} else {
-			lng.dom('#repo-issues ul').append(NoElements('issues'));
+			lng.dom('#repo-issues').html(NoElements('issues'));
 		}
-		StopPullable('repo-issues');
 	};
 
 	//========== DETAIL VIEWS ==========//
@@ -177,7 +172,7 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#commit-detail-branch').html(branch);
 		lng.dom('#commit-detail-author').html(detail.author);
 		lng.dom('#commit-detail-date').html(formatted_date);
-		lng.dom('#commit-detail-msg').html(App.Utils.ToHTML(detail.message));
+		lng.dom('#commit-detail-msg').html(detail.message);
 
 		// Files tab
 		lng.dom('#commit-detail-files').empty();
@@ -191,8 +186,6 @@ App.View = (function(lng, app, undefined) {
 		} else {
 			lng.dom('#commit-detail-files').html(NoElements('files'));
 		}
-		RefreshScroll('commit-detail-info');
-		RefreshScroll('commit-detail-files');
 	};
 
 	var CommitComments = function(comments) {
@@ -207,7 +200,7 @@ App.View = (function(lng, app, undefined) {
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_created_on']);
 					lng.dom('#commit-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['user_avatar_url']+'" class="icon"/>\
-						<label>'+comments[i]['username']+'</label><br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
+						<label>'+comments[i]['username']+'</label><br/>'+comments[i]['content']+'</li>');
 					num_comments++;
 				}
 			}
@@ -215,7 +208,6 @@ App.View = (function(lng, app, undefined) {
 		if (num_comments === 0) {
 			lng.dom('#commit-detail-comments').html(NoElements('comments'));
 		}
-		RefreshScroll('commit-detail-comments');
 	};
 
 	var IssueDetail = function(detail) {
@@ -240,7 +232,7 @@ App.View = (function(lng, app, undefined) {
 			'Priority':App.Utils.Capitalize(detail.priority),'Reported by':reported_by,'Responsible':responsible,
 			'Created on':created_on,'Last updated':last_updated,'Kind':App.Utils.Capitalize(detail.metadata.kind),
 			'Component':detail.metadata.component,'Milestone':detail.metadata.milestone,
-			'Version':detail.metadata.version,'Description':'<br/>'+App.Utils.ToHTML(detail.content)};
+			'Version':detail.metadata.version,'Description':'<br/>'+detail.content};
 
 		for (var x in obj) {
 			if (obj[x]) {
@@ -248,11 +240,10 @@ App.View = (function(lng, app, undefined) {
 					<label>'+x+'</label></div>'+obj[x]+'</li>');
 			}
 		}
-		RefreshScroll('issue-detail-info');
 	};
 
 	var IssueComments = function(comments) {
-		console.error(comments);
+		//console.error(comments);
 		lng.dom('#issue-detail-comments').empty();
 		var num_comments = 0;
 
@@ -263,7 +254,7 @@ App.View = (function(lng, app, undefined) {
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_updated_on']);
 					lng.dom('#issue-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['author_info']['avatar']+'" class="icon"/>\
-						<label>'+comments[i]['author_info']['username']+'</label><br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
+						<label>'+comments[i]['author_info']['username']+'</label><br/>'+comments[i]['content']+'</li>');
 					num_comments++;
 				}
 			}
@@ -271,7 +262,6 @@ App.View = (function(lng, app, undefined) {
 		if (num_comments === 0) {
 			lng.dom('#issue-detail-comments').html(NoElements('comments'));
 		}
-		RefreshScroll('issue-detail-comments');
 	};
 
 	var RefreshIssueSelects = function() {
@@ -304,8 +294,6 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-form').data('title', 'New Issue');
 		lng.dom('#compose-issue-form header span.title').html('New Issue');
 		lng.dom('#compose-issue-send').data('action', 'new');
-
-		RefreshScroll('compose-issue-form');
 	};
 
 	var LoadIssue = function(detail) {
@@ -321,8 +309,6 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-milestone').val(detail.metadata.milestone);
 		lng.dom('#compose-issue-version').val(detail.metadata.version);
 		lng.dom('#compose-issue-msg').val(detail.content);
-
-		RefreshScroll('compose-issue-form');
 	};
 
 	var ResetForm = function (id) {
@@ -342,119 +328,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#compose-comment-desc').html(App.Data.CurrentIssueDesc());
 		}
 		lng.dom('#compose-comment-send').data('type', type);
-		
 		new App.Utils.AutoGrow(document.getElementById('compose-comment-msg'), 3);
-		RefreshScroll('compose-comment-form');
-	};
-
-	var Settings = function(events) {
-		//console.error(events);
-		lng.dom('#settings ul').empty();
-		if (events.length > 0) {
-			for (var i = 0; i < events.length; i++) {
-				var icon = App.Utils.GetIcon(events[i]['event']);
-				var time_ago = App.Utils.TimeAgo(events[i]['utc_created_on']);
-				var node = (events[i]['node']) ? events[i]['node'] : '';
-				var description = (events[i]['description']) ? ': '+events[i]['description'] : '';
-				lng.dom('#settings ul').append('<li data-title="'+node+'"><a href="#">\
-					<div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
-					'+App.Utils.Capitalize(events[i]['event'])+description+'</a></li>');
-			}
-		} else {
-			lng.dom('#settings ul').append(NoElements('events'));
-		}
-		RefreshScroll('settings');
-	};
-
-	//===== VIEW UTILITIES =====//
-
-	var UpdateTitle = function(title) {
-		lng.dom('#main header').data('title', title);
-		lng.dom('#main header span.title').html(title);
-	};
-
-	var NoElements = function(type) {
-		var message = '<div style="margin-top:100px;text-align:center;">\
-				<h1 class="icon" style="font-size:100pt">H</h1>\
-				<p>&nbsp;</p><h2>There are no '+type+'</h2></div>';
-		return message;
-	};
-
-	var RefreshScroll = function(element) {
-		lng.View.Scroll.refresh(element);
-	};
-
-	//========== PULL-TO-REFRESH ==========//
-
-	var CreatePullables = function() {
-		var found_el = lng.dom('.pullable');
-        for (var i=0; i < found_el.length; i++) {
-            var article_id = lng.dom(found_el[i]).attr('id');
-            _InitPullable(article_id);
-        }
-	};
-
-	var _InitPullable = function(article) {
-
-		EmptyPullable(article);
-
-		var pullDownEl = lng.dom('#'+article+' .pullDown').get(0);
-		var pullDownOffset = pullDownEl.offsetHeight;
-
-		var myScroll = new iScroll(article, {
-			useTransition: true,
-			topOffset: pullDownOffset,
-			onRefresh: function () {
-				if (pullDownEl.className.match('loading')) {
-					pullDownEl.className = 'pullDown';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
-				}
-			},
-			onScrollMove: function () {
-				if (this.y > 5 && !pullDownEl.className.match('flip')) {
-					pullDownEl.className = 'pullDown flip';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
-					this.minScrollY = 0;
-				} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-					pullDownEl.className = 'pullDown';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
-					this.minScrollY = -pullDownOffset;
-				}
-			},
-			onScrollEnd: function () {
-				if (pullDownEl.className.match('flip')) {
-					pullDownEl.className = 'pullDown loading';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';
-					App.Events.PullDownAction(article, myScroll); // Execute callback function (ajax call?)
-				}
-			}
-		});
-
-		// Store the reference in the cache
-		lng.Data.Cache.set('pullable_'+article, myScroll);
-	};
-
-	var EmptyPullable = function(article) {
-		// Insert the PullDown HTML code if not present
-		if (lng.dom('#'+article).html() == '<ul></ul>') {
-			// Append the fix if the article has a footer
-			var footer = lng.dom('#'+article).siblings('footer').length;
-			var fix = (footer) ? '<div class="pullFix"></div>' : '';
-			lng.dom('#'+article).html('<div><div class="pullDown"><span class="pullDownIcon"></span>\
-			<span class="pullDownLabel">Pull down to refresh...</span></div><ul></ul>'+fix+'</div>');
-		} else {
-			lng.dom('#'+article+' ul').empty();
-		}
-	};
-
-	var StopPullable = function(article) {
-		// Revert the PullDown to its initial state
-		var pullDownEl = lng.dom('#'+article+' .pullDown').get(0);
-		pullDownEl.className = 'pullDown';
-		pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
-		
-		var myScroll = lng.Data.Cache.get('pullable_'+article);
-		myScroll.refresh();
 	};
 
 	return {
@@ -475,10 +349,7 @@ App.View = (function(lng, app, undefined) {
 		NewIssue: NewIssue,
 		LoadIssue: LoadIssue,
 		ResetForm: ResetForm,
-		NewComment: NewComment,
-		CreatePullables: CreatePullables,
-		RefreshScroll: RefreshScroll,
-		Settings: Settings
+		NewComment: NewComment
 	};
 
 })(LUNGO, App);

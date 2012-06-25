@@ -293,15 +293,3 @@ header .bubble.count {
   background: #05b8e2;
 }
 /* @end */
-
-/***** CUSTOM CSS *****/
-pre {
-  white-space: pre-wrap;
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-.load-more {
-  height: 34px;
-  line-height: 34px;
-  text-align: center;
-}
