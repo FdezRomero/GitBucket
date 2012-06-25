@@ -225,22 +225,38 @@ App.Events = (function(lng, app, undefined) {
 		App.View.ResetForm('#compose-issue-form');
 	});
 
-	/*lng.Data.Sql.select('pictures', null, function(result) {
-		console.error(result);
-		if (result.length > 0) { //Tenemos datos en la DB
-			App.View.pictures(result);
-		} else {
-			App.Services.panoramioPictures();
+	//========== PULL-TO-REFRESH ==========//
+
+	lng.dom('body').ready(function() {
+		App.View.CreatePullables();
+	});
+
+	var PullDownAction = function(article, scroll) {
+		
+		var user_repo = App.Data.CurrentRepo();
+		var path_history = lng.Data.Storage.session('path_history');
+		var path = (path_history) ? path_history.join('/') : null;
+		
+		switch(article) {
+			case 'repo-commits':
+				App.Services.RepoCommits(user_repo);
+				break;
+			case 'repo-source':
+				App.Services.RepoSource(user_repo, path);
+				break;
+			case 'repo-issues':
+				App.Services.RepoIssues(user_repo);
+				break;
 		}
-	});*/
+	};
 
 	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
 		//App.Services.RepoRecent(user_repo, method);
 		App.Services.RepoDashboard(user_repo, method);
-		App.Services.RepoSource(user_repo, null, method);
 		App.Services.RepoCommits(user_repo, method);
+		App.Services.RepoSource(user_repo, null, method);
 		App.Services.RepoIssues(user_repo, method);
 	};
 
@@ -251,11 +267,21 @@ App.Events = (function(lng, app, undefined) {
 	var HideFooter = function() {
 		lng.dom('#main footer').hide();
 	};
+
+	/*lng.Data.Sql.select('pictures', null, function(result) {
+		console.error(result);
+		if (result.length > 0) { //Tenemos datos en la DB
+			App.View.pictures(result);
+		} else {
+			App.Services.panoramioPictures();
+		}
+	});*/
 	
 	return {
 		UpdateRepo: UpdateRepo,
 		ShowFooter: ShowFooter,
-		HideFooter: HideFooter
+		HideFooter: HideFooter,
+		PullDownAction: PullDownAction
 	};
 
 })(LUNGO, App);

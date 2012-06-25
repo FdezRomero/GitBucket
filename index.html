@@ -17,11 +17,13 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/images/icon-72.png">
     <link rel="apple-touch-icon-precomposed" href="assets/images/icon.png">
     <link rel="apple-touch-startup-image" href="assets/images/default.png">
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="./lungo.js/lungo-1.2.css">
-    <link rel="stylesheet" href="./lungo.js/lungo.theme.gitbucket.css">
-    <link rel="stylesheet" href="./assets/font-awesome.css">
-    <!--<link rel="stylesheet" href="./assets/pull-to-refresh.css">-->
+    <!-- Main Stylesheets -->
+    <link rel="stylesheet" href="lungo.js/lungo-1.2.css">
+    <link rel="stylesheet" href="lungo.js/lungo.theme.gitbucket.css">
+    <link rel="stylesheet" href="lungo.js/lungo.sugar.growl.css">
+    <!-- Custom Stylesheets -->
+    <link rel="stylesheet" href="assets/streamsocial.pullable.css">
+    <link rel="stylesheet" href="assets/font-awesome.css">
 </head>
 
 <body class="app">
@@ -60,7 +62,7 @@
             </ul>
         </article>
         <!--<article id="repo-recent" class="list scrollable"></article>-->
-        <article id="repo-dashboard" class="indented list scrollable">
+        <article id="repo-dashboard" class="list indented scollable">
             <ul>
                 <li>
                     <label>Description</label>
@@ -104,10 +106,10 @@
                 </li>
             </ul>
         </article>
-        <article id="repo-commits" class="list scrollable"></article>
-        <article id="repo-source" class="list scrollable"></article>
-        <article id="repo-issues" class="list scrollable"></article>
-        <article id="settings" class="list scrollable">Settings here</article>
+        <article id="repo-commits" class="list pullable"></article>
+        <article id="repo-source" class="list pullable"></article>
+        <article id="repo-issues" class="list pullable"></article>
+        <article id="settings" class="list scrollable"></article>
         
         <footer class="toolbar with-labels">
             <nav>
@@ -301,8 +303,9 @@
 
     <!-- LungoJS (Development mode) -->
     <script src="lungo.js/QuoJS.js"></script>
-    <script src="lungo.js/iscroll-lite.js"></script>
+    <script src="lungo.js/iscroll-lite-mod.js"></script>
     <script src="lungo.js/lungo-1.2.js"></script>
+    <script src="lungo.js/lungo.sugar.growl.js"></script>
     <!-- LungoJS (Production mode) -->
     <!--<script src="lungo.js/lungo-1.2.packed.js"></script>-->
     <!-- LungoJS - Sandbox App -->
@@ -314,6 +317,5 @@
     <script src="app/services.js"></script>
     <script src="app/moment.min.js"></script>
     <script src="app/view.js"></script>
-    <!--<script src="app/pull-to-refresh.js"></script>-->
 </body>
 </html>
