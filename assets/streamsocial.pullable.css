@@ -1,10 +1,17 @@
 /**
  *
  * Pull down styles
+ * Modified by Streamsocial for refactoring
+ * #pullDown -> .pullDown, #pullUp -> .pullUp
  *
  */
-#pullDown, #pullUp {
-	background:#fff;
+.pullFix {
+	height:41px;
+	line-height:41px;
+	padding:5px 10px;
+}
+.pullDown, .pullUp {
+	/*background:#fff;*/
 	height:40px;
 	line-height:40px;
 	padding:5px 10px;
@@ -13,30 +20,30 @@
 	font-size:14px;
 	color:#888;
 }
-#pullDown .pullDownIcon, #pullUp .pullUpIcon  {
+.pullDown .pullDownIcon, .pullUp .pullUpIcon  {
 	display:block; float:left;
 	width:40px; height:40px;
 	background:url(images/pull-icon@2x.png) 0 0 no-repeat;
 	-webkit-background-size:40px 80px; background-size:40px 80px;
 	-webkit-transition-property:-webkit-transform;
-	-webkit-transition-duration:250ms;	
+	-webkit-transition-duration:250ms;
 }
-#pullDown .pullDownIcon {
+.pullDown .pullDownIcon {
 	-webkit-transform:rotate(0deg) translateZ(0);
 }
-#pullUp .pullUpIcon  {
+.pullUp .pullUpIcon  {
 	-webkit-transform:rotate(-180deg) translateZ(0);
 }
 
-#pullDown.flip .pullDownIcon {
+.pullDown.flip .pullDownIcon {
 	-webkit-transform:rotate(-180deg) translateZ(0);
 }
 
-#pullUp.flip .pullUpIcon {
+.pullUp.flip .pullUpIcon {
 	-webkit-transform:rotate(0deg) translateZ(0);
 }
 
-#pullDown.loading .pullDownIcon, #pullUp.loading .pullUpIcon {
+.pullDown.loading .pullDownIcon, .pullUp.loading .pullUpIcon {
 	background-position:0 100%;
 	-webkit-transform:rotate(0deg) translateZ(0);
 	-webkit-transition-duration:0ms;
