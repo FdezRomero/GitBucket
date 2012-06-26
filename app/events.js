@@ -25,6 +25,8 @@ App.Events = (function(lng, app, undefined) {
 	//========== LOGIN EVENTS ==========//
 
 	lng.dom('#login-btn').tap(function() {
+		
+		App.View.GrowlShow();
 		var username = lng.dom('#login-username').val();
 		var password = lng.dom('#login-password').val();
 
@@ -50,11 +52,13 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('body').on('login', function() {
 
+		App.View.GrowlShow();
 		var username = lng.Data.Storage.persistent('username');
 
 		HideFooter();
 		lng.Data.Storage.session('current_title', username);
 		App.View.UpdateTitle(username);
+		App.View.CreatePullables();
 
 		App.Services.UserInfo();
 		//App.Services.UserRecent();
@@ -103,6 +107,7 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#repo-commits li').tap(function() {
 		if (lng.dom(this).data('title')) {
+			App.View.GrowlShow();
 			var user_repo = App.Data.CurrentRepo();
 			var commit = lng.dom(this).data('title');
 			App.Data.CurrentCommit(commit);
@@ -114,6 +119,7 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#repo-source li').tap(function() {
 
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 
 		if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'dir') {
@@ -130,6 +136,7 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#repo-issues li').tap(function() {
 		if (lng.dom(this).data('title')) {
+			App.View.GrowlShow();
 			var user_repo = App.Data.CurrentRepo();
 			var issue = lng.dom(this).data('title');
 			App.Data.CurrentIssue(issue);
@@ -140,6 +147,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#repo-issues-search-btn').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		App.Services.SearchIssue(user_repo);
 	});
@@ -152,6 +160,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#commit-detail-refresh').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var commit = App.Data.CurrentCommit();
 		App.Services.CommitDetail(user_repo, commit);
@@ -164,6 +173,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#issue-detail-refresh').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var issue = App.Data.CurrentIssue();
 		App.Services.IssueDetail(user_repo, issue);
@@ -180,6 +190,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#update-issue-btn').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var issue = App.Data.CurrentIssue();
 		App.View.RefreshIssueSelects();
@@ -189,6 +200,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#compose-issue-send').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var issue = App.Data.CurrentIssue();
 		var action = lng.dom(this).data('action');
@@ -210,6 +222,7 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	lng.dom('#compose-comment-send').tap(function() {
+		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var commit = App.Data.CurrentCommit();
 		var issue = App.Data.CurrentIssue();
@@ -226,10 +239,6 @@ App.Events = (function(lng, app, undefined) {
 	});
 
 	//========== PULL-TO-REFRESH ==========//
-
-	lng.dom('body').ready(function() {
-		App.View.CreatePullables();
-	});
 
 	var PullDownAction = function(article, scroll) {
 		
@@ -253,6 +262,7 @@ App.Events = (function(lng, app, undefined) {
 	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
+		App.View.GrowlShow();
 		//App.Services.RepoRecent(user_repo, method);
 		App.Services.RepoDashboard(user_repo, method);
 		App.Services.RepoCommits(user_repo, method);

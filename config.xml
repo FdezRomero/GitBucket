@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns	= "http://www.w3.org/ns/widgets"
+	xmlns:gap	= "http://phonegap.com/ns/1.0"
+	id			= "com.streamsocial.gitbucket"
+	version 	= "0.1">
+
+	<name>GitBucket</name>
+
+	<description>
+		A BitBucket mobile client for Git and Mercurial repositories.
+	</description>
+
+	<author href="http://www.streamsocial.com"
+		email="hello@streamsocial.com">
+		Streamsocial
+	</author>
+
+	<feature name="http://api.phonegap.com/1.0/network"/>
+
+	<access origin="https://api.bitbucket.org" />
+
+	<icon src="icon.png" gap:role="default" />
+
+	<icon src="assets/icons/ios/icon.png" width="57" height="57" />
+	<icon src="assets/icons/ios/icon-72.png" gap:platform="ios" width="72" height="72" />
+	<icon src="assets/icons/ios/icon@2x.png" width="114" height="114" />
+
+	<!--<icon src="assets/icons/android/ldpi.png" gap:platform="android" gap:density="ldpi" />
+	<icon src="assets/icons/android/mdpi.png" gap:platform="android" gap:density="mdpi" />
+	<icon src="assets/icons/android/hdpi.png" gap:platform="android" gap:density="hdpi" />-->
+
+	<gap:splash src="splash.png" />
+
+	<gap:splash src="assets/splash/ios/Default.png" width="320" height="480" />
+	<!--<gap:splash src="assets/splash/ios/Default@2x.png" width="640" height="960" />
+	<gap:splash src="assets/splash/ios/iPad-Landscape.png" width="1024" height="768" />
+	<gap:splash src="assets/splash/ios/iPad-Portrait.png" width="768" height="1024" />-->
+
+	<!--<gap:splash src="assets/splash/android/ldpi.png" gap:platform="android" gap:density="ldpi" />
+	<gap:splash src="assets/splash/android/mdpi.png" gap:platform="android" gap:density="mdpi" />
+	<gap:splash src="assets/splash/android/hdpi.png" gap:platform="android" gap:density="hdpi" />-->
+
+	<preference name="orientation" value="portrait" />
+	<preference name="target-device" value="universal" />
+	<preference name="webviewbounce" value="false" />
+	<preference name="prerendered-icon" value="true" />
+	<preference name="stay-in-webview" value="false" />
+	<preference name="ios-statusbarstyle" value="black-opaque" />
+	<preference name="android-installLocation" value="preferExternal" />
+</widget>

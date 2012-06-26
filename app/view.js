@@ -44,6 +44,7 @@ App.View = (function(lng, app, undefined) {
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
 		}
 		RefreshScroll('aside-repos');
+		GrowlHide();
 	};
 	
 	var RepoRecent = function(events) {
@@ -132,6 +133,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-source ul').append(NoElements('files'));
 		}
 		StopPullable('repo-source');
+		GrowlHide();
 	};
 
 	var RepoIssues = function(issues) {
@@ -158,6 +160,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-issues ul').append(NoElements('issues'));
 		}
 		StopPullable('repo-issues');
+		GrowlHide();
 	};
 
 	//========== DETAIL VIEWS ==========//
@@ -216,6 +219,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#commit-detail-comments').html(NoElements('comments'));
 		}
 		RefreshScroll('commit-detail-comments');
+		GrowlHide();
 	};
 
 	var IssueDetail = function(detail) {
@@ -272,6 +276,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#issue-detail-comments').html(NoElements('comments'));
 		}
 		RefreshScroll('issue-detail-comments');
+		GrowlHide();
 	};
 
 	var RefreshIssueSelects = function() {
@@ -323,6 +328,7 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-msg').val(detail.content);
 
 		RefreshScroll('compose-issue-form');
+		GrowlHide();
 	};
 
 	var ResetForm = function (id) {
@@ -347,25 +353,6 @@ App.View = (function(lng, app, undefined) {
 		RefreshScroll('compose-comment-form');
 	};
 
-	var Settings = function(events) {
-		//console.error(events);
-		lng.dom('#settings ul').empty();
-		if (events.length > 0) {
-			for (var i = 0; i < events.length; i++) {
-				var icon = App.Utils.GetIcon(events[i]['event']);
-				var time_ago = App.Utils.TimeAgo(events[i]['utc_created_on']);
-				var node = (events[i]['node']) ? events[i]['node'] : '';
-				var description = (events[i]['description']) ? ': '+events[i]['description'] : '';
-				lng.dom('#settings ul').append('<li data-title="'+node+'"><a href="#">\
-					<div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
-					'+App.Utils.Capitalize(events[i]['event'])+description+'</a></li>');
-			}
-		} else {
-			lng.dom('#settings ul').append(NoElements('events'));
-		}
-		RefreshScroll('settings');
-	};
-
 	//===== VIEW UTILITIES =====//
 
 	var UpdateTitle = function(title) {
@@ -382,6 +369,14 @@ App.View = (function(lng, app, undefined) {
 
 	var RefreshScroll = function(element) {
 		lng.View.Scroll.refresh(element);
+	};
+
+	var GrowlShow = function() {
+		lng.Sugar.Growl.show('Loading', '', 'refresh', false);
+	};
+
+	var GrowlHide = function() {
+		lng.Sugar.Growl.hide();
 	};
 
 	//========== PULL-TO-REFRESH ==========//
@@ -437,9 +432,8 @@ App.View = (function(lng, app, undefined) {
 	var EmptyPullable = function(article) {
 		// Insert the PullDown HTML code if not present
 		if (lng.dom('#'+article).html() == '<ul></ul>') {
-			// Append the fix if the article has a footer
-			var footer = lng.dom('#'+article).siblings('footer').length;
-			var fix = (footer) ? '<div class="pullFix"></div>' : '';
+			// Append the fix if the article has a footer and it's visible
+			var fix = (article.substr(0,5) == 'repo-') ? '<div class="pullFix"></div>' : '';
 			lng.dom('#'+article).html('<div><div class="pullDown"><span class="pullDownIcon"></span>\
 			<span class="pullDownLabel">Pull down to refresh...</span></div><ul></ul>'+fix+'</div>');
 		} else {
@@ -478,7 +472,8 @@ App.View = (function(lng, app, undefined) {
 		NewComment: NewComment,
 		CreatePullables: CreatePullables,
 		RefreshScroll: RefreshScroll,
-		Settings: Settings
+		GrowlShow: GrowlShow,
+		GrowlHide: GrowlHide
 	};
 
 })(LUNGO, App);

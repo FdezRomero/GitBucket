@@ -11,6 +11,7 @@ App.Services = (function(lng, app, undefined) {
 		lng.Service.Settings.async = false;
 		var response = lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(){});
 		lng.Service.Settings.async = true;
+		App.View.GrowlHide();
 		return response.user.username;
 	};
 
@@ -235,11 +236,13 @@ App.Services = (function(lng, app, undefined) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', serial_data, function(response) {
 				//console.error(response);
 				RepoIssues(user_repo, method);
+				App.View.GrowlHide();
 				alert('Issue #'+response.local_id+' was created');
 				App.View.ResetForm('#compose-issue-form');
 				lng.Router.back();
 			});
 		} else {
+			App.View.GrowlHide();
 			alert('The issue must have a title and a description.');
 		}
 	};
@@ -249,6 +252,7 @@ App.Services = (function(lng, app, undefined) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
 			//console.error(response);
 			App.View.LoadIssue(response);
+			App.View.GrowlHide();
 		});
 	};
 
@@ -272,6 +276,7 @@ App.Services = (function(lng, app, undefined) {
 				//console.error(response);
 				IssueDetail(user_repo, issue); // Update the details before going back
 				RepoIssues(user_repo, method); // Just in case we changed the title
+				App.View.GrowlHide();
 				alert('Issue #'+response.local_id+' updated');
 				App.View.ResetForm('#compose-issue-form');
 				lng.Router.back();
@@ -288,6 +293,7 @@ App.Services = (function(lng, app, undefined) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+query, null, function(response) {
 			//console.error(response);
 			App.View.RepoIssues(response.issues);
+			App.View.GrowlHide();
 		});
 	};
 
@@ -302,6 +308,7 @@ App.Services = (function(lng, app, undefined) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', serial_data, function(response) {
 				//console.error(response);
 				CommitComments(user_repo, commit); // Reload Comments
+				App.View.GrowlHide();
 				alert('Your comment has been posted');
 				App.View.ResetForm('#compose-comment-form');
 				lng.Router.back();
@@ -320,6 +327,7 @@ App.Services = (function(lng, app, undefined) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', serial_data, function(response) {
 				//console.error(response);
 				IssueComments(user_repo, issue); // Reload Comments
+				App.View.GrowlHide();
 				alert('Your comment has been posted');
 				App.View.ResetForm('#compose-comment-form');
 				lng.Router.back();
