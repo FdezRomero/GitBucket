@@ -18,6 +18,8 @@
 	<feature name="http://api.phonegap.com/1.0/network"/>
 
 	<access origin="https://api.bitbucket.org" />
+	<access origin="https://secure.gravatar.com" />
+	<access origin="http://debug.phonegap.com" />
 
 	<icon src="icon.png" gap:role="default" />
 
@@ -32,8 +34,8 @@
 	<gap:splash src="splash.png" />
 
 	<gap:splash src="assets/splash/ios/Default.png" width="320" height="480" />
-	<!--<gap:splash src="assets/splash/ios/Default@2x.png" width="640" height="960" />
-	<gap:splash src="assets/splash/ios/iPad-Landscape.png" width="1024" height="768" />
+	<gap:splash src="assets/splash/ios/Default@2x.png" width="640" height="960" />
+	<!--<gap:splash src="assets/splash/ios/iPad-Landscape.png" width="1024" height="768" />
 	<gap:splash src="assets/splash/ios/iPad-Portrait.png" width="768" height="1024" />-->
 
 	<!--<gap:splash src="assets/splash/android/ldpi.png" gap:platform="android" gap:density="ldpi" />
