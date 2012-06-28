@@ -65,7 +65,7 @@ App.Services = (function(lng, app, undefined) {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/privileges/', null, function(response) {
 			//console.error(response);
 			for (var x in response.teams) {
-				lng.dom('#user-dashboard-teams').append('<li><span class="icon group"></span>'+x+'\
+				lng.dom('#user-dashboard ul').append('<li><span class="icon group"></span>'+x+'\
 					<small>'+App.Utils.Capitalize(response.teams[x])+'</small></li>');
 			}
 		});

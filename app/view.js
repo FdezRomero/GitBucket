@@ -23,12 +23,12 @@ App.View = (function(lng, app, undefined) {
 		//console.error(events);
 		if (events.length > 0) {
 			lng.View.Template.List.create({
-				el: '#settings ul',
+				el: '#user-recent ul',
 				template: 'recent-tmpl',
 				data: events
 			});
 		} else {
-			lng.dom('#settings').html(NoElements('events'));
+			lng.dom('#user-recent ul').html(NoElements('events'));
 		}
 	};
 
@@ -43,25 +43,25 @@ App.View = (function(lng, app, undefined) {
 				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
 		}
-		RefreshScroll('aside-repos');
+		RefreshScroll('aside-menu');
 		GrowlHide();
 	};
 	
 	var RepoRecent = function(events) {
 		//console.error(events);
-		lng.dom('#repo-recent').empty();
+		lng.dom('#repo-recent ul').empty();
 		if (events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
 				var icon = App.Utils.GetIcon(events[i]['event']);
 				var time_ago = App.Utils.TimeAgo(events[i]['utc_created_on']);
 				var node = (events[i]['node']) ? events[i]['node'] : '';
 				var description = (events[i]['description']) ? ': '+events[i]['description'] : '';
-				lng.dom('#repo-recent').append('<li data-title="'+node+'"><a href="#">\
+				lng.dom('#repo-recent ul').append('<li data-title="'+node+'"><a href="#">\
 					<div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
 					'+App.Utils.Capitalize(events[i]['event'])+description+'</a></li>');
 			}
 		} else {
-			lng.dom('#repo-recent').html(NoElements('events'));
+			lng.dom('#repo-recent ul').append(NoElements('events'));
 		}
 		RefreshScroll('repo-recent');
 	};
@@ -91,8 +91,6 @@ App.View = (function(lng, app, undefined) {
 	var RepoCommits = function(response) {
 		//console.error(response);
 		var commits = response.changesets;
-		
-		//lng.dom('#repo-commits').empty();
 		EmptyPullable('repo-commits');
 		
 		if (commits.length > 0) {
@@ -116,8 +114,6 @@ App.View = (function(lng, app, undefined) {
 
 	var RepoSource = function(source) {
 		//console.error(source);
-
-		//lng.dom('#repo-source').empty();
 		EmptyPullable('repo-source');
 
 		if (source.length > 0) {
@@ -183,16 +179,16 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#commit-detail-msg').html(App.Utils.ToHTML(detail.message));
 
 		// Files tab
-		lng.dom('#commit-detail-files').empty();
+		lng.dom('#commit-detail-files ul').empty();
 		if (detail.files.length > 0) {
 			for (var i = 0; i < detail.files.length; i++) {
 				var icon = App.Utils.GetIcon(detail.files[i]['type']);
-				lng.dom('#commit-detail-files').append('<li><span class="icon '+icon+'"></span>\
+				lng.dom('#commit-detail-files ul').append('<li><span class="icon '+icon+'"></span>\
 					'+detail.files[i]['file']+'<small>'+App.Utils.Capitalize(detail.files[i]['type'])+'\
 					</small></a></li>');
 			}
 		} else {
-			lng.dom('#commit-detail-files').html(NoElements('files'));
+			lng.dom('#commit-detail-files ul').html(NoElements('files'));
 		}
 		RefreshScroll('commit-detail-info');
 		RefreshScroll('commit-detail-files');
@@ -200,7 +196,7 @@ App.View = (function(lng, app, undefined) {
 
 	var CommitComments = function(comments) {
 		//console.error(comments);
-		lng.dom('#commit-detail-comments').empty();
+		lng.dom('#commit-detail-comments ul').empty();
 		var num_comments = 0;
 		
 		//Comments tab
@@ -208,7 +204,7 @@ App.View = (function(lng, app, undefined) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_created_on']);
-					lng.dom('#commit-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
+					lng.dom('#commit-detail-comments ul').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['user_avatar_url']+'" class="icon"/>\
 						<label>'+comments[i]['username']+'</label><br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
 					num_comments++;
@@ -216,7 +212,7 @@ App.View = (function(lng, app, undefined) {
 			}
 		}
 		if (num_comments === 0) {
-			lng.dom('#commit-detail-comments').html(NoElements('comments'));
+			lng.dom('#commit-detail-comments ul').append(NoElements('comments'));
 		}
 		RefreshScroll('commit-detail-comments');
 		GrowlHide();
@@ -229,7 +225,7 @@ App.View = (function(lng, app, undefined) {
 
 		App.Data.CurrentIssueDesc(detail.content);
 		
-		lng.dom('#issue-detail-info').empty();
+		lng.dom('#issue-detail-info ul').empty();
 
 		// Info tab: Show only properties with a value assigned
 		var reported_by = '<img src="'+detail.reported_by.avatar+'" class="icon" style="float:none"/>\
@@ -248,7 +244,7 @@ App.View = (function(lng, app, undefined) {
 
 		for (var x in obj) {
 			if (obj[x]) {
-				lng.dom('#issue-detail-info').append('<li><div style="display:inline-block;width:95px">\
+				lng.dom('#issue-detail-info ul').append('<li><div style="display:inline-block;width:95px">\
 					<label>'+x+'</label></div>'+obj[x]+'</li>');
 			}
 		}
@@ -257,7 +253,7 @@ App.View = (function(lng, app, undefined) {
 
 	var IssueComments = function(comments) {
 		console.error(comments);
-		lng.dom('#issue-detail-comments').empty();
+		lng.dom('#issue-detail-comments ul').empty();
 		var num_comments = 0;
 
 		//Comments tab
@@ -265,7 +261,7 @@ App.View = (function(lng, app, undefined) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_updated_on']);
-					lng.dom('#issue-detail-comments').append('<li><div class="onright">'+time_ago+'</div>\
+					lng.dom('#issue-detail-comments ul').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['author_info']['avatar']+'" class="icon"/>\
 						<label>'+comments[i]['author_info']['username']+'</label><br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
 					num_comments++;
@@ -273,7 +269,7 @@ App.View = (function(lng, app, undefined) {
 			}
 		}
 		if (num_comments === 0) {
-			lng.dom('#issue-detail-comments').html(NoElements('comments'));
+			lng.dom('#issue-detail-comments ul').append(NoElements('comments'));
 		}
 		RefreshScroll('issue-detail-comments');
 		GrowlHide();
@@ -397,6 +393,9 @@ App.View = (function(lng, app, undefined) {
 		var pullDownOffset = pullDownEl.offsetHeight;
 
 		var myScroll = new iScroll(article, {
+			hScroll: false,
+			hScrollbar: false,
+			vScrollbar: false,
 			useTransition: true,
 			topOffset: pullDownOffset,
 			onRefresh: function () {
