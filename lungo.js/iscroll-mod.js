@@ -94,12 +94,20 @@ var m = Math,
 			wheelAction: 'scroll',
 
 			// Snap
-			snap: false,
+			snap: 'li',
 			snapThreshold: 1,
 
 			// Events
 			onRefresh: null,
-			onBeforeScrollStart: function (e) { e.preventDefault(); },
+			onBeforeScrollStart: function (e) {
+				//e.preventDefault();
+				var target = e.target;
+                while (target.nodeType != 1) target = target.parentNode;
+
+                if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA') {
+					e.preventDefault();
+                }
+			},
 			onScrollStart: null,
 			onBeforeScrollMove: null,
 			onScrollMove: null,
@@ -189,14 +197,14 @@ iScroll.prototype = {
 		}
 	},
 	
-	_checkDOMChanges: function () {
+	/*_checkDOMChanges: function () {
 		if (this.moved || this.zoomed || this.animating ||
 			(this.scrollerW == this.scroller.offsetWidth * this.scale && this.scrollerH == this.scroller.offsetHeight * this.scale)) return;
 
 		this.refresh();
-	},
+	},*/
 	
-	_scrollbar: function (dir) {
+	/*_scrollbar: function (dir) {
 		var that = this,
 			doc = document,
 			bar;
@@ -251,8 +259,8 @@ iScroll.prototype = {
 		}
 
 		// Reset position
-		that._scrollbarPos(dir, true);
-	},
+		// that._scrollbarPos(dir, true);
+	},*/
 	
 	_resize: function () {
 		var that = this;
@@ -277,11 +285,11 @@ iScroll.prototype = {
 		this.x = x;
 		this.y = y;
 
-		this._scrollbarPos('h');
-		this._scrollbarPos('v');
+		/*this._scrollbarPos('h');
+		this._scrollbarPos('v');*/
 	},
 
-	_scrollbarPos: function (dir, hidden) {
+	/*_scrollbarPos: function (dir, hidden) {
 		var that = this,
 			pos = dir == 'h' ? that.x : that.y,
 			size;
@@ -311,7 +319,7 @@ iScroll.prototype = {
 		that[dir + 'ScrollbarWrapper'].style[vendor + 'TransitionDelay'] = '0';
 		that[dir + 'ScrollbarWrapper'].style.opacity = hidden && that.options.hideScrollbar ? '0' : '1';
 		that[dir + 'ScrollbarIndicator'].style[vendor + 'Transform'] = trnOpen + (dir == 'h' ? pos + 'px,0' : '0,' + pos + 'px') + trnClose;
-	},
+	},*/
 	
 	_start: function (e) {
 		var that = this,
@@ -865,10 +873,10 @@ iScroll.prototype = {
 		that.scroller.style[vendor + 'Transform'] = '';
 
 		// Remove the scrollbars
-		that.hScrollbar = false;
+		/*that.hScrollbar = false;
 		that.vScrollbar = false;
 		that._scrollbar('h');
-		that._scrollbar('v');
+		that._scrollbar('v');*/
 
 		// Remove the event listeners
 		that._unbind(RESIZE_EV, window);
@@ -954,8 +962,8 @@ iScroll.prototype = {
 		}
 
 		// Prepare the scrollbars
-		that._scrollbar('h');
-		that._scrollbar('v');
+		/*that._scrollbar('h');
+		that._scrollbar('v');*/
 
 		if (!that.zoomed) {
 			that.scroller.style[vendor + 'TransitionDuration'] = '0';
@@ -1047,7 +1055,7 @@ iScroll.prototype = {
 		this.animating = false;
 	},
 	
-	zoom: function (x, y, scale, time) {
+	/*zoom: function (x, y, scale, time) {
 		var that = this,
 			relScale = scale / that.scale;
 
@@ -1069,7 +1077,7 @@ iScroll.prototype = {
 		that.scroller.style[vendor + 'TransitionDuration'] = time + 'ms';
 		that.scroller.style[vendor + 'Transform'] = trnOpen + that.x + 'px,' + that.y + 'px' + trnClose + ' scale(' + scale + ')';
 		that.zoomed = false;
-	},
+	},*/
 	
 	isReady: function () {
 		return !this.moved && !this.zoomed && !this.animating;
