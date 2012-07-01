@@ -11,19 +11,19 @@ var m = Math,
 		(/trident/i).test(navigator.userAgent) ? 'ms' :
 		'opera' in window ? 'O' : '',
 
-    // Browser capabilities
-    isAndroid = (/android/gi).test(navigator.appVersion),
-    isIDevice = (/iphone|ipad/gi).test(navigator.appVersion),
-    isPlaybook = (/playbook/gi).test(navigator.appVersion),
-    isTouchPad = (/hp-tablet/gi).test(navigator.appVersion),
+	// Browser capabilities
+	isAndroid = (/android/gi).test(navigator.appVersion),
+	isIDevice = (/iphone|ipad/gi).test(navigator.appVersion),
+	isPlaybook = (/playbook/gi).test(navigator.appVersion),
+	isTouchPad = (/hp-tablet/gi).test(navigator.appVersion),
 
-    has3d = 'WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix(),
-    hasTouch = 'ontouchstart' in window && !isTouchPad,
-    hasTransform = vendor + 'Transform' in document.documentElement.style,
-    hasTransitionEnd = isIDevice || isPlaybook,
+	has3d = 'WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix(),
+	hasTouch = 'ontouchstart' in window && !isTouchPad,
+	hasTransform = vendor + 'Transform' in document.documentElement.style,
+	hasTransitionEnd = isIDevice || isPlaybook,
 
 	nextFrame = (function() {
-	    return window.requestAnimationFrame
+		return window.requestAnimationFrame
 			|| window.webkitRequestAnimationFrame
 			|| window.mozRequestAnimationFrame
 			|| window.oRequestAnimationFrame
@@ -31,7 +31,7 @@ var m = Math,
 			|| function(callback) { return setTimeout(callback, 1); };
 	})(),
 	cancelFrame = (function () {
-	    return window.cancelRequestAnimationFrame
+		return window.cancelRequestAnimationFrame
 			|| window.webkitCancelAnimationFrame
 			|| window.webkitCancelRequestAnimationFrame
 			|| window.mozCancelRequestAnimationFrame
@@ -76,7 +76,7 @@ var m = Math,
 			useTransition: false,
 			topOffset: 0,
 			checkDOMChanges: false,		// Experimental
-    		handleClick: true,
+			handleClick: true,
 
 			// Scrollbar
 			hScrollbar: false,
@@ -94,7 +94,7 @@ var m = Math,
 			wheelAction: 'scroll',
 
 			// Snap
-			snap: 'li',
+			snap: false,
 			snapThreshold: 1,
 
 			// Events
@@ -102,11 +102,11 @@ var m = Math,
 			onBeforeScrollStart: function (e) {
 				//e.preventDefault();
 				var target = e.target;
-                while (target.nodeType != 1) target = target.parentNode;
+				while (target.nodeType != 1) target = target.parentNode;
 
-                if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA') {
+				if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA') {
 					e.preventDefault();
-                }
+				}
 			},
 			onScrollStart: null,
 			onBeforeScrollMove: null,
@@ -135,7 +135,7 @@ var m = Math,
 		that.options.useTransition = hasTransitionEnd && that.options.useTransition;
 
 		// Helpers FIX ANDROID BUG!
-		// translate3d and scale doesn't work together! 
+		// translate3d and scale doesn't work together!
 		// Ignoring 3d ONLY WHEN YOU SET that.options.zoom
 		if ( that.options.zoom && isAndroid ){
 			trnOpen = 'translate(';
@@ -268,7 +268,7 @@ iScroll.prototype = {
 	},
 	
 	_pos: function (x, y) {
-		if (this.zoomed) return;
+		//if (this.zoomed) return;
 
 		x = this.hScroll ? x : 0;
 		y = this.vScroll ? y : 0;
@@ -335,7 +335,7 @@ iScroll.prototype = {
 
 		that.moved = false;
 		that.animating = false;
-		that.zoomed = false;
+		//that.zoomed = false;
 		that.distX = 0;
 		that.distY = 0;
 		that.absDistX = 0;
@@ -344,7 +344,7 @@ iScroll.prototype = {
 		that.dirY = 0;
 
 		// Gesture start
-		if (that.options.zoom && hasTouch && e.touches.length > 1) {
+		/*if (that.options.zoom && hasTouch && e.touches.length > 1) {
 			c1 = m.abs(e.touches[0].pageX-e.touches[1].pageX);
 			c2 = m.abs(e.touches[0].pageY-e.touches[1].pageY);
 			that.touchesDistStart = m.sqrt(c1 * c1 + c2 * c2);
@@ -353,7 +353,7 @@ iScroll.prototype = {
 			that.originY = m.abs(e.touches[0].pageY + e.touches[1].pageY - that.wrapperOffsetTop * 2) / 2 - that.y;
 
 			if (that.options.onZoomStart) that.options.onZoomStart.call(that, e);
-		}
+		}*/
 
 		if (that.options.momentum) {
 			if (that.options.useTransform) {
@@ -404,7 +404,7 @@ iScroll.prototype = {
 		if (that.options.onBeforeScrollMove) that.options.onBeforeScrollMove.call(that, e);
 
 		// Zoom
-		if (that.options.zoom && hasTouch && e.touches.length > 1) {
+		/*if (that.options.zoom && hasTouch && e.touches.length > 1) {
 			c1 = m.abs(e.touches[0].pageX - e.touches[1].pageX);
 			c2 = m.abs(e.touches[0].pageY - e.touches[1].pageY);
 			that.touchesDist = m.sqrt(c1*c1+c2*c2);
@@ -425,7 +425,7 @@ iScroll.prototype = {
 
 			if (that.options.onZoom) that.options.onZoom.call(that, e);
 			return;
-		}
+		}*/
 
 		that.pointX = point.pageX;
 		that.pointY = point.pageY;
@@ -434,7 +434,7 @@ iScroll.prototype = {
 		if (newX > 0 || newX < that.maxScrollX) {
 			newX = that.options.bounce ? that.x + (deltaX / 2) : newX >= 0 || that.maxScrollX >= 0 ? 0 : that.maxScrollX;
 		}
-		if (newY > that.minScrollY || newY < that.maxScrollY) { 
+		if (newY > that.minScrollY || newY < that.maxScrollY) {
 			newY = that.options.bounce ? that.y + (deltaY / 2) : newY >= that.minScrollY || that.maxScrollY >= 0 ? that.minScrollY : that.maxScrollY;
 		}
 
@@ -473,7 +473,7 @@ iScroll.prototype = {
 	},
 	
 	_end: function (e) {
-		if (hasTouch && e.touches.length != 0) return;
+		if (hasTouch && e.touches.length !== 0) return;
 
 		var that = this,
 			point = hasTouch ? e.changedTouches[0] : e,
@@ -494,7 +494,7 @@ iScroll.prototype = {
 
 		if (that.options.onBeforeScrollEnd) that.options.onBeforeScrollEnd.call(that, e);
 
-		if (that.zoomed) {
+		/*if (that.zoomed) {
 			scale = that.scale * that.lastScale;
 			scale = Math.max(that.options.zoomMin, scale);
 			scale = Math.min(that.options.zoomMax, scale);
@@ -512,11 +512,11 @@ iScroll.prototype = {
 
 			if (that.options.onZoomEnd) that.options.onZoomEnd.call(that, e);
 			return;
-		}
+		}*/
 
 		if (!that.moved) {
 			if (hasTouch) {
-				if (that.doubleTapTimer && that.options.zoom) {
+				/*if (that.doubleTapTimer && that.options.zoom) {
 					// Double tapped
 					clearTimeout(that.doubleTapTimer);
 					that.doubleTapTimer = null;
@@ -527,7 +527,7 @@ iScroll.prototype = {
 							that.options.onZoomEnd.call(that, e);
 						}, 200); // 200 is default zoom duration
 					}
-				} else if (this.options.handleClick) {
+				} else*/ if (this.options.handleClick) {
 					that.doubleTapTimer = setTimeout(function () {
 						that.doubleTapTimer = null;
 
@@ -544,7 +544,7 @@ iScroll.prototype = {
 							ev._fake = true;
 							target.dispatchEvent(ev);
 						}
-					}, that.options.zoom ? 250 : 0);
+					}, /*that.options.zoom ? 250 :*/ 0);
 				}
 			}
 
@@ -561,15 +561,15 @@ iScroll.prototype = {
 			newPosX = that.x + momentumX.dist;
 			newPosY = that.y + momentumY.dist;
 
- 			if ((that.x > 0 && newPosX > 0) || (that.x < that.maxScrollX && newPosX < that.maxScrollX)) momentumX = { dist:0, time:0 };
- 			if ((that.y > that.minScrollY && newPosY > that.minScrollY) || (that.y < that.maxScrollY && newPosY < that.maxScrollY)) momentumY = { dist:0, time:0 };
+			if ((that.x > 0 && newPosX > 0) || (that.x < that.maxScrollX && newPosX < that.maxScrollX)) momentumX = { dist:0, time:0 };
+			if ((that.y > that.minScrollY && newPosY > that.minScrollY) || (that.y < that.maxScrollY && newPosY < that.maxScrollY)) momentumY = { dist:0, time:0 };
 		}
 
 		if (momentumX.dist || momentumY.dist) {
 			newDuration = m.max(m.max(momentumX.time, momentumY.time), 10);
 
 			// Do we need to snap?
-			if (that.options.snap) {
+			/*if (that.options.snap) {
 				distX = newPosX - that.absStartX;
 				distY = newPosY - that.absStartY;
 				if (m.abs(distX) < that.options.snapThreshold && m.abs(distY) < that.options.snapThreshold) { that.scrollTo(that.absStartX, that.absStartY, 200); }
@@ -579,7 +579,7 @@ iScroll.prototype = {
 					newPosY = snap.y;
 					newDuration = m.max(snap.time, newDuration);
 				}
-			}
+			}*/
 
 			that.scrollTo(mround(newPosX), mround(newPosY), newDuration);
 
@@ -588,7 +588,7 @@ iScroll.prototype = {
 		}
 
 		// Do we need to snap?
-		if (that.options.snap) {
+		/*if (that.options.snap) {
 			distX = newPosX - that.absStartX;
 			distY = newPosY - that.absStartY;
 			if (m.abs(distX) < that.options.snapThreshold && m.abs(distY) < that.options.snapThreshold) that.scrollTo(that.absStartX, that.absStartY, 200);
@@ -599,7 +599,7 @@ iScroll.prototype = {
 
 			if (that.options.onTouchEnd) that.options.onTouchEnd.call(that, e);
 			return;
-		}
+		}*/
 
 		that._resetPos(200);
 		if (that.options.onTouchEnd) that.options.onTouchEnd.call(that, e);
@@ -616,14 +616,14 @@ iScroll.prototype = {
 				if (that.options.onScrollEnd) that.options.onScrollEnd.call(that);		// Execute custom code on scroll end
 			}
 
-			if (that.hScrollbar && that.options.hideScrollbar) {
+			/*if (that.hScrollbar && that.options.hideScrollbar) {
 				if (vendor == 'webkit') that.hScrollbarWrapper.style[vendor + 'TransitionDelay'] = '300ms';
 				that.hScrollbarWrapper.style.opacity = '0';
 			}
 			if (that.vScrollbar && that.options.hideScrollbar) {
 				if (vendor == 'webkit') that.vScrollbarWrapper.style[vendor + 'TransitionDelay'] = '300ms';
 				that.vScrollbarWrapper.style.opacity = '0';
-			}
+			}*/
 
 			return;
 		}
@@ -676,10 +676,10 @@ iScroll.prototype = {
 
 		if (deltaY > that.minScrollY) deltaY = that.minScrollY;
 		else if (deltaY < that.maxScrollY) deltaY = that.maxScrollY;
-    
-    if(that.maxScrollY < 0){
+	
+	if(that.maxScrollY < 0){
 		  that.scrollTo(deltaX, deltaY, 0);
-    }
+	}
 	},*/
 	
 	_mouseout: function (e) {
@@ -777,7 +777,7 @@ iScroll.prototype = {
 			newDist = (speed * speed) / (2 * deceleration),
 			newTime = 0, outsideDist = 0;
 
-		// Proportinally reduce speed if we are outside of the boundaries 
+		// Proportinally reduce speed if we are outside of the boundaries
 		if (dist > 0 && newDist > maxDistUpper) {
 			outsideDist = size / (6 / (newDist / speed * deceleration));
 			maxDistUpper = maxDistUpper + outsideDist;
@@ -800,7 +800,7 @@ iScroll.prototype = {
 		var left = -el.offsetLeft,
 			top = -el.offsetTop;
 			
-		while (el = el.offsetParent) {
+		while (el == el.offsetParent) { //SS: Changed '=' to '=='
 			left -= el.offsetLeft;
 			top -= el.offsetTop;
 		}
@@ -813,7 +813,7 @@ iScroll.prototype = {
 		return { left: left, top: top };
 	},
 
-	_snap: function (x, y) {
+	/*_snap: function (x, y) {
 		var that = this,
 			i, l,
 			page, time,
@@ -851,7 +851,7 @@ iScroll.prototype = {
 		time = mround(m.max(sizeX, sizeY)) || 200;
 
 		return { x: x, y: y, time: time };
-	},
+	},*/
 
 	_bind: function (type, el, bubble) {
 		(el || this.scroller).addEventListener(type, this, !!bubble);
@@ -892,7 +892,7 @@ iScroll.prototype = {
 		
 		if (that.options.useTransition) that._unbind('webkitTransitionEnd');
 		
-		if (that.options.checkDOMChanges) clearInterval(that.checkDOMTime);
+		//if (that.options.checkDOMChanges) clearInterval(that.checkDOMTime);
 		
 		if (that.options.onDestroy) that.options.onDestroy.call(that);
 	},
@@ -905,7 +905,7 @@ iScroll.prototype = {
 			pos = 0,
 			page = 0;
 
-		if (that.scale < that.options.zoomMin) that.scale = that.options.zoomMin;
+		//if (that.scale < that.options.zoomMin) that.scale = that.options.zoomMin;
 		that.wrapperW = that.wrapper.clientWidth || 1;
 		that.wrapperH = that.wrapper.clientHeight || 1;
 
@@ -930,7 +930,7 @@ iScroll.prototype = {
 		that.wrapperOffsetTop = -offset.top;
 
 		// Prepare snap
-		if (typeof that.options.snap == 'string') {
+		/*if (typeof that.options.snap == 'string') {
 			that.pagesX = [];
 			that.pagesY = [];
 			els = that.scroller.querySelectorAll(that.options.snap);
@@ -959,16 +959,16 @@ iScroll.prototype = {
 				page++;
 			}
 			if (that.maxScrollY%that.wrapperH) that.pagesY[that.pagesY.length] = that.maxScrollY - that.pagesY[that.pagesY.length-1] + that.pagesY[that.pagesY.length-1];
-		}
+		}*/
 
 		// Prepare the scrollbars
 		/*that._scrollbar('h');
 		that._scrollbar('v');*/
 
-		if (!that.zoomed) {
+		//if (!that.zoomed) {
 			that.scroller.style[vendor + 'TransitionDuration'] = '0';
 			that._resetPos(200);
-		}
+		//}
 	},
 
 	scrollTo: function (x, y, time, relative) {
@@ -1011,7 +1011,7 @@ iScroll.prototype = {
 
 		if (that.options.onScrollStart) that.options.onScrollStart.call(that);
 
-		if (that.options.snap) {
+		/*if (that.options.snap) {
 			pageX = pageX == 'next' ? that.currPageX+1 : pageX == 'prev' ? that.currPageX-1 : pageX;
 			pageY = pageY == 'next' ? that.currPageY+1 : pageY == 'prev' ? that.currPageY-1 : pageY;
 
@@ -1022,12 +1022,12 @@ iScroll.prototype = {
 			that.currPageY = pageY;
 			x = that.pagesX[pageX];
 			y = that.pagesY[pageY];
-		} else {
+		} else {*/
 			x = -that.wrapperW * pageX;
 			y = -that.wrapperH * pageY;
 			if (x < that.maxScrollX) x = that.maxScrollX;
 			if (y < that.maxScrollY) y = that.maxScrollY;
-		}
+		//}
 
 		that.scrollTo(x, y, time);
 	},
@@ -1080,7 +1080,7 @@ iScroll.prototype = {
 	},*/
 	
 	isReady: function () {
-		return !this.moved && !this.zoomed && !this.animating;
+		return !this.moved /*&& !this.zoomed*/ && !this.animating;
 	}
 };
 

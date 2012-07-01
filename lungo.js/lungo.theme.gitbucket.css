@@ -296,6 +296,13 @@ pre {
   font-family: 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+.list.indented li.list-break {
+  height: 20px;
+  padding: 0;
+  background: #EDEDED;
+  border: none;
+  border-bottom: 1px solid #E1E1E1;
+}
 .load-more {
   height: 34px;
   line-height: 34px;

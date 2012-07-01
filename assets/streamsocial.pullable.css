@@ -5,17 +5,27 @@
  * #pullDown -> .pullDown, #pullUp -> .pullUp
  *
  */
-.pullFix {
+.scrollFix {
 	height:41px;
 	line-height:41px;
 	padding:5px 10px;
 }
-.pullDown, .pullUp {
-	/*background:#fff;*/
+.pullDown {
+	background:#EDEDED;
 	height:40px;
 	line-height:40px;
 	padding:5px 10px;
-	border-bottom:1px solid #ccc;
+	border-bottom:1px solid #E1E1E1;
+	font-weight:bold;
+	font-size:14px;
+	color:#888;
+}
+.pullUp {
+	background:#EDEDED;
+	height:40px;
+	line-height:40px;
+	padding:5px 10px;
+	border-top:1px solid #E1E1E1;
 	font-weight:bold;
 	font-size:14px;
 	color:#888;

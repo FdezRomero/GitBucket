@@ -37,32 +37,31 @@
             </nav>
         </header>
         
-        <article id="user-dashboard" class="current list indented scrollable">
+        <article id="user-dashboard" class="list indented scrollable current">
             <ul>
                 <li id="user-dashboard-avatar">
                     <span class="icon user mini"></span> Loading user info...
                 </li>
-            <!--</ul>
-            <ul>-->
                 <li>
-                    <div style="display:inline-block;width:85px"><label>Followers</label></div>
-                    <span id="user-dashboard-followers"></span>
+                    <div style="display:inline-block;width:32%">
+                        <div style="display:inline-block;width:85px"><label>Followers</label></div>
+                        <span id="user-dashboard-followers"></span>
+                    </div>
+                    <div style="display:inline-block;width:32%">
+                        <div style="display:inline-block;width:85px"><label>Following</label></div>
+                        <span id="user-dashboard-following"></span>
+                    </div>
+                    <div style="display:inline-block;width:32%">
+                        <div style="display:inline-block;width:85px"><label>Groups</label></div>
+                        <span id="user-dashboard-groups"></span>
+                    </div>
                 </li>
-                <li>
-                    <div style="display:inline-block;width:85px"><label>Following</label></div>
-                    <span id="user-dashboard-following"></span>
-                </li>
-                <li>
-                    <div style="display:inline-block;width:85px"><label>Groups</label></div>
-                    <span id="user-dashboard-groups"></span>
-                </li>
-            <!--</ul>
-            <ul id="user-dashboard-teams">-->
+                <li class="list-break"></li>
                 <li class="anchor" data-icon="star">Your teams</li>
             </ul>
         </article>
         <!--<article id="repo-recent" class="list scrollable"></article>-->
-        <article id="repo-dashboard" class="list indented scollable">
+        <article id="repo-dashboard" class="list indented scrollable">
             <ul>
                 <li>
                     <label>Description</label>
@@ -82,8 +81,7 @@
                         <span id="repo-dashboard-forks"></span>
                     </div>
                 </li>
-            </ul>
-            <ul>
+                <li class="list-break"></li>
                 <li>
                     <div style="display:inline-block;width:95px"><label>Type</label></div>
                     <span id="repo-dashboard-scm"></span>
@@ -104,11 +102,12 @@
                     <div style="display:inline-block;width:95px"><label>Last updated</label></div>
                     <span id="repo-dashboard-updated"></span>
                 </li>
+                <div class="scrollFix"></div>
             </ul>
         </article>
-        <article id="repo-commits" class="list pullable"></article>
-        <article id="repo-source" class="list pullable"></article>
-        <article id="repo-issues" class="list pullable"></article>
+        <article id="repo-commits" class="list pullable down up"></article>
+        <article id="repo-source" class="list pullable down up"></article>
+        <article id="repo-issues" class="list pullable down up"></article>
         <article id="settings" class="list scrollable"></article>
         
         <footer class="toolbar with-labels">

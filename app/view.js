@@ -103,8 +103,8 @@ App.View = (function(lng, app, undefined) {
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
 			if (response.count > commits.length) {
-				lng.dom('#repo-commits ul').append('<li class="load-more" data-start="x" data-limit="x">\
-					<a href="#">Load more...</a></li>');
+				/*lng.dom('#repo-commits ul').append('<li class="load-more" data-start="x" data-limit="x">\
+					<a href="#">Load more...</a></li>');*/
 			}
 		} else {
 			lng.dom('#repo-commits ul').append(NoElements('events'));
@@ -409,6 +409,7 @@ App.View = (function(lng, app, undefined) {
 		ResetForm: ResetForm,
 		NewComment: NewComment,
 		CreatePullables: CreatePullables,
+		StopPullable: StopPullable,
 		RefreshScroll: RefreshScroll,
 		GrowlShow: GrowlShow,
 		GrowlHide: GrowlHide

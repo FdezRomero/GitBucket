@@ -32,11 +32,12 @@ App.Events = (function(lng, app, undefined) {
 
 		if (username.length > 0 && password.length > 0) {
 			lng.Data.Storage.persistent('username', username);
-			lng.Data.Storage.persistent('token', Base64.encode(username+':'+password));
+			//lng.Data.Storage.persistent('token', Base64.encode(username+':'+password));
+			lng.Data.Storage.persistent('token', btoa(username+':'+password));
 			
 			App.Services.SetBasicAuth();
 			var login_confirm = App.Services.CheckLogin();
-			//console.error(login_confirm);
+			console.error(login_confirm);
 
 			if (login_confirm.toLowerCase() == username.toLowerCase()) {
 				lng.dom('body').trigger('login');
@@ -259,6 +260,28 @@ App.Events = (function(lng, app, undefined) {
 		}
 	};
 
+	var PullUpAction = function(article, scroll) {
+		
+		var user_repo = App.Data.CurrentRepo();
+		var path_history = lng.Data.Storage.session('path_history');
+		var path = (path_history) ? path_history.join('/') : null;
+		
+		switch(article) {
+			case 'repo-commits':
+				//App.Services.RepoCommits(user_repo);
+				setTimeout(function(){App.View.StopPullable('repo-commits');}, 1000);
+				break;
+			case 'repo-source':
+				//App.Services.RepoSource(user_repo, path);
+				setTimeout(function(){App.View.StopPullable('repo-source');}, 1000);
+				break;
+			case 'repo-issues':
+				//App.Services.RepoIssues(user_repo);
+				setTimeout(function(){App.View.StopPullable('repo-issues');}, 1000);
+				break;
+		}
+	};
+
 	//========== EVENT UTILITIES ==========//
 
 	var UpdateRepo = function(user_repo, method) {
@@ -291,7 +314,8 @@ App.Events = (function(lng, app, undefined) {
 		UpdateRepo: UpdateRepo,
 		ShowFooter: ShowFooter,
 		HideFooter: HideFooter,
-		PullDownAction: PullDownAction
+		PullDownAction: PullDownAction,
+		PullUpAction: PullUpAction
 	};
 
 })(LUNGO, App);
