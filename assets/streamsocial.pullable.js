@@ -54,19 +54,23 @@ LUNGO.Sugar.Pullable = (function(lng, undefined) {
             },
             onScrollMove: function () {
                 if (has_down && this.y > 5 && !pullDownEl.className.match('flip')) {
+                    App.Utils.Arrow1Sound();
                     pullDownEl.className = 'pullDown flip';
                     pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
                     this.minScrollY = 0;
                 } else if (has_down && this.y < 5 && pullDownEl.className.match('flip')) {
+                    App.Utils.Arrow1Sound();
                     pullDownEl.className = 'pullDown';
                     pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
                     this.minScrollY = -pullDownOffset;
                 
                 } else if (has_up && this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                    App.Utils.Arrow1Sound();
                     pullUpEl.className = 'pullUp flip';
                     pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Release to load more...';
                     this.maxScrollY = this.maxScrollY;
                 } else if (has_up && this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+                    App.Utils.Arrow1Sound();
                     pullUpEl.className = 'pullUp';
                     pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
                     this.maxScrollY = pullUpOffset;
@@ -74,11 +78,13 @@ LUNGO.Sugar.Pullable = (function(lng, undefined) {
             },
             onScrollEnd: function () {
                 if (has_down && pullDownEl.className.match('flip')) {
+                    App.Utils.Arrow2Sound();
                     pullDownEl.className = 'pullDown loading';
                     pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';
                     App.Events.PullDownAction(article, myScroll); // Execute event callback function
                 
                 } else if (has_up && pullUpEl.className.match('flip')) {
+                    App.Utils.Arrow2Sound();
                     pullUpEl.className = 'pullUp loading';
                     pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';
                     App.Events.PullUpAction(article, myScroll); // Execute event callback function
@@ -112,16 +118,21 @@ LUNGO.Sugar.Pullable = (function(lng, undefined) {
         
         // Revert the Pullables to their initial state
         if (lng.dom('#'+article).hasClass('down')) {
+            App.Utils.PopSound();
             var pullDownEl = lng.dom('#'+article+' .pullDown').get(0);
             pullDownEl.className = 'pullDown';
             pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
         }
         if (lng.dom('#'+article).hasClass('up')) {
+            App.Utils.PopSound();
             var pullUpEl = lng.dom('#'+article+' .pullUp').get(0);
             pullUpEl.className = 'pullUp';
             pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
         }
-        
+        Refresh(article);
+    };
+
+    var Refresh = function(article) {
         var myScroll = lng.Data.Cache.get('pullable_'+article);
         myScroll.refresh();
     };
@@ -129,7 +140,8 @@ LUNGO.Sugar.Pullable = (function(lng, undefined) {
     return {
         Create: Create,
         Empty: Empty,
-        Stop: Stop
+        Stop: Stop,
+        Refresh: Refresh
     };
 
 })(LUNGO);

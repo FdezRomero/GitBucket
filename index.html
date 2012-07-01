@@ -33,7 +33,8 @@
             <nav>
                 <a href="#aside-menu" data-target="aside" class="button onleft"><i class="icon-reorder"></i></a>
                 <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
-                <a id="refresh" href="#" data-icon="refresh" class="button onright"></a>
+                <!--<a id="main-refresh" href="#" data-icon="refresh" class="button onright"></a>-->
+                <a id="user-refresh" href="#" data-article="user-dashboard" data-icon="refresh" class="button onright"></a>
             </nav>
         </header>
         
@@ -58,6 +59,7 @@
                 </li>
                 <li class="list-break"></li>
                 <li class="anchor" data-icon="star">Your teams</li>
+                <div id="user-dashboard-teams"></div>
             </ul>
         </article>
         <!--<article id="repo-recent" class="list scrollable"></article>-->
@@ -113,10 +115,10 @@
         <footer class="toolbar with-labels">
             <nav>
                 <!--<a href="#repo-recent" data-target="article" data-icon="clock" data-label="Recent" class="current"></a>-->
-                <a href="#repo-dashboard" data-target="article" data-icon="chart" data-label="Dashboard" class="current"></a>
-                <a href="#repo-commits" data-target="article" data-icon="files" data-label="Commits"></a>
-                <a href="#repo-source" data-target="article" data-icon="edit" data-label="Source"></a>
-                <a href="#repo-issues" data-target="article" data-icon="warning" data-label="Issues"></a>
+                <a id="footer-dashboard" href="#repo-dashboard" data-target="article" data-icon="chart" data-label="Dashboard" class="current"></a>
+                <a id="footer-commits" href="#repo-commits" data-target="article" data-icon="files" data-label="Commits"></a>
+                <a id="footer-source" href="#repo-source" data-target="article" data-icon="edit" data-label="Source"></a>
+                <a id="footer-issues" href="#repo-issues" data-target="article" data-icon="warning" data-label="Issues"></a>
             </nav>
         </footer>
     </section>
@@ -306,6 +308,7 @@
     <script src="lungo.js/lungo-1.2.js"></script>
     <script src="assets/streamsocial.pullable.js"></script>
     <script src="lungo.js/lungo.sugar.growl-1.2.js"></script>
+    <script src="lungo.js/lungo.sugar.sound.js"></script>
     <!-- LungoJS (Production mode) -->
     <!--<script src="lungo.js/lungo-1.2.packed.js"></script>-->
     <!-- LungoJS - Sandbox App -->

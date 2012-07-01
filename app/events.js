@@ -63,8 +63,8 @@ App.Events = (function(lng, app, undefined) {
 
 		App.Services.UserInfo();
 		//App.Services.UserRecent();
-		App.Services.UserDashboard();
 		App.Services.RepoList();
+		App.Services.UserDashboard();
 	});
 
 	//========== ASIDE EVENTS ==========//
@@ -81,7 +81,7 @@ App.Events = (function(lng, app, undefined) {
 		App.View.UpdateTitle(user_repo);
 
 		if (lng.dom(this).parent().attr('id') == 'aside-repos') {
-			UpdateRepo(user_repo, 'cache');
+			UpdateRepo(user_repo);
 			ShowFooter();
 		} else {
 			HideFooter();
@@ -100,10 +100,16 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== REPOSITORY EVENTS ==========//
 
-	lng.dom('#main a#refresh').tap(function() {
+	/*lng.dom('#main-refresh').tap(function() {
 		App.Services.RepoList();
 		var user_repo = App.Data.CurrentRepo();
 		UpdateRepo(user_repo, 'refresh');
+	});*/
+
+	lng.dom('#user-refresh').tap(function() {
+		App.View.GrowlShow();
+		App.Services.RepoList();
+		App.Services.UserDashboard();
 	});
 
 	lng.dom('#repo-commits li').tap(function() {
@@ -249,13 +255,13 @@ App.Events = (function(lng, app, undefined) {
 		
 		switch(article) {
 			case 'repo-commits':
-				App.Services.RepoCommits(user_repo);
+				App.Services.RepoCommits(user_repo, true);
 				break;
 			case 'repo-source':
-				App.Services.RepoSource(user_repo, path);
+				App.Services.RepoSource(user_repo, path, true);
 				break;
 			case 'repo-issues':
-				App.Services.RepoIssues(user_repo);
+				App.Services.RepoIssues(user_repo, true);
 				break;
 		}
 	};
@@ -284,13 +290,13 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== EVENT UTILITIES ==========//
 
-	var UpdateRepo = function(user_repo, method) {
+	var UpdateRepo = function(user_repo) {
 		App.View.GrowlShow();
-		//App.Services.RepoRecent(user_repo, method);
-		App.Services.RepoDashboard(user_repo, method);
-		App.Services.RepoCommits(user_repo, method);
-		App.Services.RepoSource(user_repo, null, method);
-		App.Services.RepoIssues(user_repo, method);
+		//App.Services.RepoRecent(user_repo);
+		App.Services.RepoDashboard(user_repo);
+		App.Services.RepoCommits(user_repo);
+		App.Services.RepoSource(user_repo, null);
+		App.Services.RepoIssues(user_repo);
 	};
 
 	var ShowFooter = function() {

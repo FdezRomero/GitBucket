@@ -44,7 +44,6 @@ App.View = (function(lng, app, undefined) {
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
 		}
 		RefreshScroll('aside-menu');
-		GrowlHide();
 	};
 	
 	var RepoRecent = function(events) {
@@ -88,7 +87,7 @@ App.View = (function(lng, app, undefined) {
 		RefreshScroll('repo-dashboard');
 	};
 
-	var RepoCommits = function(response) {
+	var RepoCommits = function(response, refresh) {
 		//console.error(response);
 		var commits = response.changesets;
 		EmptyPullable('repo-commits');
@@ -109,10 +108,10 @@ App.View = (function(lng, app, undefined) {
 		} else {
 			lng.dom('#repo-commits ul').append(NoElements('events'));
 		}
-		StopPullable('repo-commits');
+		if (refresh) { StopPullable('repo-commits'); } else { RefreshPullable('repo-commits'); }
 	};
 
-	var RepoSource = function(source) {
+	var RepoSource = function(source, refresh) {
 		//console.error(source);
 		EmptyPullable('repo-source');
 
@@ -128,11 +127,11 @@ App.View = (function(lng, app, undefined) {
 		} else {
 			lng.dom('#repo-source ul').append(NoElements('files'));
 		}
-		StopPullable('repo-source');
+		if (refresh) { StopPullable('repo-source'); } else { RefreshPullable('repo-source'); }
 		GrowlHide();
 	};
 
-	var RepoIssues = function(issues) {
+	var RepoIssues = function(issues, refresh) {
 		//console.error(issues);
 		EmptyPullable('repo-issues');
 
@@ -155,7 +154,16 @@ App.View = (function(lng, app, undefined) {
 		} else {
 			lng.dom('#repo-issues ul').append(NoElements('issues'));
 		}
-		StopPullable('repo-issues');
+		if (refresh) { StopPullable('repo-issues'); } else { RefreshPullable('repo-issues'); }
+	};
+
+	var IssuesBadge = function(count) {
+		if (count > 0) {
+			lng.dom('#footer-issues').html('<span class="icon warning"></span><abbr>Issues</abbr>\
+				<span class="bubble count">'+count+'</span>');
+		} else {
+			lng.dom('#footer-issues').html('<span class="icon warning"></span><abbr>Issues</abbr>');
+		}
 		GrowlHide();
 	};
 
@@ -252,7 +260,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var IssueComments = function(comments) {
-		console.error(comments);
+		//console.error(comments);
 		lng.dom('#issue-detail-comments ul').empty();
 		var num_comments = 0;
 
@@ -389,6 +397,10 @@ App.View = (function(lng, app, undefined) {
 		lng.Sugar.Pullable.Stop(article);
 	};
 
+	var RefreshPullable = function(article) {
+		lng.Sugar.Pullable.Refresh(article);
+	};
+
 	return {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
@@ -399,6 +411,7 @@ App.View = (function(lng, app, undefined) {
 		RepoCommits: RepoCommits,
 		RepoSource: RepoSource,
 		RepoIssues: RepoIssues,
+		IssuesBadge: IssuesBadge,
 		CommitDetail: CommitDetail,
 		CommitComments: CommitComments,
 		IssueDetail: IssueDetail,

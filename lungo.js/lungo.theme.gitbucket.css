@@ -291,6 +291,13 @@ header .bubble.count {
 /* @end */
 
 /***** CUSTOM CSS *****/
+header .title {
+  left: 40px;
+  right: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 pre {
   white-space: pre-wrap;
   font-family: 'Roboto', Helvetica, Arial, sans-serif;
