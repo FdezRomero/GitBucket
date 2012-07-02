@@ -114,6 +114,11 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.RepoList();
 		App.Services.UserDashboard();
 	});
+	
+	lng.dom('#load-more-btn').tap(function() {
+		var user_repo = App.Data.CurrentRepo();
+		App.Services.RepoCommits(user_repo,"more");
+	});
 
 	lng.dom('#repo-commits li').tap(function() {
 		if (lng.dom(this).data('title')) {

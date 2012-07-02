@@ -98,11 +98,31 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var RepoCommits = function(user_repo, refresh) {
-		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/', null, function(response) {
-			//console.error(response);
-			App.View.RepoCommits(response, refresh);
-		});
+	var RepoCommits = function(user_repo, type, method) {
+		if(type=="more"){
+			last_node=lng.Data.Storage.session('last_commit_node');
+			lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets?start='+last_node, null, function(response) {
+				//console.error(response);
+				if (response.count > response.changesets.length) {
+					lng.Data.Storage.session('last_commit_node',response.changesets[0].node);
+				}else{
+					lng.Data.Storage.session('last_commit_node',NULL);
+				}
+			
+				App.View.RepoCommits(response);
+			});
+		}else{
+			lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/', null, function(response) {
+				//console.error(response);
+				if (response.count > response.changesets.length) {
+					lng.Data.Storage.session('last_commit_node',response.changesets[0].node);
+				}else{
+					lng.Data.Storage.session('last_commit_node',NULL);
+				}
+			
+				App.View.RepoCommits(response);
+			});
+		}
 	};
 
 	var RepoSource = function(user_repo, dir, refresh) {
