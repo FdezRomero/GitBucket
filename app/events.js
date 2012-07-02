@@ -32,6 +32,7 @@ App.Events = (function(lng, app, undefined) {
 
 		if (username.length > 0 && password.length > 0) {
 			lng.Data.Storage.persistent('username', username);
+			lng.Data.Storage.persistent('password', password);
 			lng.Data.Storage.persistent('token', Base64.encode(username+':'+password));
 			
 			App.Services.SetBasicAuth();

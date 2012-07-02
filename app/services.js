@@ -5,6 +5,15 @@ App.Services = (function(lng, app, undefined) {
 	var SetBasicAuth = function() {
 		var token = lng.Data.Storage.persistent('token');
 		lng.Service.Settings.headers = {'Authorization': 'Basic ' + token};
+
+		var environment = $$.environment();
+		if (environment.isMobile) {
+			console.error('Running on '+environment.os.name);
+			if (environment.os.name == 'Android') {
+				$$.ajaxSettings.username = lng.Data.Storage.persistent('username');
+				$$.ajaxSettings.password = lng.Data.Storage.persistent('password');
+			}
+		}
 	};
 	
 	var CheckLogin = function() {
