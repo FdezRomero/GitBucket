@@ -73,10 +73,12 @@ App.Services = (function(lng, app, undefined) {
 	var UserTeams = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/privileges/', null, function(response) {
 			//console.error(response);
+			lng.dom('#user-dashboard-teams').empty();
 			for (var x in response.teams) {
-				lng.dom('#user-dashboard ul').append('<li><span class="icon group"></span>'+x+'\
+				lng.dom('#user-dashboard-teams').append('<li><span class="icon group"></span>'+x+'\
 					<small>'+App.Utils.Capitalize(response.teams[x])+'</small></li>');
 			}
+			App.View.GrowlHide();
 		});
 	};
 
@@ -90,7 +92,7 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var RepoRecent = function(user_repo, method) {
+	var RepoRecent = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/events/', null, function(response) {
 			//console.error(response);
 			//App.View.RepoRecent(response.events);
@@ -98,21 +100,21 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var RepoDashboard = function(user_repo, method) {
+	var RepoDashboard = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/', null, function(response) {
 			//console.error(response);
 			App.View.RepoDashboard(response);
 		});
 	};
 
-	var RepoCommits = function(user_repo, method) {
+	var RepoCommits = function(user_repo, refresh) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/', null, function(response) {
 			//console.error(response);
-			App.View.RepoCommits(response);
+			App.View.RepoCommits(response, refresh);
 		});
 	};
 
-	var RepoSource = function(user_repo, dir, method) {
+	var RepoSource = function(user_repo, dir, refresh) {
 		var path = (dir) ? dir + '/' : '';
 		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/'+scm+'/'+path, null, function(response) {
@@ -145,15 +147,17 @@ App.Services = (function(lng, app, undefined) {
 				return elements;
 			};
 			var source = Join(response.directories, response.files);
-			App.View.RepoSource(source);
+			App.View.RepoSource(source, refresh);
 		});
 	};
 
-	var RepoIssues = function(user_repo, method) {
+	var RepoIssues = function(user_repo, refresh) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', null, function(response) {
 			//console.error(response);
-			App.View.RepoIssues(response.issues);
+			App.View.RepoIssues(response.issues, refresh);
 		});
+		// Show badge for open issues
+		IssuesBadge(user_repo);
 		// Get & store for <select>'s
 		IssueComponents(user_repo);
 		IssueMilestones(user_repo);
@@ -161,30 +165,38 @@ App.Services = (function(lng, app, undefined) {
 		IssueUsers(user_repo);
 	};
 
+	var IssuesBadge = function(user_repo) {
+		var filter = '?status=new&status=open&status=on%20hold';
+		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+filter, null, function(response) {
+			//console.error(response);
+			App.View.IssuesBadge(response.count);
+		});
+	};
+
 	//========== DETAIL FUNCTIONS ==========//
 
-	var CommitDetail = function(user_repo, commit, method) {
+	var CommitDetail = function(user_repo, commit) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/', null, function(response) {
 			//console.error(response);
 			App.View.CommitDetail(response);
 		});
 	};
 
-	var CommitComments = function(user_repo, commit, method) {
+	var CommitComments = function(user_repo, commit) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', null, function(response) {
 			//console.error(response);
 			App.View.CommitComments(response);
 		});
 	};
 
-	var IssueDetail = function(user_repo, issue, method) {
+	var IssueDetail = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
 			//console.error(response);
 			App.View.IssueDetail(response);
 		});
 	};
 
-	var IssueComments = function(user_repo, issue, method) {
+	var IssueComments = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', null, function(response) {
 			//console.error(response);
 			App.View.IssueComments(response);
@@ -193,28 +205,28 @@ App.Services = (function(lng, app, undefined) {
 
 	//========== ISSUE POSTING ==========//
 
-	var IssueComponents = function(user_repo, method) {
+	var IssueComponents = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/components/', null, function(response) {
 			//console.error(response);
 			App.Data.IssueComponents(response);
 		});
 	};
 
-	var IssueMilestones = function(user_repo, method) {
+	var IssueMilestones = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/milestones/', null, function(response) {
 			//console.error(response);
 			App.Data.IssueMilestones(response);
 		});
 	};
 
-	var IssueVersions = function(user_repo, method) {
+	var IssueVersions = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/versions/', null, function(response) {
 			//console.error(response);
 			App.Data.IssueVersions(response);
 		});
 	};
 
-	var IssueUsers = function(user_repo, method) {
+	var IssueUsers = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/privileges/'+user_repo, null, function(response) {
 			//console.error(response);
 			var users = [];
@@ -225,7 +237,7 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var PostIssue = function(user_repo, method) {
+	var PostIssue = function(user_repo) {
 		
 		var data = new Object({
 			title: lng.dom('#compose-issue-title').val(),
@@ -244,7 +256,7 @@ App.Services = (function(lng, app, undefined) {
 		if (data.title && data.content) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', serial_data, function(response) {
 				//console.error(response);
-				RepoIssues(user_repo, method);
+				RepoIssues(user_repo);
 				App.View.GrowlHide();
 				alert('Issue #'+response.local_id+' was created');
 				App.View.ResetForm('#compose-issue-form');
@@ -257,7 +269,7 @@ App.Services = (function(lng, app, undefined) {
 	};
 
 	// Populates the issue composer with previous data
-	var LoadIssue = function(user_repo, issue, method) {
+	var LoadIssue = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
 			//console.error(response);
 			App.View.LoadIssue(response);
@@ -265,7 +277,7 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var UpdateIssue = function(user_repo, issue, method) {
+	var UpdateIssue = function(user_repo, issue) {
 		
 		var data = new Object({
 			title: lng.dom('#compose-issue-title').val(),
@@ -284,7 +296,7 @@ App.Services = (function(lng, app, undefined) {
 			data: serial_data, dataType: 'json', contentType: "application/x-www-form-urlencoded", success: function(response) {
 				//console.error(response);
 				IssueDetail(user_repo, issue); // Update the details before going back
-				RepoIssues(user_repo, method); // Just in case we changed the title
+				RepoIssues(user_repo); // Just in case we changed the title
 				App.View.GrowlHide();
 				alert('Issue #'+response.local_id+' updated');
 				App.View.ResetForm('#compose-issue-form');
@@ -293,7 +305,7 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var SearchIssue = function(user_repo, method) {
+	var SearchIssue = function(user_repo) {
 		var query = lng.dom('#repo-issues-search').val();
 		query = (query) ? query : ''; // null -> empty string
 
@@ -308,7 +320,7 @@ App.Services = (function(lng, app, undefined) {
 
 	//========== COMMENTING COMMITS & ISSUES ==========//
 
-	var PostCommitComment = function(user_repo, commit, method) {
+	var PostCommitComment = function(user_repo, commit) {
 		
 		var data = new Object({content: lng.dom('#compose-comment-msg').val()});
 		var serial_data = App.Utils.Serialize(data);
@@ -327,7 +339,7 @@ App.Services = (function(lng, app, undefined) {
 		}
 	};
 
-	var PostIssueComment = function(user_repo, issue, method) {
+	var PostIssueComment = function(user_repo, issue) {
 		
 		var data = new Object({content: lng.dom('#compose-comment-msg').val()});
 		var serial_data = App.Utils.Serialize(data);

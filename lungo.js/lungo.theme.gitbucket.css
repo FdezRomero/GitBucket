@@ -291,10 +291,24 @@ header .bubble.count {
 /* @end */
 
 /***** CUSTOM CSS *****/
+header .title {
+  left: 40px;
+  right: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 pre {
   white-space: pre-wrap;
   font-family: 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+.list.indented li.list-break {
+  height: 20px;
+  padding: 0;
+  background: #EDEDED;
+  border: none;
+  border-bottom: 1px solid #E1E1E1;
 }
 .load-more {
   height: 34px;

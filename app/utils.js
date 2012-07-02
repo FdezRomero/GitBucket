@@ -88,6 +88,20 @@ App.Utils = (function(lng, undefined) {
 			element.attachEvent('onkeyup', handler);
 		}
 	};
+
+	//===== SOUND UTILITIES =====//
+
+	var PopSound = function() {
+		lng.Sugar.Sound.play('assets/sounds/pop.wav');
+	};
+
+	var Arrow1Sound = function() {
+		lng.Sugar.Sound.play('assets/sounds/psst1.wav');
+	};
+
+	var Arrow2Sound = function() {
+		lng.Sugar.Sound.play('assets/sounds/psst2.wav');
+	};
 	
 	return {
 		TimeAgo: TimeAgo,
@@ -97,7 +111,10 @@ App.Utils = (function(lng, undefined) {
 		Capitalize: Capitalize,
 		Serialize: Serialize,
 		ToHTML: ToHTML,
-		AutoGrow: AutoGrow
+		AutoGrow: AutoGrow,
+		PopSound: PopSound,
+		Arrow1Sound: Arrow1Sound,
+		Arrow2Sound: Arrow2Sound
 	};
 
 })(LUNGO);
