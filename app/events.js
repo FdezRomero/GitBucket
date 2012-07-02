@@ -16,6 +16,7 @@ App.Events = (function(lng, app, undefined) {
 				lng.dom('body').trigger('login');
 			} else {
 				lng.Router.section('login');
+				alert('The username/password combination is not valid.');
 			}
 		} else {
 			lng.Router.section('login');
@@ -36,15 +37,18 @@ App.Events = (function(lng, app, undefined) {
 			
 			App.Services.SetBasicAuth();
 			var login_confirm = App.Services.CheckLogin();
-			console.error(login_confirm);
-
-			if (login_confirm.toLowerCase() == username.toLowerCase()) {
-				lng.dom('body').trigger('login');
-				lng.Router.back();
+			//console.error(login_confirm);
+			
+			if (login_confirm) {
+				if (login_confirm.toLowerCase() == username.toLowerCase()) {
+					lng.dom('body').trigger('login');
+					lng.Router.back();
+				} else {
+					alert('The username/password combination is not valid.');
+				}
 			} else {
 				alert('The username/password combination is not valid.');
 			}
-
 		} else {
 			alert("The username and password cannot be blank.");
 		}
