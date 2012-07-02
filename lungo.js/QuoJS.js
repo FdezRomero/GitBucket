@@ -544,8 +544,6 @@
     $$.ajaxSettings = {
       type: DEFAULT.TYPE,
       async: true,
-      username: null, //SS
-      password: null, //SS
       success: {},
       error: {},
       context: null,
@@ -570,7 +568,7 @@
           return _xhrStatus(xhr, settings);
         }
       };
-      xhr.open(settings.type, settings.url, settings.async, settings.username, settings.password); //SS
+      xhr.open(settings.type, settings.url, settings.async);
       _xhrHeaders(xhr, settings);
       if (settings.timeout > 0) {
         abortTimeout = setTimeout(function() {

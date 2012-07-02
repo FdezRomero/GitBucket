@@ -1,8 +1,14 @@
 App.Utils = (function(lng, undefined) {
-
-	//Non-LungoJS module for JS utilities
 	
 	//===== VIEW UTILITIES =====//
+
+	var Base64 = function(string) {
+		if (typeof(btoa) === 'function') {
+			return btoa(string);
+		} else {
+			return Base64.encode(string);
+		}
+	};
 
 	var TimeAgo = function(timestamp) {
 		var time_ago = (timestamp) ? moment(timestamp, 'YYYY-MM-DD HH:mm:ssZZ').fromNow() : '';
@@ -104,6 +110,7 @@ App.Utils = (function(lng, undefined) {
 	};
 	
 	return {
+		Base64: Base64,
 		TimeAgo: TimeAgo,
 		FormatDate: FormatDate,
 		FileSize: FileSize,
