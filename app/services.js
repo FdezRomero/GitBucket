@@ -11,8 +11,8 @@ App.Services = (function(lng, app, undefined) {
 		$$.ajax({type: 'GET', url: 'https://api.bitbucket.org/1.0/user/', success: function(response) {
 			//console.error(response);
 			lng.dom('body').trigger('login');
-			lng.Router.back();
-		}, error: function (xhr, type) {
+			if (from == 'login') { lng.Router.back(); }
+		}, error: function () {
 			App.View.GrowlHide();
 			if (from == 'onready') { lng.Router.section('login'); }
 			alert('The username/password combination is not valid.');
