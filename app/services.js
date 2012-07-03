@@ -7,24 +7,16 @@ App.Services = (function(lng, app, undefined) {
 		lng.Service.Settings.headers = {'Authorization': 'Basic ' + token};
 	};
 	
-	var CheckLogin = function(username) {
-		lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(response){
+	var CheckLogin = function(from) {
+		$$.ajax({type: 'GET', url: 'https://api.bitbucket.org/1.0/user/', success: function(response) {
 			//console.error(response);
-			var login = response.user.username;
-			if (username.toLowerCase() === login.toLowerCase()) {
-				lng.dom('body').trigger('login');
-				lng.Router.back();
-			} else {
-				App.View.GrowlHide();
-				lng.Router.section('login');
-				alert('The username/password combination is not valid.');
-			}
-		},
-		function error (xhr, type) {
+			lng.dom('body').trigger('login');
+			lng.Router.back();
+		}, error: function (xhr, type) {
 			App.View.GrowlHide();
-			lng.Router.section('login');
+			if (from == 'onready') { lng.Router.section('login'); }
 			alert('The username/password combination is not valid.');
-		});
+		}});
 	};
 
 	var UserInfo = function() {
@@ -305,8 +297,8 @@ App.Services = (function(lng, app, undefined) {
 		});
 		var serial_data = App.Utils.Serialize(data);
 
-		$$.ajax({type: "PUT", url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
-			data: serial_data, dataType: 'json', contentType: "application/x-www-form-urlencoded", success: function(response) {
+		$$.ajax({type: 'PUT', url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
+			data: serial_data, dataType: 'json', contentType: 'application/x-www-form-urlencoded', success: function(response) {
 				//console.error(response);
 				IssueDetail(user_repo, issue); // Update the details before going back
 				RepoIssues(user_repo); // Just in case we changed the title

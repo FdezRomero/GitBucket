@@ -10,7 +10,7 @@ App.Events = (function(lng, app, undefined) {
 
 		if (username && token) {
 			App.Services.SetBasicAuth();
-			App.Services.CheckLogin(username);
+			App.Services.CheckLogin('onready');
 		} else {
 			lng.Router.section('login');
 		}
@@ -29,7 +29,7 @@ App.Events = (function(lng, app, undefined) {
 			lng.Data.Storage.persistent('token', App.Utils.Base64(username+':'+password));
 			
 			App.Services.SetBasicAuth();
-			App.Services.CheckLogin(username);
+			App.Services.CheckLogin('login');
 		}
 	});
 
@@ -44,7 +44,6 @@ App.Events = (function(lng, app, undefined) {
 		App.View.CreatePullables();
 
 		App.Services.UserInfo();
-		//App.Services.UserRecent();
 		App.Services.RepoList();
 		App.Services.UserDashboard();
 	});
@@ -179,7 +178,7 @@ App.Events = (function(lng, app, undefined) {
 	lng.dom('#compose-issue-btn').tap(function() {
 		App.View.RefreshIssueSelects();
 		App.View.NewIssue();
-		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 3 -- line height
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
 		lng.Router.section('compose-issue');
 	});
 
@@ -189,7 +188,7 @@ App.Events = (function(lng, app, undefined) {
 		var issue = App.Data.CurrentIssue();
 		App.View.RefreshIssueSelects();
 		App.Services.LoadIssue(user_repo, issue);
-		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3); // 3 -- line height
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
 		lng.Router.section('compose-issue');
 	});
 

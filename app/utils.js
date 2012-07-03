@@ -76,7 +76,7 @@ App.Utils = (function(lng, undefined) {
 		function handler(e) {
 			var newHeight = this.scrollHeight, currentHeight = this.clientHeight;
 			if (newHeight > currentHeight) {
-				this.style.height = newHeight + 3 * textLineHeight + "px";
+				this.style.height = newHeight + lh * textLineHeight + "px";
 				// Added: LungoJS needs the parent iScroll to be refreshed
 				var iScroll = lng.dom(this).closest('article').attr('id');
 				lng.View.Scroll.refresh(iScroll);
