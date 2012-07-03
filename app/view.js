@@ -2,12 +2,12 @@ App.View = (function(lng, app, undefined) {
 		
 	//===== TEMPLATES =====//
 
-	lng.View.Template.create('recent-tmpl',
+	/*lng.View.Template.create('recent-tmpl',
 		'<li>\
 			<div class="onright">{{utc_created_on}}</div>\
 			<a href="#"><span class="icon check mini"></span>{{event}}: {{description}}</a>\
 		</li>'
-	);
+	);*/
 
 	//========== USER VIEWS ==========//
 
@@ -46,7 +46,7 @@ App.View = (function(lng, app, undefined) {
 		RefreshScroll('aside-menu');
 	};
 	
-	var RepoRecent = function(events) {
+	/*var RepoRecent = function(events) {
 		//console.error(events);
 		lng.dom('#repo-recent ul').empty();
 		if (events.length > 0) {
@@ -63,7 +63,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-recent ul').append(NoElements('events'));
 		}
 		RefreshScroll('repo-recent');
-	};
+	};*/
 
 	var RepoDashboard = function(info) {
 		//console.error(info);
@@ -87,10 +87,11 @@ App.View = (function(lng, app, undefined) {
 		RefreshScroll('repo-dashboard');
 	};
 
-	var RepoCommits = function(response, refresh) {
+	var RepoCommits = function(response, action) {
 		//console.error(response);
 		var commits = response.changesets;
-		EmptyPullable('repo-commits');
+		
+		if (action != 'more') { EmptyPullable('repo-commits'); }
 		
 		if (commits.length > 0) {
 			for (var i = commits.length-1; i >= 0; i--) {
@@ -101,17 +102,22 @@ App.View = (function(lng, app, undefined) {
 					<span class="icon check"></span>'+commits[i]['node']+branch+'\
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
-			if (response.count > commits.length) {
-				lng.dom('#repo-commits ul').append('<li class="load-more" data-start="x" data-limit="x">\
-					<a id="load-more-btn" href="#">Load more...</a></li>');
+			var size = lng.Data.Storage.session('commits_size');
+			//console.error('count: '+response.count+' - length: '+size);
+			if (response.count > size) {
+				ShowPullable('repo-commits', 'both');
+			} else {
+				ShowPullable('repo-commits', 'down');
+				HidePullable('repo-commits', 'up');
 			}
-		} else {
-			lng.dom('#repo-commits ul').append(NoElements('events'));
+		} else if (action != 'more') {
+			lng.dom('#repo-commits ul').append(NoElements('commits'));
+			HidePullable('repo-commits', 'both');
 		}
-		if (refresh) { StopPullable('repo-commits'); } else { RefreshPullable('repo-commits'); }
+		if (action == 'refresh') { StopPullable('repo-commits'); } else { RefreshPullable('repo-commits'); }
 	};
 
-	var RepoSource = function(source, refresh) {
+	var RepoSource = function(source, action) {
 		//console.error(source);
 		EmptyPullable('repo-source');
 
@@ -124,16 +130,20 @@ App.View = (function(lng, app, undefined) {
 					<span class="icon '+source[i]['icon']+'"></span>'+source[i]['path']+'\
 					<small>'+revision+'</small></a></li>');
 			}
+			ShowPullable('repo-source', 'down');
 		} else {
 			lng.dom('#repo-source ul').append(NoElements('files'));
+			HidePullable('repo-source', 'down');
 		}
-		if (refresh) { StopPullable('repo-source'); } else { RefreshPullable('repo-source'); }
+		if (action == 'refresh') { StopPullable('repo-source'); } else { RefreshPullable('repo-source'); }
 		GrowlHide();
 	};
 
-	var RepoIssues = function(issues, refresh) {
-		//console.error(issues);
-		EmptyPullable('repo-issues');
+	var RepoIssues = function(response, action) {
+		//console.error(response);
+		var issues = response.issues;
+
+		if (action != 'more') { EmptyPullable('repo-issues'); }
 
 		var query = App.Data.CurrentIssueQuery();
 		query = (query) ? query : ''; // null -> empty string
@@ -151,10 +161,20 @@ App.View = (function(lng, app, undefined) {
 					<span class="icon '+icon+'"></span>#'+issues[i]['local_id']+': '+issues[i]['title']+'\
 					<small>Status: '+issues[i]['status']+'</small></a></li>');
 			}
-		} else {
+			var size = App.Data.LastIssue();
+			//console.error('count: '+response.count+' - length: '+size);
+			if (response.count > size) {
+				ShowPullable('repo-issues', 'both');
+			} else {
+				ShowPullable('repo-issues', 'down');
+				HidePullable('repo-issues', 'up');
+			}
+		} else if (action != 'more') {
 			lng.dom('#repo-issues ul').append(NoElements('issues'));
+			lng.dom('#repo-issues li').hide();
+			HidePullable('repo-issues', 'both');
 		}
-		if (refresh) { StopPullable('repo-issues'); } else { RefreshPullable('repo-issues'); }
+		if (action == 'refresh') { StopPullable('repo-issues'); } else { RefreshPullable('repo-issues'); }
 	};
 
 	var IssuesBadge = function(count) {
@@ -401,12 +421,28 @@ App.View = (function(lng, app, undefined) {
 		lng.Sugar.Pullable.Refresh(article);
 	};
 
+	var ShowPullable = function(article, type) {
+		switch (type) {
+			case 'down': lng.dom('#'+article+' .pullDown').show(); break;
+			case 'up': lng.dom('#'+article+' .pullUp').show(); break;
+			case 'both': lng.dom('#'+article+' .pullDown, #'+article+' .pullUp').show(); break;
+		}
+	};
+
+	var HidePullable = function(article, type) {
+		switch (type) {
+			case 'down': lng.dom('#'+article+' .pullDown').hide(); break;
+			case 'up': lng.dom('#'+article+' .pullUp').hide(); break;
+			case 'both': lng.dom('#'+article+' .pullDown, #'+article+' .pullUp').hide(); break;
+		}
+	};
+
 	return {
 		UserInfo: UserInfo,
 		UserRecent: UserRecent,
 		UpdateTitle: UpdateTitle,
 		RepoList: RepoList,
-		RepoRecent: RepoRecent,
+		//RepoRecent: RepoRecent,
 		RepoDashboard: RepoDashboard,
 		RepoCommits: RepoCommits,
 		RepoSource: RepoSource,

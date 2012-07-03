@@ -10,14 +10,7 @@ App.Events = (function(lng, app, undefined) {
 
 		if (username && token) {
 			App.Services.SetBasicAuth();
-			var login_confirm = App.Services.CheckLogin();
-
-			if (login_confirm.toLowerCase() == username.toLowerCase()) {
-				lng.dom('body').trigger('login');
-			} else {
-				lng.Router.section('login');
-				alert('The username/password combination is not valid.');
-			}
+			App.Services.CheckLogin(username);
 		} else {
 			lng.Router.section('login');
 		}
@@ -36,21 +29,7 @@ App.Events = (function(lng, app, undefined) {
 			lng.Data.Storage.persistent('token', App.Utils.Base64(username+':'+password));
 			
 			App.Services.SetBasicAuth();
-			var login_confirm = App.Services.CheckLogin();
-			//console.error(login_confirm);
-			
-			if (login_confirm) {
-				if (login_confirm.toLowerCase() == username.toLowerCase()) {
-					lng.dom('body').trigger('login');
-					lng.Router.back();
-				} else {
-					alert('The username/password combination is not valid.');
-				}
-			} else {
-				alert('The username/password combination is not valid.');
-			}
-		} else {
-			alert("The username and password cannot be blank.");
+			App.Services.CheckLogin(username);
 		}
 	});
 
@@ -263,13 +242,13 @@ App.Events = (function(lng, app, undefined) {
 		
 		switch(article) {
 			case 'repo-commits':
-				App.Services.RepoCommits(user_repo, true);
+				App.Services.RepoCommits(user_repo, 'refresh');
 				break;
 			case 'repo-source':
-				App.Services.RepoSource(user_repo, path, true);
+				App.Services.RepoSource(user_repo, path, 'refresh');
 				break;
 			case 'repo-issues':
-				App.Services.RepoIssues(user_repo, true);
+				App.Services.RepoIssues(user_repo, 'refresh');
 				break;
 		}
 	};
@@ -282,16 +261,10 @@ App.Events = (function(lng, app, undefined) {
 		
 		switch(article) {
 			case 'repo-commits':
-				//App.Services.RepoCommits(user_repo);
-				setTimeout(function(){App.View.StopPullable('repo-commits');}, 1000);
-				break;
-			case 'repo-source':
-				//App.Services.RepoSource(user_repo, path);
-				setTimeout(function(){App.View.StopPullable('repo-source');}, 1000);
+				App.Services.RepoCommits(user_repo, 'more');
 				break;
 			case 'repo-issues':
-				//App.Services.RepoIssues(user_repo);
-				setTimeout(function(){App.View.StopPullable('repo-issues');}, 1000);
+				App.Services.RepoIssues(user_repo, 'more');
 				break;
 		}
 	};

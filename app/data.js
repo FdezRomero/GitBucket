@@ -35,35 +35,26 @@ App.Data = (function(lng, app, undefined) {
 		dataStore.clear();
 	};
 
-	// Stores and provides the current repo in view
 	var CurrentRepo = function(repo) {
 		if (repo) {
-			// Store the repo provided
 			lng.Data.Storage.session('current_repo', repo);
 		} else {
-			// Return the current repo
 			return lng.Data.Storage.session('current_repo');
 		}
 	};
 
-	// Stores and provides the current repo SCM in view
 	var CurrentRepoType = function(type) {
 		if (type) {
-			// Store the repo SCM provided
 			lng.Data.Storage.session('current_scm', type);
 		} else {
-			// Return the current SCM repo
 			return lng.Data.Storage.session('current_scm');
 		}
 	};
 
-	// Stores and provides the current commit in view
 	var CurrentCommit = function(commit) {
 		if (commit) {
-			// Store the commit provided
 			lng.Data.Storage.session('current_commit', commit);
 		} else {
-			// Return the current commit
 			return lng.Data.Storage.session('current_commit');
 		}
 	};
@@ -73,6 +64,14 @@ App.Data = (function(lng, app, undefined) {
 			lng.Data.Storage.session('current_commit_desc', description);
 		} else {
 			return lng.Data.Storage.session('current_commit_desc');
+		}
+	};
+
+	var LastCommit = function(commit) {
+		if (commit) {
+			lng.Data.Storage.session('last_commit', commit);
+		} else {
+			return lng.Data.Storage.session('last_commit');
 		}
 	};
 
@@ -99,20 +98,16 @@ App.Data = (function(lng, app, undefined) {
 		return path_history.join('/'); // Returns previous URL
 	};
 
-	// Stores and provides the current issue in view
 	var CurrentIssue = function(issue) {
 		if (issue) {
-			// Store the issue provided
 			lng.Data.Storage.session('current_issue', issue);
 		} else {
-			// Return the current issue
 			return lng.Data.Storage.session('current_issue');
 		}
 	};
 
 	var CurrentIssueQuery = function(query) {
 		//console.error('CurrentIssueQuery: Received type '+typeof(query)', value "'+query+'"');
-		
 		if (query === undefined) {
 			// CurrentIssueQuery(): Return the current search query
 			return sessionStorage.current_issue_query;
@@ -130,46 +125,42 @@ App.Data = (function(lng, app, undefined) {
 		}
 	};
 
-	// Stores and provides the Issue Components
+	var LastIssue = function(issue) {
+		if (issue) {
+			lng.Data.Storage.session('last_issue', issue);
+		} else {
+			return lng.Data.Storage.session('last_issue');
+		}
+	};
+
 	var IssueComponents = function(components) {
 		if (components) {
-			// Store the components provided
 			lng.Data.Storage.session('issue_components', components);
 		} else {
-			// Return the current components
 			return lng.Data.Storage.session('issue_components');
 		}
 	};
 
-	// Stores and provides the Issue Milestones
 	var IssueMilestones = function(milestones) {
 		if (milestones) {
-			// Store the milestones provided
 			lng.Data.Storage.session('issue_milestones', milestones);
 		} else {
-			// Return the current milestones
 			return lng.Data.Storage.session('issue_milestones');
 		}
 	};
 
-	// Stores and provides the Issue Versions
 	var IssueVersions = function(versions) {
 		if (versions) {
-			// Store the versions provided
 			lng.Data.Storage.session('issue_versions', versions);
 		} else {
-			// Return the current versions
 			return lng.Data.Storage.session('issue_versions');
 		}
 	};
 
-	// Stores and provides the Users to assign issues
 	var IssueUsers = function(users) {
 		if (users) {
-			// Store the users provided
 			lng.Data.Storage.session('issue_users', users);
 		} else {
-			// Return the current users
 			return lng.Data.Storage.session('issue_users');
 		}
 	};
@@ -181,11 +172,13 @@ App.Data = (function(lng, app, undefined) {
 		CurrentRepoType: CurrentRepoType,
 		CurrentCommit: CurrentCommit,
 		CurrentCommitDesc: CurrentCommitDesc,
+		LastCommit: LastCommit,
 		StorePath: StorePath,
 		PathBack: PathBack,
 		CurrentIssue: CurrentIssue,
 		CurrentIssueQuery: CurrentIssueQuery,
 		CurrentIssueDesc: CurrentIssueDesc,
+		LastIssue: LastIssue,
 		IssueComponents: IssueComponents,
 		IssueMilestones: IssueMilestones,
 		IssueVersions: IssueVersions,
