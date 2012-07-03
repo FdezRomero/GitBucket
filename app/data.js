@@ -83,7 +83,7 @@ App.Data = (function(lng, app, undefined) {
 			lng.Data.Storage.session('path_history', path_history);
 			return path_history.join('/'); // Returns new URL
 		} else {
-			var path_history = new Array();
+			var path_history = [];
 			path_history.push(path);
 			lng.Data.Storage.session('path_history', path_history);
 			return path_history.join('/'); // Returns new URL

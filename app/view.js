@@ -99,7 +99,7 @@ App.View = (function(lng, app, undefined) {
 				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
 				lng.dom('#repo-commits ul').append('<li data-title="'+commits[i]['node']+'">\
 					<a href="#"><div class="onright">'+time_ago+'</div>\
-					<span class="icon check"></span>'+commits[i]['node']+branch+'\
+					<img class="icon round" src="'+App.Utils.Gravatar(commits[i]['raw_author'])+'"/>'+commits[i]['node']+branch+'\
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
 			var size = lng.Data.Storage.session('commits_size');
@@ -114,7 +114,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-commits ul').append(NoElements('commits'));
 			HidePullable('repo-commits', 'both');
 		}
-		if (action == 'refresh') { StopPullable('repo-commits'); } else { RefreshPullable('repo-commits'); }
+		if (action == 'load') { RefreshPullable('repo-commits'); } else { StopPullable('repo-commits'); }
 	};
 
 	var RepoSource = function(source, action) {
@@ -135,7 +135,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-source ul').append(NoElements('files'));
 			HidePullable('repo-source', 'down');
 		}
-		if (action == 'refresh') { StopPullable('repo-source'); } else { RefreshPullable('repo-source'); }
+		if (action == 'load') { RefreshPullable('repo-source'); } else { StopPullable('repo-source'); }
 		GrowlHide();
 	};
 
@@ -174,7 +174,7 @@ App.View = (function(lng, app, undefined) {
 			lng.dom('#repo-issues li').hide();
 			HidePullable('repo-issues', 'both');
 		}
-		if (action == 'refresh') { StopPullable('repo-issues'); } else { RefreshPullable('repo-issues'); }
+		if (action == 'load') { RefreshPullable('repo-issues'); } else { StopPullable('repo-issues'); }
 	};
 
 	var IssuesBadge = function(count) {

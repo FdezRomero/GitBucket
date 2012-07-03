@@ -62,7 +62,7 @@ App.Events = (function(lng, app, undefined) {
 		App.View.UpdateTitle(user_repo);
 
 		if (lng.dom(this).parent().attr('id') == 'aside-repos') {
-			UpdateRepo(user_repo);
+			UpdateRepo(user_repo, 'load');
 			ShowFooter();
 		} else {
 			HideFooter();
@@ -91,11 +91,6 @@ App.Events = (function(lng, app, undefined) {
 		App.View.GrowlShow();
 		App.Services.RepoList();
 		App.Services.UserDashboard();
-	});
-	
-	lng.dom('#load-more-btn').tap(function() {
-		var user_repo = App.Data.CurrentRepo();
-		App.Services.RepoCommits(user_repo,"more");
 	});
 
 	lng.dom('#repo-commits li').tap(function() {
@@ -270,13 +265,13 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== EVENT UTILITIES ==========//
 
-	var UpdateRepo = function(user_repo) {
+	var UpdateRepo = function(user_repo, action) {
 		App.View.GrowlShow();
-		//App.Services.RepoRecent(user_repo);
-		App.Services.RepoDashboard(user_repo);
-		App.Services.RepoCommits(user_repo);
-		App.Services.RepoSource(user_repo, null);
-		App.Services.RepoIssues(user_repo);
+		//App.Services.RepoRecent(user_repo, action);
+		App.Services.RepoDashboard(user_repo, action);
+		App.Services.RepoCommits(user_repo, action);
+		App.Services.RepoSource(user_repo, null, action);
+		App.Services.RepoIssues(user_repo, action);
 	};
 
 	var ShowFooter = function() {

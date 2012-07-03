@@ -101,21 +101,21 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
-	var RepoCommits = function(user_repo, action) { //action: load (default), refresh, more	
+	var RepoCommits = function(user_repo, action) { //action: load (default), refresh, more
 		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
 		var start = (action == 'more') ? App.Data.LastCommit() : scm;
 		var size = (action == 'more') ? lng.Data.Storage.session('commits_size') : 0;
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/?start='+start, null, function(response) {
 			//console.error(response);
-			App.Data.LastCommit(response.changesets[0].node)
+			App.Data.LastCommit(response.changesets[0].node);
 			if (action == 'more') { response.changesets.pop(); } // Avoid repeating last commit
 			lng.Data.Storage.session('commits_size', size+response.changesets.length);
 			App.View.RepoCommits(response, action);
 		});
 	};
 
-	var RepoSource = function(user_repo, dir, action) {	
+	var RepoSource = function(user_repo, dir, action) {
 		var path = (dir) ? dir + '/' : '';
 		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/'+scm+'/'+path, null, function(response) {
@@ -124,18 +124,18 @@ App.Services = (function(lng, app, undefined) {
 			// Normalize directory data to file structure
 			var Join = function(dirsArray, filesArray) {
 				var n = dirsArray.length + filesArray.length;
-				var elements = new Array();
+				var elements = [];
 
 				// Add path to go back if needed
 				//console.error(path);
 				if (path.length > 0) {
-					var obj = new Object({path: 'Back', type: 'back', size: null, revision: null, icon: 'left mini'});
-					elements.push(obj);
+					var back_obj = {path: 'Back', type: 'back', size: null, revision: null, icon: 'left mini'};
+					elements.push(back_obj);
 				}
 				// Add the directories
 				for (var i = 0; i < dirsArray.length; i++) {
-					var obj = new Object({path: dirsArray[i], type: 'dir', size: null, revision: null, icon: 'folder mini'});
-					elements.push(obj);
+					var dir_obj = {path: dirsArray[i], type: 'dir', size: null, revision: null, icon: 'folder mini'};
+					elements.push(dir_obj);
 				}
 				// Add the files
 				for (var j = 0; j < filesArray.length; j++) {
@@ -154,7 +154,6 @@ App.Services = (function(lng, app, undefined) {
 
 	var RepoIssues = function(user_repo, action) {
 		var start = (action == 'more') ? App.Data.LastIssue() : 0;
-		//var size = (action == 'more') ? lng.Data.Storage.session('issues_size') : 0;
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?start='+start, null, function(response) {
 			//console.error(response);
@@ -370,7 +369,6 @@ App.Services = (function(lng, app, undefined) {
 		UserRecent: UserRecent,
 		UserDashboard: UserDashboard,
 		RepoList: RepoList,
-		//RepoRecent: RepoRecent,
 		RepoDashboard: RepoDashboard,
 		RepoCommits: RepoCommits,
 		RepoIssues: RepoIssues,

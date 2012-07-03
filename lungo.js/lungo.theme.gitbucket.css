@@ -310,8 +310,17 @@ pre {
   border: none;
   border-bottom: 1px solid #E1E1E1;
 }
-.load-more {
-  height: 34px;
-  line-height: 34px;
-  text-align: center;
+#repo-commits .icon.round {
+  width: 32px;
+  height: 32px;
+  margin: 2px 10px 0 -2px;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+}
+#repo-commits li {
+  background-image: url(../assets/images/node@2x.png);
+  background-size: 36px 51px;
+  background-position: 4px 0;
+  background-repeat: no-repeat;
+  border-bottom: 1px dashed #E1E1E1;
 }
