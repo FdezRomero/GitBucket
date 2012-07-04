@@ -5,8 +5,14 @@ App.Events = (function(lng, app, undefined) {
 	lng.ready(function() {
 
 		App.Data.ClearSessionStorage();
-		var username = lng.Data.Storage.persistent('username') || null;
-		var token = lng.Data.Storage.persistent('token') || null;
+		/*var username = lng.Data.Storage.persistent('username') || null;
+		var token = lng.Data.Storage.persistent('token') || null;*/
+
+		if (lng.Data.Storage.persistent('username')) {var username = lng.Data.Storage.persistent('username');}
+		else {var username = null;}
+
+		if (lng.Data.Storage.persistent('token')) {var token = lng.Data.Storage.persistent('token');}
+		else {var token = null;}
 
 		if (username && token) {
 			App.Services.SetBasicAuth();
