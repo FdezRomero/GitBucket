@@ -324,3 +324,6 @@ pre {
   background-repeat: no-repeat;
   border-bottom: 1px dashed #E1E1E1;
 }
+#repo-commits li:last-child {
+  border-bottom: none;
+}
