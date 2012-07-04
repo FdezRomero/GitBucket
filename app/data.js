@@ -75,6 +75,12 @@ App.Data = (function(lng, app, undefined) {
 		}
 	};
 
+	var CurrentPath = function() {
+		var path_history = lng.Data.Storage.session('path_history');
+		var path = (path_history) ? path_history.join('/') : '';
+		return path; // Returns current URL
+	};
+
 	// Add the current path to the source browsing history
 	var StorePath = function(path) {
 		if (lng.Data.Storage.session('path_history')) {
@@ -173,6 +179,7 @@ App.Data = (function(lng, app, undefined) {
 		CurrentCommit: CurrentCommit,
 		CurrentCommitDesc: CurrentCommitDesc,
 		LastCommit: LastCommit,
+		CurrentPath: CurrentPath,
 		StorePath: StorePath,
 		PathBack: PathBack,
 		CurrentIssue: CurrentIssue,

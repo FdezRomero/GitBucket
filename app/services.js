@@ -193,6 +193,17 @@ App.Services = (function(lng, app, undefined) {
 		});
 	};
 
+	// NOTE: Raw source code is not currently available for private repos
+	/*var SourceCode = function(user_repo, dir, file) {
+		var path = (dir) ? dir + '/' : '';
+		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
+
+		lng.Service.get('https://bitbucket.org/'+user_repo+'/raw/'+scm+'/'+path+'/'+file, null, function(response) {
+			console.error(response);
+			//App.View.SourceCode(response);
+		}, 'text');
+	};*/
+
 	var IssueDetail = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
 			//console.error(response);

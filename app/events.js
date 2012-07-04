@@ -2,11 +2,11 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== DEVICE READY ==========//
 
-	lng.dom('body').ready(function() {
+	lng.ready(function() {
 
 		App.Data.ClearSessionStorage();
-		var username = lng.Data.Storage.persistent('username');
-		var token = lng.Data.Storage.persistent('token');
+		var username = lng.Data.Storage.persistent('username') || null;
+		var token = lng.Data.Storage.persistent('token') || null;
 
 		if (username && token) {
 			App.Services.SetBasicAuth();
@@ -107,16 +107,20 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#repo-source li').tap(function() {
 
-		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
+		var title = lng.dom(this).data('title');
+		var type = lng.dom(this).data('type');
 
-		if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'dir') {
-			var dir = lng.dom(this).data('title');
-			var path_url = App.Data.StorePath(dir); // Advance one history level
+		if (title && type == 'dir') {
+			App.View.GrowlShow();
+			var path_url = App.Data.StorePath(title); // Advance one history level
 			App.Services.RepoSource(user_repo, path_url);
-		} else if (lng.dom(this).data('title') && lng.dom(this).data('type') == 'file') {
-			console.error('Show highlighted source code');
-		} else if (lng.dom(this).data('type') == 'back') {
+		} /*else if (title && type == 'file') {
+			//NOTE: Raw source code is not currently available for private repos
+			var path_url = App.Data.CurrentPath();
+			App.Services.SourceCode(user_repo, path_url, title);
+		}*/ else if (type == 'back') {
+			App.View.GrowlShow();
 			var path_url = App.Data.PathBack(); // Go back one history level
 			App.Services.RepoSource(user_repo, path_url);
 		}
