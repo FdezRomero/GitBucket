@@ -19,12 +19,6 @@ App.Events = (function(lng, app, undefined) {
 		console.log('DeviceReady()');
 		App.Data.ClearSessionStorage();
 
-		/*if (lng.Data.Storage.persistent('username')) {var username = lng.Data.Storage.persistent('username');}
-		else {var username = null;}
-
-		if (lng.Data.Storage.persistent('token')) {var token = lng.Data.Storage.persistent('token');}
-		else {var token = null;}*/
-
 		try {var username = lng.Data.Storage.persistent('username');}
 		catch(e) {var username = null;}
 
@@ -96,23 +90,7 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
-	// Swipe right to open the aside
-	lng.dom('#main').swipeRight(function() {
-		lng.View.Aside.show('#main', '#aside-menu');
-	});
-
-	// Swipe left to close the aside
-	lng.dom('#main').swipeLeft(function() {
-		lng.View.Aside.hide('#main', '#aside-menu');
-	});
-
 	//========== REPOSITORY EVENTS ==========//
-
-	/*lng.dom('#main-refresh').tap(function() {
-		App.Services.RepoList();
-		var user_repo = App.Data.CurrentRepo();
-		UpdateRepo(user_repo, 'refresh');
-	});*/
 
 	lng.dom('#user-refresh').tap(function() {
 		App.View.GrowlShow();
@@ -128,7 +106,6 @@ App.Events = (function(lng, app, undefined) {
 			App.Data.CurrentCommit(commit);
 			App.Services.CommitDetail(user_repo, commit);
 			App.Services.CommitComments(user_repo, commit);
-			lng.Router.section('commit-detail');
 		}
 	});
 
@@ -161,7 +138,6 @@ App.Events = (function(lng, app, undefined) {
 			App.Data.CurrentIssue(issue);
 			App.Services.IssueDetail(user_repo, issue);
 			App.Services.IssueComments(user_repo, issue);
-			lng.Router.section('issue-detail');
 		}
 	});
 
@@ -173,22 +149,12 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== DETAIL EVENTS ==========//
 
-	lng.dom('#commit-detail-left').tap(function() {
-		lng.dom('#commit-detail-info li span').empty();
-		lng.dom('#commit-detail-comments').empty();
-	});
-
 	lng.dom('#commit-detail-refresh').tap(function() {
 		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
 		var commit = App.Data.CurrentCommit();
 		App.Services.CommitDetail(user_repo, commit);
 		App.Services.CommitComments(user_repo, commit);
-	});
-
-	lng.dom('#issue-detail-left').tap(function() {
-		lng.dom('#issue-detail-info').empty();
-		lng.dom('#issue-detail-comments').empty();
 	});
 
 	lng.dom('#issue-detail-refresh').tap(function() {
@@ -204,8 +170,6 @@ App.Events = (function(lng, app, undefined) {
 	lng.dom('#compose-issue-btn').tap(function() {
 		App.View.RefreshIssueSelects();
 		App.View.NewIssue();
-		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
-		lng.Router.section('compose-issue');
 	});
 
 	lng.dom('#update-issue-btn').tap(function() {
@@ -214,8 +178,6 @@ App.Events = (function(lng, app, undefined) {
 		var issue = App.Data.CurrentIssue();
 		App.View.RefreshIssueSelects();
 		App.Services.LoadIssue(user_repo, issue);
-		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
-		lng.Router.section('compose-issue');
 	});
 
 	lng.dom('#compose-issue-send').tap(function() {
@@ -232,12 +194,10 @@ App.Events = (function(lng, app, undefined) {
 
 	lng.dom('#commit-comment-btn').tap(function() {
 		App.View.NewComment('commit');
-		lng.Router.section('compose-comment');
 	});
 
 	lng.dom('#issue-comment-btn').tap(function() {
 		App.View.NewComment('issue');
-		lng.Router.section('compose-comment');
 	});
 
 	lng.dom('#compose-comment-send').tap(function() {
@@ -253,8 +213,62 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
+	lng.dom('#comment-reset-btn').tap(function() {
+		App.View.ResetForm('#compose-comment-form');
+		lng.View.Scroll.first('compose-comment-form');
+	});
+	
 	lng.dom('#issue-reset-btn').tap(function() {
 		App.View.ResetForm('#compose-issue-form');
+		lng.View.Scroll.first('compose-issue-form');
+	});
+
+	//========== SWIPING ==========//
+
+	// Main: open/close the aside
+	lng.dom('#main').swipeRight(function() {
+		lng.View.Aside.show('#main', '#aside-menu');
+	});
+	lng.dom('#main').swipeLeft(function() {
+		lng.View.Aside.hide('#main', '#aside-menu');
+	});
+
+	// Commit detail: go back / change articles
+	lng.dom('#commit-detail-info').swipeRight(function() {
+		lng.Router.back();
+	});
+	lng.dom('#commit-detail-info').swipeLeft(function() {
+		lng.Router.article('commit-detail', 'commit-detail-files');
+	});
+	lng.dom('#commit-detail-files').swipeRight(function() {
+		lng.Router.article('commit-detail', 'commit-detail-info');
+	});
+	lng.dom('#commit-detail-files').swipeLeft(function() {
+		lng.Router.article('commit-detail', 'commit-detail-comments');
+	});
+	lng.dom('#commit-detail-comments').swipeRight(function() {
+		lng.Router.article('commit-detail', 'commit-detail-files');
+	});
+
+	// Source: browse one dir up
+	lng.dom('#repo-source').swipeLeft(function() {
+		if (App.Data.CurrentPath() != '') {
+			App.View.GrowlShow();
+			var user_repo = App.Data.CurrentRepo();
+			var path_url = App.Data.PathBack();
+			App.Services.RepoSource(user_repo, path_url);
+		}
+	});
+
+	// Issue detail: go back / change articles
+	lng.dom('#issue-detail-info').swipeRight(function() {
+		lng.Router.back();
+	});
+	lng.dom('#issue-detail-info').swipeLeft(function() {
+		lng.Router.article('issue-detail', 'issue-detail-comments');
+	});
+	lng.dom('#issue-detail-comments').swipeRight(function() {
+		lng.Router.article('issue-detail', 'issue-detail-info');
 	});
 
 	//========== PULL-TO-REFRESH ==========//
@@ -262,7 +276,8 @@ App.Events = (function(lng, app, undefined) {
 	var PullDownAction = function(article, scroll) {
 		
 		var user_repo = App.Data.CurrentRepo();
-		var path_history = lng.Data.Storage.session('path_history');
+		try {var path_history = lng.Data.Storage.session('path_history');}
+		catch (e) {var path_history = null;}
 		var path = (path_history) ? path_history.join('/') : null;
 		
 		switch(article) {
@@ -281,8 +296,6 @@ App.Events = (function(lng, app, undefined) {
 	var PullUpAction = function(article, scroll) {
 		
 		var user_repo = App.Data.CurrentRepo();
-		var path_history = lng.Data.Storage.session('path_history');
-		var path = (path_history) ? path_history.join('/') : null;
 		
 		switch(article) {
 			case 'repo-commits':
@@ -298,6 +311,7 @@ App.Events = (function(lng, app, undefined) {
 
 	var UpdateRepo = function(user_repo, action) {
 		App.View.GrowlShow();
+		lng.View.Scroll.first('repo-dashboard');
 		//App.Services.RepoRecent(user_repo, action);
 		App.Services.RepoDashboard(user_repo, action);
 		App.Services.RepoCommits(user_repo, action);
@@ -312,15 +326,6 @@ App.Events = (function(lng, app, undefined) {
 	var HideFooter = function() {
 		lng.dom('#main footer').hide();
 	};
-
-	/*lng.Data.Sql.select('pictures', null, function(result) {
-		console.log(result);
-		if (result.length > 0) { //Tenemos datos en la DB
-			App.View.pictures(result);
-		} else {
-			App.Services.panoramioPictures();
-		}
-	});*/
 	
 	return {
 		DeviceReady: DeviceReady,

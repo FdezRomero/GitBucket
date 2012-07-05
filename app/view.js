@@ -220,6 +220,9 @@ App.View = (function(lng, app, undefined) {
 		}
 		RefreshScroll('commit-detail-info');
 		RefreshScroll('commit-detail-files');
+		lng.View.Scroll.first('commit-detail', 0);
+		lng.Router.article('commit-detail', 'commit-detail-info');
+		lng.Router.section('commit-detail');
 	};
 
 	var CommitComments = function(comments) {
@@ -277,6 +280,9 @@ App.View = (function(lng, app, undefined) {
 			}
 		}
 		RefreshScroll('issue-detail-info');
+		lng.View.Scroll.first('issue-detail', 0);
+		lng.Router.article('issue-detail', 'issue-detail-info');
+		lng.Router.section('issue-detail');
 	};
 
 	var IssueComments = function(comments) {
@@ -291,7 +297,8 @@ App.View = (function(lng, app, undefined) {
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_updated_on']);
 					lng.dom('#issue-detail-comments ul').append('<li><div class="onright">'+time_ago+'</div>\
 						<img src="'+comments[i]['author_info']['avatar']+'" class="icon"/>\
-						<label>'+comments[i]['author_info']['username']+'</label><br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
+						<label>'+comments[i]['author_info']['username']+'</label><br/>\
+						<br/>'+App.Utils.ToHTML(comments[i]['content'])+'</li>');
 					num_comments++;
 				}
 			}
@@ -334,7 +341,12 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-form header span.title').html('New Issue');
 		lng.dom('#compose-issue-send').data('action', 'new');
 
+		App.View.ResetForm('#compose-issue-form');
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
+
 		RefreshScroll('compose-issue-form');
+		lng.View.Scroll.first('compose-issue', 0);
+		lng.Router.section('compose-issue');
 	};
 
 	var LoadIssue = function(detail) {
@@ -352,7 +364,10 @@ App.View = (function(lng, app, undefined) {
 		lng.dom('#compose-issue-msg').val(detail.content);
 
 		RefreshScroll('compose-issue-form');
+		new App.Utils.AutoGrow(document.getElementById('compose-issue-msg'), 3);
+		lng.View.Scroll.first('compose-issue', 0);
 		GrowlHide();
+		lng.Router.section('compose-issue');
 	};
 
 	var ResetForm = function (id) {
@@ -373,8 +388,11 @@ App.View = (function(lng, app, undefined) {
 		}
 		lng.dom('#compose-comment-send').data('type', type);
 		
+		App.View.ResetForm('#compose-comment-form');
 		new App.Utils.AutoGrow(document.getElementById('compose-comment-msg'), 3);
 		RefreshScroll('compose-comment-form');
+		lng.View.Scroll.first('compose-comment', 0);
+		lng.Router.section('compose-comment');
 	};
 
 	//===== VIEW UTILITIES =====//

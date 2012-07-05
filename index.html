@@ -33,7 +33,6 @@
             <nav>
                 <a href="#aside-menu" data-target="aside" class="button onleft"><i class="icon-reorder"></i></a>
                 <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
-                <!--<a id="main-refresh" href="#" data-icon="refresh" class="button onright"></a>-->
                 <a id="user-refresh" href="#" data-article="user-dashboard" data-icon="refresh" class="button onright"></a>
             </nav>
         </header>
@@ -279,8 +278,9 @@
 
     <section id="compose-comment">
         <header data-title="New Comment"><span class="title">New Comment</span>
-            <nav class="onleft">
-                <a id="compose-comment-back" href="#back" data-target="section" data-icon="left" class="button"></a>
+            <nav>
+                <a id="compose-comment-back" href="#back" data-target="section" data-icon="left" class="button onleft"></a>
+                <a id="comment-reset-btn" href="#" data-icon="trash" class="red button onright"></a>
             </nav>
         </header>
         <article id="compose-comment-form" class="current list scrollable">
@@ -291,7 +291,7 @@
                 </li>
                 <li>
                     <div style="display:inline-block;width:85px"><label>Description</label></div>
-                        <span id="compose-comment-desc"></span>
+                        <br/><span id="compose-comment-desc"></span>
                 </li>
                 <li>
                     <label>Comment</label>
