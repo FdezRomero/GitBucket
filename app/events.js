@@ -18,14 +18,18 @@ App.Events = (function(lng, app, undefined) {
 
 		console.log('DeviceReady()');
 		App.Data.ClearSessionStorage();
-		/*var username = lng.Data.Storage.persistent('username') || null;
-		var token = lng.Data.Storage.persistent('token') || null;*/
 
-		if (lng.Data.Storage.persistent('username')) {var username = lng.Data.Storage.persistent('username');}
+		/*if (lng.Data.Storage.persistent('username')) {var username = lng.Data.Storage.persistent('username');}
 		else {var username = null;}
 
 		if (lng.Data.Storage.persistent('token')) {var token = lng.Data.Storage.persistent('token');}
-		else {var token = null;}
+		else {var token = null;}*/
+
+		try {var username = lng.Data.Storage.persistent('username');}
+		catch(e) {var username = null;}
+
+		try {var token = lng.Data.Storage.persistent('token');}
+		catch(e) {var token = null;}
 
 		console.log('Username: '+username+' - Token: '+token);
 		if (username && token) {
@@ -33,6 +37,7 @@ App.Events = (function(lng, app, undefined) {
 			console.log('Authorization: '+lng.Service.Settings.headers.Authorization);
 			App.Services.CheckLogin('ready');
 		} else {
+			console.log('Routing to login');
 			lng.Router.section('login');
 		}
 	};
