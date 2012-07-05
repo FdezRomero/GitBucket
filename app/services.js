@@ -9,19 +9,20 @@ App.Services = (function(lng, app, undefined) {
 	
 	var CheckLogin = function(from) {
 		$$.ajax({type: 'GET', url: 'https://api.bitbucket.org/1.0/user/', success: function(response) {
-			//console.error(response);
-			lng.dom('body').trigger('login');
+			console.log('CheckLogin: Credentials OK');
+			App.Events.LoggedIn();
 			if (from == 'login') { lng.Router.back(); }
 		}, error: function () {
+			console.log('CheckLogin: Credentials FAILED');
 			App.View.GrowlHide();
-			if (from == 'onready') { lng.Router.section('login'); }
+			if (from == 'ready') { lng.Router.section('login'); }
 			alert('The username/password combination is not valid.');
 		}});
 	};
 
 	var UserInfo = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.UserInfo(response.user);
 		});
 	};
@@ -29,7 +30,7 @@ App.Services = (function(lng, app, undefined) {
 	var UserRecent = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/users/'+username+'/events', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.UserRecent(response.events);
 		});
 	};
@@ -44,7 +45,7 @@ App.Services = (function(lng, app, undefined) {
 	var UserFollowers = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/users/'+username+'/followers', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			lng.dom('#user-dashboard-followers').html(response.count.toString());
 		});
 	};
@@ -52,7 +53,7 @@ App.Services = (function(lng, app, undefined) {
 	var UserFollowing = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/user/follows', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			lng.dom('#user-dashboard-following').html(response.length.toString());
 		});
 	};
@@ -60,14 +61,14 @@ App.Services = (function(lng, app, undefined) {
 	var UserGroups = function() {
 		var username = lng.Data.Storage.persistent('username');
 		lng.Service.get('https://api.bitbucket.org/1.0/groups/'+username, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			lng.dom('#user-dashboard-groups').html(response.length.toString());
 		});
 	};
 
 	var UserTeams = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/privileges/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			lng.dom('#user-dashboard-teams').empty();
 			for (var x in response.teams) {
 				lng.dom('#user-dashboard-teams').append('<li><span class="icon group"></span>'+x+'\
@@ -81,7 +82,7 @@ App.Services = (function(lng, app, undefined) {
 
 	var RepoList = function() {
 		lng.Service.get('https://api.bitbucket.org/1.0/user/repositories/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			lng.Data.Storage.session('repo_list', response);
 			App.View.RepoList(response);
 		});
@@ -89,14 +90,14 @@ App.Services = (function(lng, app, undefined) {
 
 	/*var RepoRecent = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/events/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.RepoRecent(response.events);
 		});
 	};*/
 
 	var RepoDashboard = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.RepoDashboard(response);
 		});
 	};
@@ -107,7 +108,7 @@ App.Services = (function(lng, app, undefined) {
 		var size = (action == 'more') ? lng.Data.Storage.session('commits_size') : 0;
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/?start='+start, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.Data.LastCommit(response.changesets[0].node);
 			if (action == 'more') { response.changesets.pop(); } // Avoid repeating last commit
 			lng.Data.Storage.session('commits_size', size+response.changesets.length);
@@ -119,7 +120,7 @@ App.Services = (function(lng, app, undefined) {
 		var path = (dir) ? dir + '/' : '';
 		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/src/'+scm+'/'+path, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 
 			// Normalize directory data to file structure
 			var Join = function(dirsArray, filesArray) {
@@ -127,7 +128,7 @@ App.Services = (function(lng, app, undefined) {
 				var elements = [];
 
 				// Add path to go back if needed
-				//console.error(path);
+				//console.log(path);
 				if (path.length > 0) {
 					var back_obj = {path: 'Back', type: 'back', size: null, revision: null, icon: 'left mini'};
 					elements.push(back_obj);
@@ -156,7 +157,7 @@ App.Services = (function(lng, app, undefined) {
 		var start = (action == 'more') ? App.Data.LastIssue() : 0;
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?start='+start, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.Data.LastIssue(start+response.issues.length);
 			App.View.RepoIssues(response, action);
 		});
@@ -172,7 +173,7 @@ App.Services = (function(lng, app, undefined) {
 	var IssuesBadge = function(user_repo) {
 		var filter = '?status=new&status=open&status=on%20hold';
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+filter, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.IssuesBadge(response.count);
 		});
 	};
@@ -181,14 +182,14 @@ App.Services = (function(lng, app, undefined) {
 
 	var CommitDetail = function(user_repo, commit) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.CommitDetail(response);
 		});
 	};
 
 	var CommitComments = function(user_repo, commit) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.CommitComments(response);
 		});
 	};
@@ -199,21 +200,21 @@ App.Services = (function(lng, app, undefined) {
 		var scm = (App.Data.CurrentRepoType() == 'git') ? 'master' : 'tip';
 
 		lng.Service.get('https://bitbucket.org/'+user_repo+'/raw/'+scm+'/'+path+'/'+file, null, function(response) {
-			console.error(response);
+			console.log(response);
 			//App.View.SourceCode(response);
 		}, 'text');
 	};*/
 
 	var IssueDetail = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.IssueDetail(response);
 		});
 	};
 
 	var IssueComments = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.IssueComments(response);
 		});
 	};
@@ -222,28 +223,28 @@ App.Services = (function(lng, app, undefined) {
 
 	var IssueComponents = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/components/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.Data.IssueComponents(response);
 		});
 	};
 
 	var IssueMilestones = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/milestones/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.Data.IssueMilestones(response);
 		});
 	};
 
 	var IssueVersions = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/versions/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.Data.IssueVersions(response);
 		});
 	};
 
 	var IssueUsers = function(user_repo) {
 		lng.Service.get('https://api.bitbucket.org/1.0/privileges/'+user_repo, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			var users = [];
 			for (var x in response) {
 				users.push(response[x]['user']['username']);
@@ -265,12 +266,12 @@ App.Services = (function(lng, app, undefined) {
 			status: lng.dom('#compose-issue-status').val(),
 			kind: lng.dom('#compose-issue-kind').val()
 		});
-		//console.error(data);
+		//console.log(data);
 
 		var serial_data = App.Utils.Serialize(data);
 		if (data.title && data.content) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/', serial_data, function(response) {
-				//console.error(response);
+				//console.log(response);
 				RepoIssues(user_repo);
 				App.View.GrowlHide();
 				alert('Issue #'+response.local_id+' was created');
@@ -286,7 +287,7 @@ App.Services = (function(lng, app, undefined) {
 	// Populates the issue composer with previous data
 	var LoadIssue = function(user_repo, issue) {
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/', null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.LoadIssue(response);
 			App.View.GrowlHide();
 		});
@@ -309,7 +310,7 @@ App.Services = (function(lng, app, undefined) {
 
 		$$.ajax({type: 'PUT', url: 'https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/',
 			data: serial_data, dataType: 'json', contentType: 'application/x-www-form-urlencoded', success: function(response) {
-				//console.error(response);
+				//console.log(response);
 				IssueDetail(user_repo, issue); // Update the details before going back
 				RepoIssues(user_repo); // Just in case we changed the title
 				App.View.GrowlHide();
@@ -327,7 +328,7 @@ App.Services = (function(lng, app, undefined) {
 		App.Data.CurrentIssueQuery(query);
 
 		lng.Service.get('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/?search='+query, null, function(response) {
-			//console.error(response);
+			//console.log(response);
 			App.View.RepoIssues(response.issues);
 			App.View.GrowlHide();
 		});
@@ -342,7 +343,7 @@ App.Services = (function(lng, app, undefined) {
 		
 		if (data.content) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/changesets/'+commit+'/comments/', serial_data, function(response) {
-				//console.error(response);
+				//console.log(response);
 				CommitComments(user_repo, commit); // Reload Comments
 				App.View.GrowlHide();
 				alert('Your comment has been posted');
@@ -361,7 +362,7 @@ App.Services = (function(lng, app, undefined) {
 		
 		if (data.content) {
 			lng.Service.post('https://api.bitbucket.org/1.0/repositories/'+user_repo+'/issues/'+issue+'/comments/', serial_data, function(response) {
-				//console.error(response);
+				//console.log(response);
 				IssueComments(user_repo, issue); // Reload Comments
 				App.View.GrowlHide();
 				alert('Your comment has been posted');

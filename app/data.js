@@ -113,7 +113,7 @@ App.Data = (function(lng, app, undefined) {
 	};
 
 	var CurrentIssueQuery = function(query) {
-		//console.error('CurrentIssueQuery: Received type '+typeof(query)', value "'+query+'"');
+		//console.log('CurrentIssueQuery: Received type '+typeof(query)', value "'+query+'"');
 		if (query === undefined) {
 			// CurrentIssueQuery(): Return the current search query
 			return sessionStorage.current_issue_query;

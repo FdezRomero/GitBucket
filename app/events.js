@@ -2,8 +2,21 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== DEVICE READY ==========//
 
-	lng.ready(function() {
+	if (typeof(PhoneGap) != 'undefined') {
+		lng.dom('document').on('deviceready', function() {
+			console.log('PhoneGap ready');
+			DeviceReady();
+		});
+	} else {
+		lng.ready(function() {
+			console.log('Lungo ready');
+			DeviceReady();
+		});
+	}
 
+	var DeviceReady = function() {
+
+		console.log('DeviceReady()');
 		App.Data.ClearSessionStorage();
 		/*var username = lng.Data.Storage.persistent('username') || null;
 		var token = lng.Data.Storage.persistent('token') || null;*/
@@ -14,13 +27,15 @@ App.Events = (function(lng, app, undefined) {
 		if (lng.Data.Storage.persistent('token')) {var token = lng.Data.Storage.persistent('token');}
 		else {var token = null;}
 
+		console.log('Username: '+username+' - Token: '+token);
 		if (username && token) {
 			App.Services.SetBasicAuth();
-			App.Services.CheckLogin('onready');
+			console.log('Authorization: '+lng.Service.Settings.headers.Authorization);
+			App.Services.CheckLogin('ready');
 		} else {
 			lng.Router.section('login');
 		}
-	});
+	};
 
 	//========== LOGIN EVENTS ==========//
 
@@ -39,8 +54,9 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
-	lng.dom('body').on('login', function() {
+	var LoggedIn = function() {
 
+		console.log('LoggedIn()');
 		App.View.GrowlShow();
 		var username = lng.Data.Storage.persistent('username');
 
@@ -52,7 +68,7 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.UserInfo();
 		App.Services.RepoList();
 		App.Services.UserDashboard();
-	});
+	};
 
 	//========== ASIDE EVENTS ==========//
 
@@ -293,7 +309,7 @@ App.Events = (function(lng, app, undefined) {
 	};
 
 	/*lng.Data.Sql.select('pictures', null, function(result) {
-		console.error(result);
+		console.log(result);
 		if (result.length > 0) { //Tenemos datos en la DB
 			App.View.pictures(result);
 		} else {
@@ -302,6 +318,8 @@ App.Events = (function(lng, app, undefined) {
 	});*/
 	
 	return {
+		DeviceReady: DeviceReady,
+		LoggedIn: LoggedIn,
 		UpdateRepo: UpdateRepo,
 		ShowFooter: ShowFooter,
 		HideFooter: HideFooter,

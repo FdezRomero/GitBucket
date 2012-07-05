@@ -12,7 +12,7 @@ App.View = (function(lng, app, undefined) {
 	//========== USER VIEWS ==========//
 
 	var UserInfo = function(user) {
-		//console.error(user);
+		//console.log(user);
 		lng.dom('#aside-user').data('title', user.username);
 		lng.dom('#aside-user').html('<img src="'+user.avatar+'" class="icon"/> ' + user.username);
 
@@ -20,7 +20,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var UserRecent = function(events) {
-		//console.error(events);
+		//console.log(events);
 		if (events.length > 0) {
 			lng.View.Template.List.create({
 				el: '#user-recent ul',
@@ -35,10 +35,10 @@ App.View = (function(lng, app, undefined) {
 	//========== REPOSITORY VIEWS ==========//
 
 	var RepoList = function(repos) {
-		//console.error(repos);
+		//console.log(repos);
 		lng.dom('#aside-repos').empty();
 		for (var i = 0; i < repos.length; i++) {
-			//console.error(repos);
+			//console.log(repos);
 			lng.dom('#aside-repos').append('<a href="#repo-dashboard" data-target="article" data-icon="download" data-label="'+repos[i]['name']+'" \
 				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
@@ -47,7 +47,7 @@ App.View = (function(lng, app, undefined) {
 	};
 	
 	/*var RepoRecent = function(events) {
-		//console.error(events);
+		//console.log(events);
 		lng.dom('#repo-recent ul').empty();
 		if (events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
@@ -66,7 +66,7 @@ App.View = (function(lng, app, undefined) {
 	};*/
 
 	var RepoDashboard = function(info) {
-		//console.error(info);
+		//console.log(info);
 
 		var website = (info['website']) ? info['website'] : 'N/A';
 		var followers = info['followers_count'].toString();
@@ -88,7 +88,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var RepoCommits = function(response, action) {
-		//console.error(response);
+		//console.log(response);
 		var commits = response.changesets;
 		
 		if (action != 'more') { EmptyPullable('repo-commits'); }
@@ -103,7 +103,7 @@ App.View = (function(lng, app, undefined) {
 					<small>'+commits[i]['message']+'</small></a></li>');
 			}
 			var size = lng.Data.Storage.session('commits_size');
-			//console.error('count: '+response.count+' - length: '+size);
+			//console.log('count: '+response.count+' - length: '+size);
 			if (response.count > size) {
 				ShowPullable('repo-commits', 'both');
 			} else {
@@ -118,7 +118,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var RepoSource = function(source, action) {
-		//console.error(source);
+		//console.log(source);
 		EmptyPullable('repo-source');
 
 		if (source.length > 0) {
@@ -140,7 +140,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var RepoIssues = function(response, action) {
-		//console.error(response);
+		//console.log(response);
 		var issues = response.issues;
 
 		if (action != 'more') { EmptyPullable('repo-issues'); }
@@ -162,7 +162,7 @@ App.View = (function(lng, app, undefined) {
 					<small>Status: '+issues[i]['status']+'</small></a></li>');
 			}
 			var size = App.Data.LastIssue();
-			//console.error('count: '+response.count+' - length: '+size);
+			//console.log('count: '+response.count+' - length: '+size);
 			if (response.count > size) {
 				ShowPullable('repo-issues', 'both');
 			} else {
@@ -190,7 +190,7 @@ App.View = (function(lng, app, undefined) {
 	//========== DETAIL VIEWS ==========//
 
 	var CommitDetail = function(detail) {
-		//console.error(detail);
+		//console.log(detail);
 
 		lng.dom('#commit-detail header').data('title', detail.node);
 		lng.dom('#commit-detail header span.title').html(detail.node);
@@ -223,7 +223,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var CommitComments = function(comments) {
-		//console.error(comments);
+		//console.log(comments);
 		lng.dom('#commit-detail-comments ul').empty();
 		var num_comments = 0;
 		
@@ -280,7 +280,7 @@ App.View = (function(lng, app, undefined) {
 	};
 
 	var IssueComments = function(comments) {
-		//console.error(comments);
+		//console.log(comments);
 		lng.dom('#issue-detail-comments ul').empty();
 		var num_comments = 0;
 
