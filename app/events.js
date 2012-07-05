@@ -61,7 +61,7 @@ App.Events = (function(lng, app, undefined) {
 
 		HideFooter();
 		lng.Data.Storage.session('current_title', username);
-		App.View.UpdateTitle(username);
+		//App.View.UpdateTitle(username);
 		App.View.CreatePullables();
 
 		App.Services.UserInfo();
@@ -71,6 +71,16 @@ App.Events = (function(lng, app, undefined) {
 
 	//========== ASIDE EVENTS ==========//
 
+	lng.dom('#aside-user').tap(function() {
+		App.View.UpdateTitle('Commits');
+		lng.dom('#main header .title').addClass('logo');
+	});
+
+	lng.dom('#aside-settings').tap(function() {
+		App.View.UpdateTitle('Settings');
+		lng.dom('#main header .title').removeClass('logo');
+	});
+
 	lng.dom('aside#aside-menu a').tap(function() {
 		
 		App.Data.ClearSessionStorage();
@@ -79,10 +89,10 @@ App.Events = (function(lng, app, undefined) {
 		var type = lng.dom(this).data('scm');
 		App.Data.CurrentRepoType(type);
 
-		lng.Data.Storage.session('current_title', user_repo);
-		App.View.UpdateTitle(user_repo);
-
 		if (lng.dom(this).parent().attr('id') == 'aside-repos') {
+			lng.Data.Storage.session('current_title', user_repo);
+			App.View.UpdateTitle(user_repo);
+			lng.dom('#main header .title').removeClass('logo');
 			UpdateRepo(user_repo, 'load');
 			ShowFooter();
 		} else {
@@ -144,7 +154,7 @@ App.Events = (function(lng, app, undefined) {
 	lng.dom('#repo-issues-search-btn').tap(function() {
 		App.View.GrowlShow();
 		var user_repo = App.Data.CurrentRepo();
-		App.Services.SearchIssue(user_repo);
+		App.Services.SearchIssue(user_repo, 'search');
 	});
 
 	//========== DETAIL EVENTS ==========//

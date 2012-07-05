@@ -21,7 +21,7 @@ App.View = (function(lng, app, undefined) {
 
 	var UserRecent = function(events) {
 		//console.log(events);
-		if (events.length > 0) {
+		if (events && events.length > 0) {
 			lng.View.Template.List.create({
 				el: '#user-recent ul',
 				template: 'recent-tmpl',
@@ -49,7 +49,7 @@ App.View = (function(lng, app, undefined) {
 	/*var RepoRecent = function(events) {
 		//console.log(events);
 		lng.dom('#repo-recent ul').empty();
-		if (events.length > 0) {
+		if (events && events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
 				var icon = App.Utils.GetIcon(events[i]['event']);
 				var time_ago = App.Utils.TimeAgo(events[i]['utc_created_on']);
@@ -93,7 +93,7 @@ App.View = (function(lng, app, undefined) {
 		
 		if (action != 'more') { EmptyPullable('repo-commits'); }
 		
-		if (commits.length > 0) {
+		if (commits && commits.length > 0) {
 			for (var i = commits.length-1; i >= 0; i--) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
 				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
@@ -121,7 +121,7 @@ App.View = (function(lng, app, undefined) {
 		//console.log(source);
 		EmptyPullable('repo-source');
 
-		if (source.length > 0) {
+		if (source && source.length > 0) {
 			for (var i = 0; i < source.length; i++) {
 				var size = (source[i]['size']) ? App.Utils.FileSize(source[i]['size']) : '';
 				var revision = (source[i]['revision']) ? source[i]['revision'] : '';
@@ -148,18 +148,20 @@ App.View = (function(lng, app, undefined) {
 		var query = App.Data.CurrentIssueQuery();
 		query = (query) ? query : ''; // null -> empty string
 		
-		lng.dom('#repo-issues ul').append('<li style="background:#EDEDED">\
-			<input type="search" id="repo-issues-search" placeholder="Search issues..." value="'+query+'">\
-            <a id="repo-issues-search-btn" href="#" class="button"><span class="icon search"></span></a></li>');
+		if (action != 'more') {
+			lng.dom('#repo-issues ul').append('<li style="background:#EDEDED">\
+				<input type="search" id="repo-issues-search" placeholder="Search issues..." value="'+query+'">\
+				<a id="repo-issues-search-btn" href="#" class="button"><span class="icon search"></span></a></li>');
+		}
 
-		if (issues.length > 0) {
+		if (issues && issues.length > 0) {
 			for (var i = 0; i < issues.length; i++) {
 				var time_ago = App.Utils.TimeAgo(issues[i]['utc_last_updated']);
 				var icon = App.Utils.GetIcon(issues[i]['status']);
 				lng.dom('#repo-issues ul').append('<li data-title="'+issues[i]['local_id']+'">\
-					<a href="#"><div class="onright">'+time_ago+'</div>\
-					<span class="icon '+icon+'"></span>#'+issues[i]['local_id']+': '+issues[i]['title']+'\
-					<small>Status: '+issues[i]['status']+'</small></a></li>');
+					<a href="#"><div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
+					<div class="with-icon">#'+issues[i]['local_id']+': '+issues[i]['title']+'</div>\
+					<small class="with-icon">Status: '+issues[i]['status']+'</small></a></li>');
 			}
 			var size = App.Data.LastIssue();
 			//console.log('count: '+response.count+' - length: '+size);
@@ -171,7 +173,7 @@ App.View = (function(lng, app, undefined) {
 			}
 		} else if (action != 'more') {
 			lng.dom('#repo-issues ul').append(NoElements('issues'));
-			lng.dom('#repo-issues li').hide();
+			if (action != 'search') { lng.dom('#repo-issues li').hide(); }
 			HidePullable('repo-issues', 'both');
 		}
 		if (action == 'load') { RefreshPullable('repo-issues'); } else { StopPullable('repo-issues'); }
@@ -200,15 +202,16 @@ App.View = (function(lng, app, undefined) {
 		// Info tab
 		var formatted_date = App.Utils.FormatDate(detail.utctimestamp);
 		var branch = (detail.branch) ? detail.branch : '(none)';
+		var avatar_img = '<img src="'+App.Utils.Gravatar(detail['raw_author'])+'" class="icon" style="float:none;"/>';
 		lng.dom('#commit-detail-node').html(detail.node);
 		lng.dom('#commit-detail-branch').html(branch);
-		lng.dom('#commit-detail-author').html(detail.author);
+		lng.dom('#commit-detail-author').html(avatar_img+detail.author);
 		lng.dom('#commit-detail-date').html(formatted_date);
 		lng.dom('#commit-detail-msg').html(App.Utils.ToHTML(detail.message));
 
 		// Files tab
 		lng.dom('#commit-detail-files ul').empty();
-		if (detail.files.length > 0) {
+		if (detail.files && detail.files.length > 0) {
 			for (var i = 0; i < detail.files.length; i++) {
 				var icon = App.Utils.GetIcon(detail.files[i]['type']);
 				lng.dom('#commit-detail-files ul').append('<li><span class="icon '+icon+'"></span>\
@@ -231,7 +234,7 @@ App.View = (function(lng, app, undefined) {
 		var num_comments = 0;
 		
 		//Comments tab
-		if (comments.length > 0) {
+		if (comments && comments.length > 0) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_created_on']);
@@ -291,7 +294,7 @@ App.View = (function(lng, app, undefined) {
 		var num_comments = 0;
 
 		//Comments tab
-		if (comments.length > 0) {
+		if (comments && comments.length > 0) {
 			for (var i = 0; i < comments.length; i++) {
 				if (comments[i]['content']) { // Don't display comment if no content
 					var time_ago = App.Utils.TimeAgo(comments[i]['utc_updated_on']);

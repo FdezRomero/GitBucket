@@ -29,11 +29,12 @@
 <body class="app">
 
     <section id="main">
-        <header data-title="Loading">
+        <header>
+            <span class="title logo">Commits</span>
             <nav>
-                <a href="#aside-menu" data-target="aside" class="button onleft"><i class="icon-reorder"></i></a>
+                <a href="#aside-menu" data-target="aside" class="button sunk onleft"><i class="icon-reorder"></i></a>
                 <a id="compose-issue-btn" href="#" data-article="repo-issues" data-icon="edit" class="blue button onright"></a>
-                <a id="user-refresh" href="#" data-article="user-dashboard" data-icon="refresh" class="button onright"></a>
+                <a id="user-refresh" href="#" data-article="user-dashboard" data-icon="refresh" class="button sunk onright"></a>
             </nav>
         </header>
         
@@ -56,8 +57,7 @@
                         <span id="user-dashboard-groups"></span>
                     </div>
                 </li>
-                <li class="list-break"></li>
-                <li class="anchor" data-icon="star">Your teams</li>
+                <li class="anchor">Your teams</li>
                 <div id="user-dashboard-teams"></div>
             </ul>
         </article>
