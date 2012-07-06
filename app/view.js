@@ -38,7 +38,6 @@ App.View = (function(lng, app, undefined) {
 		//console.log(repos);
 		lng.dom('#aside-repos').empty();
 		for (var i = 0; i < repos.length; i++) {
-			//console.log(repos);
 			lng.dom('#aside-repos').append('<a href="#repo-dashboard" data-target="article" data-icon="download" data-label="'+repos[i]['name']+'" \
 				data-title="'+repos[i]['owner']+'/'+repos[i]['slug']+'" data-scm="'+repos[i]['scm']+'">\
 				<span class="icon download"></span><abbr>'+App.Utils.Capitalize(repos[i]['owner'])+'/'+repos[i]['name']+'</abbr></a>');
