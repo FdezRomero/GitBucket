@@ -39,7 +39,9 @@ footer {
   text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
 }
 article {
-  background-color: #ededed;
+  background: #ededed;
+  background-image: url(../assets/images/bg/double_lined.png);
+  background-size: 75px 32px;
 }
 article .title {
   color: #787878;
@@ -78,13 +80,16 @@ nav a.current, nav a.active {
 /* @end */
 /* @group <aside> */
 aside {
-  background: #252525;
+  background: #252525 url(../assets/images/dark/black_linen.png);
+  background-size: 241px 245px;
 }
 aside .title {
-  background: #101010;
+  background: #101010 url(../assets/images/dark/dark_stripes.png);
+  background-size: 25px 25px;
   border: none;
 }
 aside a {
+  background: none; /* #252525 */
   color: #fff;
   text-shadow: 0px 1px 0px #000;
   border-bottom: 1px inset #101010;
@@ -145,10 +150,10 @@ section.aside.onright {
   border-left: solid 1px #e1e1e1;
   border-right: solid 1px #e1e1e1;
 }
-.list.indented li:first-child {
+.list li:first-child {
   border-top: solid 1px #e1e1e1;
 }
-.list.indented li:last-child {
+.list li:last-child {
   border-bottom: solid 1px  #e1e1e1;
 }
 .list li.anchor {
@@ -322,6 +327,15 @@ header .title {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+aside footer {
+  background: none;
+}
+/*aside footer a {
+  background: #2c2c2d -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #2c2c2d), color-stop(1, #1c1c1c));
+}
+#aside-repos a {
+  background-image: url(../assets/images/dark/black_linen.png);
+}*/
 header .title.logo {
   font-family: 'Pacifico';
   font-size: 24px;
@@ -335,7 +349,7 @@ pre {
 .list.indented li.list-break {
   height: 20px;
   padding: 0;
-  background: #EDEDED;
+  background: none;
   border: none;
   border-bottom: 1px solid #E1E1E1;
 }
@@ -352,12 +366,16 @@ pre {
   -webkit-border-radius: 16px;
   border-radius: 16px;
 }
+#repo-commits ul {
+  background-image: url(../assets/images/fg/handmadepaper.png);
+  background-repeat: repeat;
+}
 #repo-commits li {
-  background-image: url(../assets/images/node@2x.png);
+  background: #fff url(../assets/images/node@2x.png);
   background-size: 36px 51px;
   background-position: 4px 0;
   background-repeat: no-repeat;
-  border-bottom: 1px dashed #E1E1E1;
+  border-bottom: 1px solid #E1E1E1;
 }
 #repo-commits li:last-child {
   border-bottom: none;
