@@ -18,7 +18,7 @@
 
 .app {
   background: #101010;
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  font-family: 'Varela Round', 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 /* @group <header> & <footer> & <article> */
@@ -40,8 +40,8 @@ footer {
 }
 article {
   background: #ededed;
-  background-image: url(../assets/images/bg/double_lined.png);
-  background-size: 75px 32px;
+  background-image: url(../assets/images/fg/furley_bg.png);
+  /*background-size: 162px 15px;*/
 }
 article .title {
   color: #787878;
@@ -243,7 +243,7 @@ footer .button:active {
 input, textarea, select {
   border: 1px solid #e1e1e1;
   color: #858585;
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  font-family: 'Varela Round', 'Roboto', Helvetica, Arial, sans-serif;
 }
 input:focus, textarea:focus, select:focus {
   border-color: #05b8e2;
@@ -343,8 +343,16 @@ header .title.logo {
 }
 pre {
   white-space: pre-wrap;
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  font-family: 'Varela Round', 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+#login-form {
+  background-color: #ff7700;
+}
+#login-form div > div {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
 }
 .list.indented li.list-break {
   height: 20px;
@@ -356,8 +364,37 @@ pre {
 .list .with-icon {
   margin-left: 38px;
 }
+#user-dashboard-stats {
+  text-align: center;
+}
+#user-dashboard-stats > div {
+  display: inline-block;
+  width: 32%;
+}
 #user-dashboard-teams li:first-child {
   border-top: none;
+}
+#repo-dashboard li div {
+  display: inline-block;
+  width: 110px;
+}
+#repo-commits ul {
+  background-color: #FFF;
+  /*background-image: url(../assets/images/fg/furley_bg.png);
+  background-repeat: repeat;*/
+}
+#repo-commits li {
+  background: transparent url(../assets/images/node@2x.png);
+  background-size: 40px 51px;
+  background-position: 2px 0;
+  background-repeat: no-repeat;
+  border-bottom: none;
+  border-bottom: 1px solid #E1E1E1;
+  margin-bottom: -1px; /* Make BG img overlay the border */
+}
+#repo-commits li:last-child {
+  /*border-bottom: none;*/
+  margin-bottom: 0;
 }
 #repo-commits .icon.round {
   width: 32px;
@@ -366,17 +403,15 @@ pre {
   -webkit-border-radius: 16px;
   border-radius: 16px;
 }
-#repo-commits ul {
-  background-image: url(../assets/images/fg/handmadepaper.png);
-  background-repeat: repeat;
+#repo-commits .ago {
+  float: none;
+  display: inline-block;
 }
-#repo-commits li {
-  background: #fff url(../assets/images/node@2x.png);
-  background-size: 36px 51px;
-  background-position: 4px 0;
-  background-repeat: no-repeat;
-  border-bottom: 1px solid #E1E1E1;
+#commit-detail-info li div {
+  display: inline-block;
+  width: 60px;
 }
-#repo-commits li:last-child {
-  border-bottom: none;
+#compose-commit-form li div {
+  display: inline-block;
+  width: 85px;
 }

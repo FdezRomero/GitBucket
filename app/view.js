@@ -97,9 +97,12 @@ App.View = (function(lng, app, undefined) {
 				var branch = (commits[i]['branch']) ? ' ('+commits[i]['branch']+')' : '';
 				var time_ago = App.Utils.TimeAgo(commits[i]['utctimestamp']);
 				lng.dom('#repo-commits ul').append('<li data-title="'+commits[i]['node']+'">\
-					<a href="#"><div class="onright">'+time_ago+'</div>\
+					<a href="#"><div class="onright"><span class="icon clock"></span>'+time_ago+'</div>\
 					<img class="icon round" src="'+App.Utils.Gravatar(commits[i]['raw_author'])+'"/>'+commits[i]['node']+branch+'\
 					<small>'+commits[i]['message']+'</small></a></li>');
+				/*lng.dom('#repo-commits ul').append('<li data-title="'+commits[i]['node']+'">\
+					<a href="#"><img class="icon round" src="'+App.Utils.Gravatar(commits[i]['raw_author'])+'"/>'+commits[i]['node']+branch+'\
+					<div class="onright ago"><span class="icon clock"></span>'+time_ago+'</div><small>'+commits[i]['message']+'</small></a></li>');*/
 			}
 			var size = lng.Data.Storage.session('commits_size');
 			//console.log('count: '+response.count+' - length: '+size);
@@ -158,8 +161,8 @@ App.View = (function(lng, app, undefined) {
 				var time_ago = App.Utils.TimeAgo(issues[i]['utc_last_updated']);
 				var icon = App.Utils.GetIcon(issues[i]['status']);
 				lng.dom('#repo-issues ul').append('<li data-title="'+issues[i]['local_id']+'">\
-					<a href="#"><div class="onright">'+time_ago+'</div><span class="icon '+icon+'"></span>\
-					<div class="with-icon">#'+issues[i]['local_id']+': '+issues[i]['title']+'</div>\
+					<a href="#"><div class="onright"><span class="icon clock"></span>'+time_ago+'</div>\
+					<span class="icon '+icon+'"></span><div class="with-icon">#'+issues[i]['local_id']+': '+issues[i]['title']+'</div>\
 					<small class="with-icon">Status: '+issues[i]['status']+'</small></a></li>');
 			}
 			var size = App.Data.LastIssue();

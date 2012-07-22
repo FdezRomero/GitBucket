@@ -43,17 +43,17 @@
                 <li id="user-dashboard-avatar">
                     <span class="icon user mini"></span> Loading user info...
                 </li>
-                <li>
-                    <div style="display:inline-block;width:32%">
-                        <div style="display:inline-block;width:85px"><label>Followers</label></div>
+                <li id="user-dashboard-stats">
+                    <div>
+                        <div><label>Followers</label></div>
                         <span id="user-dashboard-followers"></span>
                     </div>
-                    <div style="display:inline-block;width:32%">
-                        <div style="display:inline-block;width:85px"><label>Following</label></div>
+                    <div>
+                        <div><label>Following</label></div>
                         <span id="user-dashboard-following"></span>
                     </div>
-                    <div style="display:inline-block;width:32%">
-                        <div style="display:inline-block;width:85px"><label>Groups</label></div>
+                    <div>
+                        <div><label>Groups</label></div>
                         <span id="user-dashboard-groups"></span>
                     </div>
                 </li>
@@ -69,44 +69,44 @@
                     <p id="repo-dashboard-desc"></p>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Website</label></div>
+                    <div><label>Website</label></div>
                     <span id="repo-dashboard-web"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:49%">
-                        <div style="display:inline-block;width:95px"><label>Followers</label></div>
+                    <div style="width:49%">
+                        <div><label>Followers</label></div>
                         <span id="repo-dashboard-followers"></span>
                     </div>
-                    <div style="display:inline-block;width:49%">
-                        <div style="display:inline-block;width:95px"><label>Forks</label></div>
+                    <div style="width:49%">
+                        <div><label>Forks</label></div>
                         <span id="repo-dashboard-forks"></span>
                     </div>
                 </li>
                 <li class="list-break"></li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Type</label></div>
+                    <div><label>Type</label></div>
                     <span id="repo-dashboard-scm"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Access</label></div>
+                    <div><label>Access</label></div>
                     <span id="repo-dashboard-access"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Language</label></div>
+                    <div><label>Language</label></div>
                     <span id="repo-dashboard-lang"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Created on</label></div>
+                    <div><label>Created on</label></div>
                     <span id="repo-dashboard-created"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:95px"><label>Last updated</label></div>
+                    <div><label>Last updated</label></div>
                     <span id="repo-dashboard-updated"></span>
                 </li>
                 <div class="scrollFix"></div>
             </ul>
         </article>
-        <article id="repo-commits" class="list indented pullable down up"></article>
+        <article id="repo-commits" class="list pullable down up"></article>
         <article id="repo-source" class="list pullable down"></article>
         <article id="repo-issues" class="list pullable down up"></article>
         <article id="settings" class="list scrollable"></article>
@@ -133,9 +133,9 @@
     </aside>
 
     <section id="login">
-        <article id="login-form" class="list scrollable" style="background-color:#ff7700">
+        <article id="login-form" class="list scrollable">
             <div class="container indented">
-                <div style="display:block;margin-top:20px;text-align:center">
+                <div>
                     <img src="assets/images/gitbucket.png" width="150"/>
                 </div>
                 <ul class="form">
@@ -168,19 +168,19 @@
         <article id="commit-detail-info" class="current list scrollable">
             <ul>
                 <li>
-                    <div style="display:inline-block;width:60px"><label>Commit</label></div>
+                    <div><label>Commit</label></div>
                     <span id="commit-detail-node"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:60px"><label>Branch</label></div>
+                    <div><label>Branch</label></div>
                     <span id="commit-detail-branch"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:60px"><label>Author</label></div>
+                    <div><label>Author</label></div>
                     <span id="commit-detail-author"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:60px"><label>Date</label></div>
+                    <div><label>Date</label></div>
                     <span id="commit-detail-date"></span></li>
                 <li>
                     <label>Message</label><br/>
@@ -286,11 +286,11 @@
         <article id="compose-comment-form" class="current list scrollable">
             <ul class="form">
                 <li>
-                    <div style="display:inline-block;width:85px"><label>In reply to</label></div>
+                    <div><label>In reply to</label></div>
                         <span id="compose-comment-inreplyto"></span>
                 </li>
                 <li>
-                    <div style="display:inline-block;width:85px"><label>Description</label></div>
+                    <div><label>Description</label></div>
                         <br/><span id="compose-comment-desc"></span>
                 </li>
                 <li>
@@ -321,6 +321,7 @@
     <script src="app/base64.js"></script>
     <script src="app/services.js"></script>
     <script src="app/moment.min.js"></script>
+    <script src="app/moment.lang.en.js"></script>
     <script src="app/view.js"></script>
 </body>
 </html>
