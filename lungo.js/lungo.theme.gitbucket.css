@@ -28,6 +28,7 @@
   font-family: 'Varela Round', 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
 /* @group <header> & <footer> & <article> */
 header {
   background: #ff7700 -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.25)), color-stop(50%, rgba(255,255,255,0))); 
@@ -421,4 +422,18 @@ pre {
 #compose-commit-form li div {
   display: inline-block;
   width: 85px;
+}
+
+/* Background size media queries for retina displays */
+
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  aside {
+    background-size: 120.5px 122.5px;
+  }
+  aside .title {
+    background-size: 12.5px 12.5px;
+  }
+  article {
+    background-size: 300px 300px;
+  }
 }
