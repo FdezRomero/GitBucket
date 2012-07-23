@@ -26,6 +26,7 @@
 .app {
   background: #101010;
   font-family: 'Varela Round', 'Roboto', Helvetica, Arial, sans-serif;
+  font-weight: normal !important; /* Prevents double-rendering on iOS 4.2+ */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -75,6 +76,7 @@ nav a.current, nav a.active {
   text-shadow: 0px 1px 4px #000;
 }
 .groupbar {
+  margin-top: 1px; /* Varela Round fix */
   background: #ededed;
   border-bottom: solid 1px rgba(0, 0, 0, 0.1);
 }
@@ -158,7 +160,7 @@ section.aside.onright {
   border-left: solid 1px #e1e1e1;
   border-right: solid 1px #e1e1e1;
 }
-.list li:first-child {
+.list.indented li:first-child, .list.pullable li:first-child {
   border-top: solid 1px #e1e1e1;
 }
 .list li:last-child {
@@ -260,7 +262,7 @@ input:focus, textarea:focus, select:focus {
 label {
   color: #05b8e2;
   text-transform: uppercase;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 .select:after {
   background: #858585;
@@ -294,7 +296,7 @@ input[type="range"]:active::-webkit-slider-thumb {
 /* @group .progress */
 .progress .labels {
   font-size: 12px;
-  font-weight: bold;
+  /*font-weight: bold;*/
   line-height: 18px;
   color: #858585;
 }
@@ -317,7 +319,7 @@ input[type="range"]:active::-webkit-slider-thumb {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   text-shadow: none;
-  font-weight: bold !important;
+  /*font-weight: bold !important;*/
 }
 header .bubble.count {
   background: #2c2c2d;
@@ -388,8 +390,6 @@ pre {
 }
 #repo-commits ul {
   background-color: #FFF;
-  /*background-image: url(../assets/images/fg/furley_bg.png);
-  background-repeat: repeat;*/
 }
 #repo-commits li {
   background: transparent url(../assets/images/node@2x.png);
