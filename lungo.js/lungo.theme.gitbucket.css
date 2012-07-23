@@ -7,7 +7,14 @@
  * @author Rodrigo Fernández-Romero <fdez.romero@streamsocial.com> || @FdezRomero
  */
 
-@import "lungo.theme.default.font.css";
+/*@import "lungo.theme.default.font.css";*/
+
+@font-face {
+  font-family: "Varela Round";
+  src: url('../assets/varela-round.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "Pacifico";
