@@ -35,7 +35,7 @@
 
 /* @group <header> & <footer> & <article> */
 header {
-  background: #ff7700 -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.25)), color-stop(50%, rgba(255,255,255,0))); 
+  background: url(../assets/images/100-100-3.png), -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.25)), color-stop(50%, rgba(255,255,255,0))) #ff7700; 
   /*border-top: 1px solid #ff9a00;*/
   height: 39px;
   border-bottom: 1px solid #ff6600;
@@ -43,7 +43,7 @@ header {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 footer {
-  background: #2c2c2d -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #2c2c2d), color-stop(1, #1c1c1c));
+  background: url(../assets/images/100-100-1.png), -webkit-gradient(linear, left top, left bottom, color-stop(0.25, #2c2c2d), color-stop(1, #1c1c1c)) #2c2c2d;
   border-top: 1px inset #1c1c1c;
 }
 .title {
