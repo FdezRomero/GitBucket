@@ -53,6 +53,11 @@ App.Events = (function(lng, app, undefined) {
 		}
 	});
 
+	lng.dom('#logout-btn').tap(function() {
+		App.Data.ClearLocalStorage();
+		lng.Router.section('login');
+	});
+
 	var LoggedIn = function() {
 
 		console.log('LoggedIn()');
@@ -68,6 +73,8 @@ App.Events = (function(lng, app, undefined) {
 		App.Services.RepoList();
 		App.Services.UserDashboard();
 	};
+
+
 
 	//========== ASIDE EVENTS ==========//
 

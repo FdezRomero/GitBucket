@@ -5,6 +5,11 @@ App.Data = (function(lng, app, undefined) {
 		dataStore.clear();
 	};
 
+	var ClearLocalStorage = function() {
+		var localData = window.localStorage;
+		localData.clear();
+	};
+
 	var CurrentRepo = function(repo) {
 		if (repo) {
 			lng.Data.Storage.session('current_repo', repo);
@@ -143,6 +148,7 @@ App.Data = (function(lng, app, undefined) {
 	
 	return {
 		ClearSessionStorage: ClearSessionStorage,
+		ClearLocalStorage: ClearLocalStorage,
 		CurrentRepo: CurrentRepo,
 		CurrentRepoType: CurrentRepoType,
 		CurrentCommit: CurrentCommit,
