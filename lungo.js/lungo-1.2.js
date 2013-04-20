@@ -1302,10 +1302,10 @@ LUNGO.View.Scroll = (function(lng, undefined) {
      * @param {string} Id of the <section>
      */
     var first = function(id) {
-        var scroll = lng.Data.Cache.get(CACHE_KEY);
-        //console.log("scroll[id]: " + scroll[id]);
-        if (scroll[id]) {
-            scroll[id].scrollTo(0, 0, SCROLL_TIMEFRAME);
+        var scroll = lng.Data.Cache.get(CACHE_KEY, id);
+        console.log("scroll: "+scroll);
+        if (scroll) {
+            scroll.scrollTo(0, 0, SCROLL_TIMEFRAME);
         }
     };
 
