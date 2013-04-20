@@ -1303,6 +1303,7 @@ LUNGO.View.Scroll = (function(lng, undefined) {
      */
     var first = function(id) {
         var scroll = lng.Data.Cache.get(CACHE_KEY);
+        //console.log("scroll[id]: " + scroll[id]);
         if (scroll[id]) {
             scroll[id].scrollTo(0, 0, SCROLL_TIMEFRAME);
         }
