@@ -10,6 +10,15 @@
         "64": "/assets/icons/fxos/icon64.png",
         "128": "/assets/icons/fxos/icon128.png"
     },
+    "permissions": {
+      "systemXHR": {
+        "description": "Permissions for CORS",
+        "access": "readcreate"
+        },
+      "alarms": {
+        "description": "Required to schedule notifications"
+  }
+}
     "developer": {
         "name": "Awesome",
         "url": "awesome.do"
