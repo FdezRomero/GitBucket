@@ -550,7 +550,7 @@
       dataType: DEFAULT.MIME,
       headers: {},
       xhr: function() {
-        return new window.XMLHttpRequest();
+        return new window.XMLHttpRequest({mozSystem:true});
       },
       crossDomain: false,
       timeout: 0
