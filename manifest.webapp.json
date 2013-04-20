@@ -1,15 +1,14 @@
 {
     "version": "1",
-    "package_path" : "http://localhost/Commits.zip",
     "name": "Commits",
     "launch_path": "/index.html",
     "description": "GitBucket client for FirefoxOS",
     "icons": {
         "16": "/assets/icons/fxos/icon16.png",
         "32": "/assets/icons/fxos/icon32.png",
-        "48": "assets/icons/fxos/icon48.png",
-        "64": "assets/icons/fxos/icon64.png",
-        "128": "assets/icons/fxos/icon128.png"
+        "48": "/assets/icons/fxos/icon48.png",
+        "64": "/assets/icons/fxos/icon64.png",
+        "128": "/assets/icons/fxos/icon128.png"
     },
     "developer": {
         "name": "Awesome",
